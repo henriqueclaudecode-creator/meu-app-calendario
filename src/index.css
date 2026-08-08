@@ -1,0 +1,419 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+/* Casca do app: barra de navegação no topo + tela ocupando o resto da altura.
+   Assim o Calendário pode preencher a tela inteira (estilo Google Calendar). */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+#root > nav {
+  flex-shrink: 0;
+}
+#root > div {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+body {
+  background: var(--cor-bg, #f6f9fd);
+  color: var(--cor-texto, #0f2547);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ---- Modo escuro ------------------------------------------------------- */
+/* O tema claro usa os fallbacks definidos em lib/tema.js. Aqui só sobrescrevo
+   o que muda no escuro (paleta inspirada na referência: navy quase preto). */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --cor-bg: #0d1926;
+  --cor-superficie: #162334;
+  --cor-superficie2: #1e2c40;
+
+  --cor-primaria: #dbe7fb;
+  --cor-primariaSuave: #c3d4f0;
+
+  --cor-acento: #3b82f6;
+  --cor-acentoForte: #2563eb;
+  --cor-acentoClaro: #60a5fa;
+  --cor-acentoBg: #1a2b45;
+
+  --cor-texto: #eef2f8;
+  --cor-textoSuave: #b7c1d1;
+  --cor-textoApagado: #8b98ac;
+  --cor-textoFraco: #5b6b86;
+
+  --cor-borda: #2f4056;
+  --cor-bordaForte: #3d4f66;
+  --cor-pontinho: #3a4a60;
+  --cor-grade: #2a3a4f;
+
+  --cor-perigo: #f0555a;
+  --cor-sucesso: #22c55e;
+
+  /* Tag "Principal" (aba Objetivos) — translúcida em vez do rosa claro. */
+  --principal-tag-bg: rgba(240, 85, 90, 0.16);
+
+  /* Fundos das categorias (badges e tags) — translúcidos no escuro. */
+  --cat-estudo-bg: rgba(37, 99, 235, 0.18);
+  --cat-simulado-bg: rgba(249, 115, 22, 0.18);
+  --cat-prova-bg: rgba(229, 72, 77, 0.18);
+  --cat-aula-bg: rgba(124, 58, 237, 0.22);
+  --cat-revisao-bg: rgba(147, 51, 234, 0.22);
+  --cat-evento-bg: rgba(148, 163, 184, 0.18);
+  --cat-meta-bg: rgba(15, 157, 88, 0.22);
+
+  /* Badges dos períodos. */
+  --periodo-manha-bg: rgba(245, 158, 11, 0.16);
+  --periodo-tarde-bg: rgba(249, 115, 22, 0.16);
+  --periodo-noite-bg: rgba(124, 58, 237, 0.22);
+  --periodo-madrugada-bg: rgba(148, 197, 253, 0.14);
+
+  /* Aviso de feriado. */
+  --feriado-bg: rgba(8, 145, 178, 0.14);
+  --feriado-texto: #67d3ea;
+  --feriado-borda: rgba(8, 145, 178, 0.35);
+
+  /* Ícones dos três cards superiores (resumo) — tons dessaturados, "premium".
+     Só os ícones e o fundo do quadradinho; textos e o resto seguem iguais. */
+  --resumo-estudo-icone: #5c8dda;
+  --resumo-estudo-bg: #25364b;
+  --resumo-simulado-icone: #c48a4e;
+  --resumo-simulado-bg: #3d322b;
+  --resumo-prova-icone: #c96a6a;
+  --resumo-prova-bg: #3c2a33;
+}
+
+/* ---- Tema Blossom (feminino, cream + blush) ---------------------------- */
+:root[data-theme='blossom'] {
+  color-scheme: light;
+
+  --cor-bg: #fdfbf8;
+  --cor-superficie: #fffefd;
+  --cor-superficie2: #f3efea;
+
+  --cor-primaria: #2e2a28;
+  --cor-primariaSuave: #4a4441;
+
+  --cor-acento: #e58c8c;
+  --cor-acentoForte: #d97a7a;
+  --cor-acentoClaro: #f0b3b3;
+  --cor-acentoBg: #f8ece9;
+
+  --cor-texto: #2e2a28;
+  --cor-textoSuave: #6f6a66;
+  --cor-textoApagado: #bdafa7;
+  --cor-textoFraco: #cfcac4;
+
+  --cor-borda: #f1ece7;
+  --cor-bordaForte: #e5ddd5;
+  --cor-pontinho: #d8ccc4;
+  --cor-grade: #f1ece7;
+
+  --cor-perigo: #d98c8c;
+  --cor-sucesso: #9bb89a;
+
+  /* Categorias — cor (suave/dessaturada) */
+  --cat-estudo-cor: #e7c8bc;
+  --cat-simulado-cor: #f3b2b0;
+  --cat-prova-cor: #d9c5b6;
+  --cat-aula-cor: #b8c5d6;
+  --cat-evento-cor: #c6d3be;
+  --cat-revisao-cor: #cdbbd4;
+  --cat-meta-cor: #bfd3b8;
+
+  /* Categorias — fundo dos badges/tags (tom quente muito claro) */
+  --cat-estudo-bg: #f6ece7;
+  --cat-simulado-bg: #fbeceb;
+  --cat-prova-bg: #f3ede5;
+  --cat-aula-bg: #ecf0f5;
+  --cat-evento-bg: #eef3ea;
+  --cat-revisao-bg: #f2eef5;
+  --cat-meta-bg: #eef4ec;
+
+  /* Cards superiores (resumo) */
+  --resumo-estudo-icone: #c9b7ac;
+  --resumo-estudo-bg: #f4ece6;
+  --resumo-simulado-icone: #f2b4b1;
+  --resumo-simulado-bg: #faebe9;
+  --resumo-prova-icone: #d4c1b4;
+  --resumo-prova-bg: #f3ece4;
+  --resumo-num-cor: #2e2a28;
+
+  /* Badges de período */
+  --periodo-manha-icone: #f3b2b0;
+  --periodo-manha-bg: #fbeceb;
+  --periodo-tarde-icone: #f3b2b0;
+  --periodo-tarde-bg: #fbeceb;
+  --periodo-noite-icone: #d4c1b4;
+  --periodo-noite-bg: #f3ece4;
+  --periodo-madrugada-icone: #b8c5d6;
+  --periodo-madrugada-bg: #ecf0f5;
+
+  /* Dia selecionado: círculo blush claro com número escuro (assinatura Blossom) */
+  --dia-sel-bg: #f6ece7;
+  --dia-sel-texto: #2e2a28;
+
+  /* Texto dos eventos na célula e horários: suave/escuro em vez de colorido */
+  --evento-cel-cor: #6f6a66;
+  --hora-cor: #2e2a28;
+
+  /* Título do mês: serifado, elegante */
+  --fonte-titulo: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  /* Aviso de feriado (neutro quente) */
+  --feriado-bg: #f3efea;
+  --feriado-texto: #8a7d76;
+  --feriado-borda: #e5ddd5;
+}
+
+/* Aba Objetivos no escuro: as cores de categoria dos "Próximos eventos" ficam
+   berrantes sobre o navy. Aqui suavizamos (só nessa tela) para tons sóbrios,
+   combinando com as cores de objetivo já dessaturadas. */
+:root[data-theme='dark'] .telaObjetivos {
+  --cat-estudo-cor: #6079a6;
+  --cat-simulado-cor: #b78455;
+  --cat-prova-cor: #b06a6d;
+  --cat-aula-cor: #8672ab;
+  --cat-revisao-cor: #9070ad;
+  --cat-evento-cor: #8b96a6;
+  --cat-meta-cor: #5f8a70;
+}
+
+/* ---- Tema Black (preto absoluto, monocromático premium) ---------------- */
+/* Referência: dark mode OLED estilo Notion/Linear/Arc. Fundo preto puro,
+   superfícies quase pretas em camadas, sem nenhuma cor saturada — só escala de
+   cinza e branco. O destaque vem apenas do contraste, não da cor. */
+:root[data-theme='black'] {
+  color-scheme: dark;
+
+  --cor-bg: #000000;
+  --cor-superficie: #101010;
+  --cor-superficie2: #1a1a1a;
+
+  --cor-primaria: #ffffff;
+  --cor-primariaSuave: #d0d0d0;
+
+  /* Acento neutro (cinza claro) — sem azul/verde. */
+  --cor-acento: #d0d0d0;
+  --cor-acentoForte: #ffffff;
+  --cor-acentoClaro: #eaeaea;
+  --cor-acentoBg: #1f1f1f;
+  /* Sobre o acento claro, o texto/ícone precisa ser ESCURO para ter contraste. */
+  --cor-acentoTexto: #101010;
+
+  --cor-texto: #ffffff;
+  --cor-textoSuave: #cfcfcf;
+  --cor-textoApagado: #9a9a9a;
+  --cor-textoFraco: #5f5f5f;
+
+  --cor-borda: rgba(255, 255, 255, 0.08);
+  --cor-bordaForte: #2b2b2b;
+  --cor-pontinho: #444444;
+  --cor-grade: #2b2b2b;
+
+  /* Estados semânticos mantidos monocromáticos (só brilho diferente). */
+  --cor-perigo: #d0d0d0;
+  --cor-sucesso: #eaeaea;
+
+  /* Tag "Principal" (aba Objetivos) — cinza translúcido, sem cor. */
+  --principal-tag-bg: rgba(255, 255, 255, 0.08);
+
+  /* Categorias — cor (tudo cinza claro, mesma identidade visual) */
+  --cat-estudo-cor: #eaeaea;
+  --cat-simulado-cor: #eaeaea;
+  --cat-prova-cor: #eaeaea;
+  --cat-aula-cor: #eaeaea;
+  --cat-evento-cor: #eaeaea;
+  --cat-revisao-cor: #eaeaea;
+  --cat-meta-cor: #eaeaea;
+
+  /* Categorias — fundo dos badges/tags (cinza escuro translúcido) */
+  --cat-estudo-bg: rgba(255, 255, 255, 0.06);
+  --cat-simulado-bg: rgba(255, 255, 255, 0.06);
+  --cat-prova-bg: rgba(255, 255, 255, 0.06);
+  --cat-aula-bg: rgba(255, 255, 255, 0.06);
+  --cat-evento-bg: rgba(255, 255, 255, 0.06);
+  --cat-revisao-bg: rgba(255, 255, 255, 0.06);
+  --cat-meta-bg: rgba(255, 255, 255, 0.06);
+
+  /* Cards superiores (resumo) — quadradinho cinza gradiente, ícone branco */
+  --resumo-estudo-icone: #f4f4f4;
+  --resumo-estudo-bg: #2b2b2b;
+  --resumo-simulado-icone: #f4f4f4;
+  --resumo-simulado-bg: #2b2b2b;
+  --resumo-prova-icone: #f4f4f4;
+  --resumo-prova-bg: #2b2b2b;
+  --resumo-num-cor: #ffffff;
+
+  /* Badges de período — ícone branco, fundo cinza escuro */
+  --periodo-manha-icone: #f4f4f4;
+  --periodo-manha-bg: rgba(255, 255, 255, 0.06);
+  --periodo-tarde-icone: #f4f4f4;
+  --periodo-tarde-bg: rgba(255, 255, 255, 0.06);
+  --periodo-noite-icone: #f4f4f4;
+  --periodo-noite-bg: rgba(255, 255, 255, 0.06);
+  --periodo-madrugada-icone: #f4f4f4;
+  --periodo-madrugada-bg: rgba(255, 255, 255, 0.06);
+
+  /* Dia selecionado: preenchimento neutro discreto (sem cor), número branco.
+     O ícone de "hoje" já ganha o anel claro via --cor-acento. */
+  --dia-sel-bg: rgba(255, 255, 255, 0.14);
+  --dia-sel-texto: #ffffff;
+
+  /* Texto dos eventos na célula e horários: cinza claro neutro */
+  --evento-cel-cor: #eaeaea;
+  --hora-cor: #cfcfcf;
+
+  /* Aviso de feriado (neutro, sem ciano) */
+  --feriado-bg: rgba(255, 255, 255, 0.05);
+  --feriado-texto: #cfcfcf;
+  --feriado-borda: rgba(255, 255, 255, 0.12);
+}
+
+/* ---- Tema Natureza (verde floresta, tons quentes e terrosos) ----------- */
+/* Paleta orgânica: fundos creme quentes, verde floresta como cor principal e
+   categorias em tons naturais. Claro e sereno, foco no estudo. */
+:root[data-theme='natureza'] {
+  color-scheme: light;
+
+  --cor-bg: #f6f4ee;
+  --cor-superficie: #fbfaf7;
+  --cor-superficie2: #f2f0e8;
+
+  --cor-primaria: #2f6b3d;
+  --cor-primariaSuave: #6e8b5a;
+
+  --cor-acento: #2f6b3d;
+  --cor-acentoForte: #245730;
+  --cor-acentoClaro: #6e8b5a;
+  --cor-acentoBg: #e8ede3;
+
+  --cor-texto: #243125;
+  --cor-textoSuave: #657362;
+  --cor-textoApagado: #93a18f;
+  --cor-textoFraco: #bcc5ba;
+
+  --cor-borda: #e8ede3;
+  --cor-bordaForte: #d8e0d0;
+  --cor-pontinho: #a7b79a;
+  --cor-grade: #e8ede3;
+
+  --cor-perigo: #c0492e;
+  --cor-sucesso: #2f6b3d;
+
+  /* Tag "Principal" (aba Objetivos) — verde sálvia suave. */
+  --principal-tag-bg: #e8ede3;
+
+  /* Categorias — cor (natural) e fundo (pastel quente). */
+  --cat-estudo-cor: #3d7a45;
+  --cat-simulado-cor: #37658c;
+  --cat-prova-cor: #c0492e;
+  --cat-aula-cor: #b06a3a;
+  --cat-revisao-cor: #6e8b5a;
+  --cat-evento-cor: #8a9885;
+  --cat-meta-cor: #2f6b3d;
+
+  --cat-estudo-bg: #e6ede0;
+  --cat-simulado-bg: #e3eaf0;
+  --cat-prova-bg: #f4e6df;
+  --cat-aula-bg: #f2e8dd;
+  --cat-revisao-bg: #e8ede3;
+  --cat-evento-bg: #eef0e8;
+  --cat-meta-bg: #e6ede0;
+
+  /* Cards superiores (resumo) — círculos verde floresta, ícone branco. */
+  --resumo-estudo-icone: #ffffff;
+  --resumo-estudo-bg: #2f6b3d;
+  --resumo-simulado-icone: #ffffff;
+  --resumo-simulado-bg: #2f6b3d;
+  --resumo-prova-icone: #ffffff;
+  --resumo-prova-bg: #2f6b3d;
+  --resumo-num-cor: #243125;
+
+  /* Badges de período — ícone verde sobre fundo sálvia. */
+  --periodo-manha-icone: #2f6b3d;
+  --periodo-manha-bg: #e8ede3;
+  --periodo-tarde-icone: #2f6b3d;
+  --periodo-tarde-bg: #e8ede3;
+  --periodo-noite-icone: #2f6b3d;
+  --periodo-noite-bg: #e8ede3;
+  --periodo-madrugada-icone: #6e8b5a;
+  --periodo-madrugada-bg: #e8ede3;
+
+  /* Dia selecionado: círculo verde sálvia com número escuro. */
+  --dia-sel-bg: #d8e0d0;
+  --dia-sel-texto: #243125;
+
+  /* Horários da agenda em tom escuro (não colorido). */
+  --hora-cor: #243125;
+
+  /* Aviso de feriado (verde suave). */
+  --feriado-bg: #eef0e8;
+  --feriado-texto: #657362;
+  --feriado-borda: #d8e0d0;
+}
+
+/* ---- Animação dos modais (ao abrir com o +) ---------------------------- */
+@keyframes modalFundoIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalPainelIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.modalFundo {
+  animation: modalFundoIn 0.18s ease;
+}
+.modalPainel {
+  animation: modalPainelIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Bottom sheet: desliza de baixo para cima. */
+@keyframes sheetIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.bottomSheet {
+  animation: sheetIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Botão flutuante de adicionar: leve resposta ao toque. */
+.fab {
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+}
+.fab:hover {
+  filter: brightness(1.05);
+}
+.fab:active {
+  transform: scale(0.9);
+}
+
+/* Esconde a barra de rolagem nas colunas do seletor de hora. */
+.sem-barra {
+  scrollbar-width: none;
+}
+.sem-barra::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cartão do widget: cantos bem arredondados, superfície levemente distinta do
+     fundo, borda discreta. Nada de gradiente ou sombra forte. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners android:radius="24dp" />
+    <solid android:color="@color/orbit_surface" />
+    <stroke android:width="1dp" android:color="@color/orbit_border" />
+</shape>

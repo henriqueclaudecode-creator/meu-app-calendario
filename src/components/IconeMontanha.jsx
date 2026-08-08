@@ -1,0 +1,20 @@
+// Ícone da montanha com o alpinista sentado no cume e a bandeira — traçado exato
+// do logotipo enviado pelo usuário (ícone/icone_montanha.svg). Silhueta cheia
+// (fill) num único tom, então se adapta ao tema: basta passar `cor` (padrão:
+// currentColor) — branco no selo dourado, cinza no título, etc.
+
+export function IconeMontanha({ tamanho = 22, cor = 'currentColor', style }) {
+  return (
+    <svg
+      width={tamanho}
+      height={tamanho}
+      viewBox="205 278 850 615"
+      fill={cor}
+      xmlns="http://www.w3.org/2000/svg"
+      style={style}
+      aria-hidden="true"
+    >
+      <path d="M 1040,871 L872,645 L868,642 L861,643 L823,675 L818,676 L718,535 L708,525 L700,521 L700,375 L714,370 L728,370 L739,373 L761,386 L775,390 L801,389 L814,385 L817,381 L798,373 L789,366 L803,356 L814,345 L814,342 L788,343 L772,340 L763,335 L747,319 L735,312 L718,308 L701,310 L700,305 L703,302 L703,296 L700,292 L696,291 L690,295 L689,299 L693,306 L693,517 L687,517 L687,508 L675,503 L669,497 L669,492 L661,485 L661,479 L645,437 L646,435 L650,437 L651,444 L655,444 L654,453 L658,453 L660,441 L654,429 L638,420 L629,418 L615,405 L609,394 L601,387 L605,382 L612,383 L614,381 L616,371 L619,369 L616,360 L626,358 L630,353 L618,351 L605,338 L594,337 L586,340 L580,346 L577,355 L580,368 L584,374 L583,377 L575,379 L570,383 L566,376 L560,373 L547,372 L540,374 L533,383 L532,394 L525,402 L527,407 L518,430 L518,461 L521,468 L530,474 L547,476 L551,487 L561,496 L546,504 L538,512 L450,651 L446,654 L432,652 L419,654 L224,871 L224,874 L1039,875 Z" />
+    </svg>
+  );
+}

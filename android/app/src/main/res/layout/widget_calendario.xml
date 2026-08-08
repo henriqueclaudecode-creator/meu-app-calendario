@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget "Calendário" do Orbit (4x4). Cartão limpo com o mês, a linha de dias da
+     semana e a grade com os chips de evento. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_card_bg"
+    android:padding="14dp">
+
+    <!-- Cabeçalho: nome do mês -->
+    <TextView
+        android:id="@+id/cal_mes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Ago 2026"
+        android:textColor="@color/orbit_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp" />
+
+    <!-- Linha dos dias da semana -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp">
+
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="SEG" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="TER" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="QUA" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="QUI" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="SEX" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="SÁB" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="DOM" android:textColor="@color/orbit_text_muted" android:textSize="9sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Grade dos dias (coleção) -->
+    <GridView
+        android:id="@+id/cal_grade"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="7"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:gravity="center" />
+
+    <!-- Rodapé Premium (mostrado só para não assinantes) -->
+    <TextView
+        android:id="@+id/tv_premium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:background="@drawable/widget_icon_circle"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="🔒 Recurso Premium — assine o Orbi para desbloquear"
+        android:textColor="@color/orbit_text_soft"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</LinearLayout>

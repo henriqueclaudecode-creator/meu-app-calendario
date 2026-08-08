@@ -1,0 +1,11 @@
+{
+  "appId": "com.orbit.calendario",
+  "appName": "Orbi",
+  "webDir": "dist",
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": true,
+      "providers": ["google.com"]
+    }
+  }
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget GRÁTIS "Agenda de Hoje" do Orbit. Lista os eventos do dia numa linha
+     do tempo limpa. Disponível para qualquer usuário (sem trava premium). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_card_bg"
+    android:padding="16dp">
+
+    <!-- Cabeçalho -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Agenda de Hoje"
+            android:textColor="@color/orbit_text"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ag_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4 de ago • Seg"
+            android:textColor="@color/orbit_text_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/orbit_border" />
+
+    <!-- Lista de eventos -->
+    <ListView
+        android:id="@+id/ag_lista"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
+    <!-- Estado vazio -->
+    <TextView
+        android:id="@+id/ag_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Nada marcado hoje.\nToque para abrir o Orbi."
+        android:textColor="@color/orbit_text_soft"
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/orbit_border" />
+
+    <TextView
+        android:id="@+id/ag_rodape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="5 eventos hoje"
+        android:textColor="@color/orbit_text_soft"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+</LinearLayout>

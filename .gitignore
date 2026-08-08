@@ -1,0 +1,26 @@
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.local
+.DS_Store
+
+# --- Segredos de assinatura / release Android (NUNCA versionar) ---
+android/keystore.properties
+*.jks
+*.keystore
+
+# --- Firebase (config nativa de produção) ---
+android/app/google-services.json
+
+# --- Build Android ---
+android/app/build/
+android/build/
+android/.gradle/
+android/app/release/
+android/app/*.aab
+android/app/*.apk
+
+# CHAVE API.txt contém credencial — não versionar
+CHAVE API.txt

@@ -1,0 +1,19 @@
+ÍCONES DO APLICATIVO (necessários para gerar o app para a Play Store)
+=====================================================================
+
+Coloque nesta pasta (public/) os arquivos do logotipo do aplicativo com
+EXATAMENTE estes nomes e tamanhos (PNG, fundo já incluso na arte):
+
+  icone-app-192.png            → 192 x 192 px  (ícone padrão / favicon)
+  icone-app-512.png            → 512 x 512 px  (ícone grande)
+  icone-app-maskable-512.png   → 512 x 512 px  (versão "maskable": deixe a
+                                  arte dentro dos 80% centrais, com margem de
+                                  segurança em volta, pois o Android recorta
+                                  o ícone em várias formas — círculo, etc.)
+
+Basta exportar o logotipo (a arte que você enviou) nesses tamanhos e salvar
+aqui. O index.html e o manifest.webmanifest já apontam para esses arquivos.
+
+Para a Play Store (via TWA / Bubblewrap ou Capacitor) ainda serão gerados
+depois os ícones nativos (mipmap) e a "feature graphic" (1024 x 500) — isso
+fica para a etapa de empacotamento.

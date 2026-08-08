@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta Orbit — tema claro. Espelha src/lib/tema.js -->
+    <color name="orbit_bg">#F6F9FD</color>
+    <color name="orbit_surface">#FFFFFF</color>
+    <color name="orbit_surface2">#EEF3FA</color>
+    <color name="orbit_border">#E4EAF2</color>
+    <color name="orbit_text">#1F2937</color>
+    <color name="orbit_text_soft">#6B7280</color>
+    <color name="orbit_text_muted">#9AA6B2</color>
+    <color name="orbit_accent">#2563EB</color>
+    <color name="orbit_accent_bg">#EAF1FE</color>
+</resources>

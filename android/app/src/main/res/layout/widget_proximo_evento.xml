@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget "Próximo Evento" do Orbit.
+     Segue as diretrizes: cartão arredondado, muito espaço, cores discretas,
+     azul só no destaque (contagem). Os textos são preenchidos em runtime pelo
+     ProximoEventoWidget a partir dos dados publicados pelo app. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_card_bg"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRÓXIMO EVENTO"
+        android:textColor="@color/orbit_text_muted"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.06" />
+
+    <!-- Estado vazio -->
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Nada marcado por aqui.\nSeus próximos eventos aparecem aqui."
+        android:textColor="@color/orbit_text_soft"
+        android:textSize="13sp" />
+
+    <!-- Conteúdo do evento -->
+    <LinearLayout
+        android:id="@+id/box_conteudo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/ic_categoria"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/widget_icon_circle"
+            android:padding="16dp"
+            android:src="@drawable/ic_widget_event"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_hora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14:00"
+                android:textColor="@color/orbit_text"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_titulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Consulta médica"
+                android:textColor="@color/orbit_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/box_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/dot_local"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:src="@drawable/widget_dot"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/tv_local"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="Clínica Vida"
+                    android:textColor="@color/orbit_text_soft"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Divisória -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/orbit_border" />
+
+    <!-- Rodapé: contagem (azul) + data -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_widget_clock"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/tv_contagem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Em 38 minutos"
+            android:textColor="@color/orbit_accent"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoje, 4 de ago."
+            android:textColor="@color/orbit_text_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Rodapé Premium (mostrado só para não assinantes) -->
+    <TextView
+        android:id="@+id/tv_premium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="8dp"
+        android:background="@drawable/widget_icon_circle"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="🔒 Recurso Premium — assine o Orbi para desbloquear"
+        android:textColor="@color/orbit_text_soft"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</LinearLayout>

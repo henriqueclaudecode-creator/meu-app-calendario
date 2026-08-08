@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Regras do Firestore.
+//
+// Princípio: o cliente lê o PRÓPRIO perfil, mas NUNCA escreve o campo `premium`
+// — quem grava o status Premium é só o backend (Cloud Functions via Admin SDK,
+// depois de validar a compra na Play). Isso impede o usuário forjar o Premium.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Perfil do usuário: users/{uid}
+    match /users/{uid} {
+      // Só o dono lê o próprio documento.
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      // O dono pode criar/atualizar o próprio perfil (nome, email...),
+      // mas não pode tocar no campo `premium`.
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['premium']);
+
+      // O dono pode apagar o próprio documento (exclusão de conta).
+      allow delete: if request.auth != null && request.auth.uid == uid;
+
+      // O campo `premium` é escrito SÓ pelo Admin SDK (Cloud Functions),
+      // que ignora estas regras.
+    }
+
+    // Qualquer outra coleção (ex.: cache de feriados) fica bloqueada para o
+    // cliente — é servida apenas pelas Cloud Functions.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

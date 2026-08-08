@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Orbi</string>
+    <string name="title_activity_main">Orbi</string>
+    <string name="package_name">com.orbit.calendario</string>
+    <string name="custom_url_scheme">com.orbit.calendario</string>
+    <string name="widget_proximo_desc">Mostra o seu próximo evento na tela inicial.</string>
+    <string name="widget_contagem_desc">Contagem regressiva para os seus eventos importantes.</string>
+    <string name="widget_calendario_desc">O calendário do mês com os seus eventos.</string>
+    <string name="widget_agenda_desc">A sua agenda de hoje, evento por evento. (Grátis)</string>
+</resources>
