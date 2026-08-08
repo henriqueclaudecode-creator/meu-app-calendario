@@ -18,6 +18,10 @@ body,
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
+  /* Sem a antiga barra de abas, o conteúdo começa no topo — respeita a barra
+     de status (Android 15 edge-to-edge). */
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
 }
 #root > nav {
   flex-shrink: 0;
@@ -397,6 +401,15 @@ button {
 }
 .bottomSheet {
   animation: sheetIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Menu de navegação: desce do topo por cima do conteúdo. */
+@keyframes menuDesceIn {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+.menuDesce {
+  animation: menuDesceIn 0.26s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Botão flutuante de adicionar: leve resposta ao toque. */

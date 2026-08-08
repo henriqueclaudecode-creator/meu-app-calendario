@@ -5,6 +5,8 @@
 // geradas a partir dos próprios dados — quase uma autobiografia do que a pessoa
 // organizou.
 
+import BotaoMenu from '../components/BotaoMenu';
+import PreviewPremium from '../components/PreviewPremium';
 import { useEffect, useState } from 'react';
 import { listarEventos } from '../db/eventos';
 import { listarCategorias } from '../db/categorias';
@@ -117,7 +119,7 @@ function IconeConquista({ id, cor }) {
   return <IconeCat id={id} tamanho={22} cor="#fff" strokeWidth={2} />;
 }
 
-function MinhaHistoria() {
+function MinhaHistoria({ onAbrirMenu }) {
   const hoje = hojeISO();
   const [eventos, setEventos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -151,10 +153,15 @@ function MinhaHistoria() {
 
   return (
     <div style={estilos.pagina}>
-      <div style={estilos.cabecalho}>
-        <h1 style={estilos.titulo}>Minha História <IconeMontanha tamanho={34} cor="#bf9540" style={estilos.montanhaTitulo} /></h1>
-        <p style={estilos.subtitulo}>Sua jornada, dia após dia</p>
+      <div style={{ ...estilos.cabecalho, display: 'flex', alignItems: 'center', gap: 4 }}>
+        <BotaoMenu onAbrir={onAbrirMenu} />
+        <div>
+          <h1 style={estilos.titulo}>Minha História <IconeMontanha tamanho={34} cor="#bf9540" style={estilos.montanhaTitulo} /></h1>
+          <p style={estilos.subtitulo}>Sua jornada, dia após dia</p>
+        </div>
       </div>
+
+      <PreviewPremium titulo="Minha História" descricao="Sua linha do tempo completa e as conquistas geradas a partir da sua própria rotina.">
 
       <div style={estilos.filtros} className="sem-barra">
         {FILTROS.map((f) => (
@@ -220,6 +227,7 @@ function MinhaHistoria() {
           ))}
         </>
       )}
+      </PreviewPremium>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { mapaFeriados } from '../db/feriados';
 import { lerLocal } from '../lib/preferencias';
 import { publicarWidget } from '../lib/widget';
 import { usePremium } from '../lib/PremiumContext';
+import BotaoMenu from '../components/BotaoMenu';
 import { cores, sombra, sombraSuave, raio, raioGrande } from '../lib/tema';
 
 const COR_FERIADO = '#0891b2';
@@ -111,7 +112,7 @@ const PERIODOS = [
   { id: 'madrugada', rotulo: 'Madrugada', cor: 'var(--periodo-madrugada-icone, #93c5fd)', bg: 'var(--periodo-madrugada-bg, #1e293b)' },
 ];
 
-function Agenda() {
+function Agenda({ onAbrirMenu }) {
   const hoje = hojeISO();
   const [selecionado, setSelecionado] = useState(hoje);
   const [modo, setModo] = useState('semana'); // 'semana' | 'mes'
@@ -220,9 +221,12 @@ function Agenda() {
   return (
     <div style={estilos.pagina}>
       <div style={estilos.cabecalho}>
-        <div>
-          <h1 style={estilos.titulo}>Agenda</h1>
-          <p style={estilos.subtitulo}>Seus compromissos, dia a dia</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <BotaoMenu onAbrir={onAbrirMenu} />
+          <div>
+            <h1 style={estilos.titulo}>Agenda</h1>
+            <p style={estilos.subtitulo}>Seus compromissos, dia a dia</p>
+          </div>
         </div>
         <button style={estilos.lupa} onClick={() => setBusca(true)} aria-label="Pesquisar eventos">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.2-3.2" /></svg>

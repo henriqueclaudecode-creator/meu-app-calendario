@@ -51,7 +51,7 @@ export default function PainelPro({ onAssinar, onFechar }) {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={cores.acento} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="8" width="18" height="4" rx="1" /><path d="M5 12v9h14v-9M12 8v13M12 8S10.5 3 7.5 4.5 9 8 12 8zM12 8s1.5-5 4.5-3.5S15 8 12 8z" /></svg>
         </span>
         <div>
-          <div style={estilos.bannerTitulo}>Experimente grátis por 7 dias.</div>
+          <div style={estilos.bannerTitulo}>7 dias grátis para testar tudo</div>
           <div style={estilos.bannerSub}>{sel.preco}{sel.periodo} após o período de teste. Cancele antes do fim para não ser cobrado.</div>
         </div>
       </div>
@@ -105,10 +105,10 @@ const estilos = {
   subtitulo: { fontSize: 13, color: cores.textoSuave, marginTop: 3, fontWeight: 500, lineHeight: 1.4 },
   marca: { color: cores.acento, fontWeight: 700 },
 
-  banner: { display: 'flex', alignItems: 'center', gap: 10, background: cores.acentoBg, borderRadius: raio, padding: '10px 12px', marginBottom: 16 },
+  banner: { display: 'flex', alignItems: 'center', gap: 12, background: cores.acentoBg, border: `1px solid ${cores.acento}22`, borderRadius: raioGrande, padding: '14px 16px', marginBottom: 16 },
   bannerIcone: { flexShrink: 0, display: 'flex' },
-  bannerTitulo: { fontSize: 13.5, fontWeight: 800, color: cores.acento, letterSpacing: -0.2 },
-  bannerSub: { fontSize: 11.5, color: cores.textoSuave, marginTop: 2, fontWeight: 500, lineHeight: 1.4 },
+  bannerTitulo: { fontSize: 17, fontWeight: 900, color: cores.acento, letterSpacing: -0.4 },
+  bannerSub: { fontSize: 12, color: cores.textoSuave, marginTop: 3, fontWeight: 500, lineHeight: 1.4 },
 
   secaoTitulo: { fontSize: 12, fontWeight: 800, letterSpacing: 0.3, textTransform: 'uppercase', color: cores.textoApagado, margin: '0 0 9px 2px' },
   grade: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 },

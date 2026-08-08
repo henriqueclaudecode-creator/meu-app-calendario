@@ -2,6 +2,7 @@
 // exportar/importar os dados e limpar tudo. Espaço para crescer (perfil, tema,
 // notificações, sincronização na nuvem...).
 
+import BotaoMenu from '../components/BotaoMenu';
 import { useEffect, useState } from 'react';
 import { lerLocal, salvarLocal } from '../lib/preferencias';
 import { lerTema, salvarTema } from '../lib/aparencia';
@@ -13,6 +14,7 @@ import { permissaoConcedida, pedirPermissao, sincronizarTodos } from '../lib/not
 import { listarEventos } from '../db/eventos';
 import PainelPro from '../components/PainelPro';
 import { IconeOrbi } from '../components/IconeOrbi';
+import { IconePro } from '../components/IconePro';
 import { cores, sombra, sombraSuave, raio, raioGrande, raioPequeno } from '../lib/tema';
 
 // Cada tema mostra um preview real das suas cores (fundo · superfície · acento)
@@ -25,7 +27,7 @@ const TEMAS = [
   { id: 'natureza', nome: 'Natureza', desc: 'Verde floresta', bg: '#f6f4ee', superficie: '#e8ede3', acento: '#2f6b3d' },
 ];
 
-function Mais() {
+function Mais({ onAbrirMenu }) {
   const [aviso, setAviso] = useState('');
   const [confirmandoDelete, setConfirmandoDelete] = useState(false);
   const [tema, setTema] = useState(lerTema());
@@ -92,6 +94,11 @@ function Mais() {
 
   return (
     <div style={estilos.pagina}>
+      <div style={estilos.cabecalhoMais}>
+        <BotaoMenu onAbrir={onAbrirMenu} />
+        <h1 style={estilos.tituloMais}>Configurações</h1>
+      </div>
+
       {/* Conta — login com Google (preparado para o Firebase) */}
       <div style={estilos.cartao}>
         <div style={estilos.grupoTitulo}>Conta</div>
@@ -175,7 +182,7 @@ function Mais() {
                     <span style={{ ...estilos.temaSwatchAcento, background: t.acento }} />
                   </span>
                   {bloqueado ? (
-                    <span style={estilos.temaCoroa} aria-hidden="true">👑</span>
+                    <span style={estilos.temaCoroa} aria-hidden="true"><IconePro tamanho={15} cor={cores.acento} /></span>
                   ) : (
                     <span style={{ ...estilos.temaRadio, ...(ativo ? estilos.temaRadioAtivo : null) }}>
                       {ativo && <span style={estilos.temaRadioPonto} />}
@@ -275,6 +282,8 @@ function Mais() {
 
 const estilos = {
   pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  cabecalhoMais: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 10px' },
+  tituloMais: { margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)' },
   cabecalho: { padding: '4px 2px 16px' },
   titulo: { fontSize: 30, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0 },
   subtitulo: { fontSize: 14, color: cores.textoSuave, margin: '4px 0 0', fontWeight: 500 },

@@ -15,6 +15,7 @@ import { IconeCat } from '../components/IconeCat';
 import NovoEvento from '../components/NovoEvento';
 import NovaCategoria from '../components/NovaCategoria';
 import MenuCriar from '../components/MenuCriar';
+import BotaoMenu from '../components/BotaoMenu';
 import NovoAniversario from '../components/NovoAniversario';
 import BuscaEventos from '../components/BuscaEventos';
 import { IconePeriodo } from '../components/IconePeriodo';
@@ -140,7 +141,7 @@ function rotuloContagem(dias) {
   return `há ${-dias} dias`;
 }
 
-function Calendario() {
+function Calendario({ onAbrirMenu }) {
   const hoje = hojeISO();
   const hojeDate = dataLocal(hoje);
 
@@ -263,8 +264,9 @@ function Calendario() {
 
   return (
     <div style={estilos.pagina}>
-      {/* Cabeçalho: título do período, setas e a lupa de pesquisa. */}
+      {/* Cabeçalho: menu, título do período, setas e a lupa de pesquisa. */}
       <div style={estilos.cabecalho}>
+        <BotaoMenu onAbrir={onAbrirMenu} />
         <button style={estilos.setaMes} onClick={() => navegar(-1)} aria-label="Anterior">‹</button>
         <div style={estilos.mesTitulo}>{tituloTopo}</div>
         <button style={estilos.setaMes} onClick={() => navegar(1)} aria-label="Próximo">›</button>

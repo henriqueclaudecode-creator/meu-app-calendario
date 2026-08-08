@@ -5,6 +5,8 @@
 // ligam tudo ao centro, sobre órbitas concêntricas. Não é um dashboard: é para
 // dar a sensação de olhar para a própria vida.
 
+import BotaoMenu from '../components/BotaoMenu';
+import PreviewPremium from '../components/PreviewPremium';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { listarEventos } from '../db/eventos';
 import { listarCategorias } from '../db/categorias';
@@ -69,7 +71,7 @@ function maiorSequencia(datasIso) {
   return melhor;
 }
 
-function MapaVida() {
+function MapaVida({ onAbrirMenu }) {
   const hoje = hojeISO();
   const [eventos, setEventos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -161,10 +163,15 @@ function MapaVida() {
 
   return (
     <div style={estilos.pagina}>
-      <div style={estilos.cabecalho}>
-        <h1 style={estilos.titulo}>Mapa da Vida</h1>
-        <p style={estilos.subtitulo}>Uma visão geral da sua vida organizada</p>
+      <div style={{ ...estilos.cabecalho, display: 'flex', alignItems: 'center', gap: 4, textAlign: 'left' }}>
+        <BotaoMenu onAbrir={onAbrirMenu} />
+        <div>
+          <h1 style={estilos.titulo}>Mapa da Vida</h1>
+          <p style={estilos.subtitulo}>Uma visão geral da sua vida organizada</p>
+        </div>
       </div>
+
+      <PreviewPremium titulo="Mapa da Vida" descricao="Visualize sua vida como uma constelação: cada área vira um planeta, do mais presente ao mais distante.">
 
       {/* Filtro de período */}
       <div style={estilos.filtros} className="sem-barra">
@@ -247,6 +254,7 @@ function MapaVida() {
           <Tile valor={seqGeral} rotulo="Maior sequência" />
         </div>
       </div>
+      </PreviewPremium>
 
       {detalhe && <DetalheEtiqueta n={detalhe} onFechar={() => setDetalhe(null)} />}
     </div>

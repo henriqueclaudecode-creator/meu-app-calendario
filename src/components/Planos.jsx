@@ -47,8 +47,8 @@ export default function Planos({ selecionado, onSelecionar }) {
           <span style={estilos.iconeBox}><IconeEscudo /></span>
           <div style={estilos.meio}>
             <div style={estilos.rotulo}>{anual.rotulo}</div>
-            <div style={estilos.precoLinha}><span style={estilos.preco}>{anual.preco}</span><span style={estilos.periodo}>{anual.periodo}</span></div>
-            <div style={estilos.equivalente}>{anual.equivalente}</div>
+            <div style={estilos.trialDestaque}>7 dias grátis</div>
+            <div style={estilos.depois}>depois {anual.preco}{anual.periodo} · {anual.equivalente}</div>
             <div style={estilos.pillEconomia}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 2.8 12V4.8A2 2 0 0 1 4.8 2.8H12a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.8z" /><circle cx="7.5" cy="7.5" r="1" /></svg>
               {anual.economia}
@@ -68,7 +68,8 @@ export default function Planos({ selecionado, onSelecionar }) {
           <span style={estilos.iconeBox}><IconeCalendario /></span>
           <div style={estilos.meio}>
             <div style={estilos.rotulo}>{mensal.rotulo}</div>
-            <div style={estilos.precoLinha}><span style={estilos.preco}>{mensal.preco}</span><span style={estilos.periodo}>{mensal.periodo}</span></div>
+            <div style={estilos.trialDestaque}>7 dias grátis</div>
+            <div style={estilos.depois}>depois {mensal.preco}{mensal.periodo}</div>
           </div>
           <Radio ativo={selecionado === 'mensal'} />
         </div>
@@ -87,6 +88,8 @@ const estilos = {
   iconeBox: { flexShrink: 0, width: 44, height: 44, borderRadius: 12, background: cores.acentoBg, display: 'flex', alignItems: 'center', justifyContent: 'center' },
   meio: { flex: 1, minWidth: 0 },
   rotulo: { fontSize: 14, fontWeight: 800, color: cores.texto },
+  trialDestaque: { fontSize: 18, fontWeight: 800, letterSpacing: -0.4, color: cores.acento, marginTop: 2 },
+  depois: { fontSize: 12, fontWeight: 600, color: cores.textoSuave, marginTop: 2 },
   precoLinha: { display: 'flex', alignItems: 'baseline', gap: 3, marginTop: 1 },
   preco: { fontSize: 23, fontWeight: 800, letterSpacing: -0.6, color: cores.texto },
   periodo: { fontSize: 13.5, fontWeight: 600, color: cores.textoSuave },

@@ -4,7 +4,8 @@ import Agenda from './screens/Agenda';
 import MapaVida from './screens/MapaVida';
 import MinhaHistoria from './screens/MinhaHistoria';
 import Mais from './screens/Mais';
-import BarraNavegacao from './components/BarraNavegacao';
+import MenuLateral from './components/MenuLateral';
+import { usePremium } from './lib/PremiumContext';
 
 const TELAS = {
   calendario: Calendario,
@@ -16,12 +17,23 @@ const TELAS = {
 
 export default function App() {
   const [aba, setAba] = useState('calendario');
+  const [menuAberto, setMenuAberto] = useState(false);
+  const { premium } = usePremium() ?? {};
   const Tela = TELAS[aba] ?? Calendario;
+
+  const abrirMenu = () => setMenuAberto(true);
 
   return (
     <>
-      <BarraNavegacao ativa={aba} onMudar={setAba} />
-      <Tela />
+      <Tela onAbrirMenu={abrirMenu} />
+      {menuAberto && (
+        <MenuLateral
+          ativa={aba}
+          premium={premium}
+          onNavegar={(id) => setAba(id)}
+          onFechar={() => setMenuAberto(false)}
+        />
+      )}
     </>
   );
 }
