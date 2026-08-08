@@ -221,9 +221,12 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
       local,
       anexos,
     };
+    // Na criação, inclui o dia principal (escolhido no formulário) + os dias
+    // marcados. Na edição, só os dias extras (o original já existe nesse dia).
+    const datas = editando ? diasDuplicar : [data, ...diasDuplicar];
     try {
-      await criarEventoEmDatas(dados, diasDuplicar);
-      await onSalvo?.(diasDuplicar[0]);
+      await criarEventoEmDatas(dados, datas);
+      await onSalvo?.(datas[0]);
       onFechar();
     } catch {
       setErro('Não deu para duplicar. Tente de novo.');
@@ -581,17 +584,17 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
           {salvando ? 'Salvando…' : 'Salvar'}
         </button>
 
-        {editando && !confirmandoExcluir && !duplicando && (
+        {!confirmandoExcluir && !duplicando && (
           <button style={estilos.duplicar} onClick={() => { setDuplicando(true); setDiasDuplicar([]); setErro(''); }} disabled={salvando}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
-            Duplicar {ehEvento ? 'evento' : 'compromisso'}
+            {editando ? `Duplicar ${ehEvento ? 'evento' : 'compromisso'}` : 'Criar em vários dias'}
           </button>
         )}
 
         {duplicando && (
           <div style={estilos.dupPainel}>
-            <div style={estilos.dupTitulo}>Duplicar para quais dias?</div>
-            <div style={estilos.dupSub}>Toque nos dias em que quer repetir. Você pode escolher vários.</div>
+            <div style={estilos.dupTitulo}>{editando ? 'Duplicar para quais dias?' : 'Criar também em quais dias?'}</div>
+            <div style={estilos.dupSub}>{editando ? 'Toque nos dias em que quer repetir. Você pode escolher vários.' : 'Será criado no dia escolhido acima e também nos dias que você marcar aqui.'}</div>
             <div style={estilos.dupGrade}>
               {proximosDias(data, 42).map((d) => {
                 const sel = diasDuplicar.includes(d.iso);
@@ -612,7 +615,9 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
             <div style={estilos.dupAcoes}>
               <button type="button" style={estilos.cancelarPeq} onClick={() => { setDuplicando(false); setDiasDuplicar([]); }}>Cancelar</button>
               <button type="button" style={estilos.dupConfirma} onClick={confirmarDuplicar} disabled={salvando || diasDuplicar.length === 0}>
-                Duplicar{diasDuplicar.length ? ` (${diasDuplicar.length})` : ''}
+                {editando
+                  ? `Duplicar${diasDuplicar.length ? ` (${diasDuplicar.length})` : ''}`
+                  : `Criar${diasDuplicar.length ? ` (${diasDuplicar.length + 1})` : ''}`}
               </button>
             </div>
           </div>
