@@ -32,7 +32,7 @@ function IconeRecurso({ id }) {
 
 export default function PainelPro({ onAssinar, onFechar }) {
   const [plano, setPlano] = useState('anual');
-  const anual = PLANOS.anual;
+  const sel = PLANOS[plano];
 
   return (
     <div style={estilos.pagina}>
@@ -52,7 +52,7 @@ export default function PainelPro({ onAssinar, onFechar }) {
         </span>
         <div>
           <div style={estilos.bannerTitulo}>Experimente grátis por 7 dias.</div>
-          <div style={estilos.bannerSub}>Depois, {anual.preco}{anual.periodo}. Cancele antes do fim para não ser cobrado.</div>
+          <div style={estilos.bannerSub}>{sel.preco}{sel.periodo} após o período de teste. Cancele antes do fim para não ser cobrado.</div>
         </div>
       </div>
 
@@ -75,9 +75,15 @@ export default function PainelPro({ onAssinar, onFechar }) {
       {/* CTA */}
       <button style={estilos.cta} onClick={() => onAssinar(plano)}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
-        Experimente o Orbi Pro grátis por 7 dias
+        Começar teste grátis
       </button>
       {onFechar && <button style={estilos.agora} onClick={onFechar}>Agora não</button>}
+
+      {/* Aviso de cobrança */}
+      <div style={estilos.aviso}>
+        Você não será cobrado durante os 7 dias. Após o período de teste, sua assinatura
+        será renovada automaticamente por {sel.preco}{sel.periodo}, salvo cancelamento.
+      </div>
 
       {/* Rodapé */}
       <div style={estilos.rodape}>
@@ -113,6 +119,7 @@ const estilos = {
   planosWrap: { marginBottom: 14 },
   cta: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, padding: '14px', border: 'none', borderRadius: raio, background: cores.acento, color: cores.acentoTexto, fontSize: 14.5, fontWeight: 800, cursor: 'pointer', letterSpacing: -0.2 },
   agora: { width: '100%', marginTop: 6, padding: '10px', border: 'none', borderRadius: raio, background: 'transparent', color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer' },
+  aviso: { fontSize: 11, lineHeight: 1.45, fontWeight: 500, color: cores.textoApagado, textAlign: 'center', margin: '10px 4px 0' },
   rodape: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 11.5, fontWeight: 600, color: cores.textoApagado, margin: '12px 0 3px', textAlign: 'center' },
   rodapeGoogle: { textAlign: 'center', fontSize: 11, color: cores.textoFraco, fontWeight: 500 },
 };

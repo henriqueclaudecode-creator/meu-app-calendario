@@ -1,24 +1,20 @@
-// Assinatura Premium do Orbi — teste grátis de 7 dias + planos.
+// Assinatura Premium do Orbi.
 //
-// Regras (ver conceito do produto):
-//   • Ao abrir o app pela 1ª vez começa o teste grátis de 7 dias.
-//   • Durante o teste: acesso total (sem cadeados).
-//   • Depois do teste: recursos Premium continuam VISÍVEIS, só que com um selo
-//     e, ao tocar, abrem o paywall (bottom sheet). Nada é escondido.
-//   • Assinando (mensal/anual): volta a ser Premium.
+// Modelo (decisão de produto):
+//   • O usuário começa no nível GRÁTIS (recursos Pro visíveis, mas bloqueados).
+//   • O teste grátis de 7 dias faz parte da ASSINATURA (oferta de free trial da
+//     Google Play): ao assinar, os 7 primeiros dias não são cobrados; se não
+//     cancelar, renova automaticamente no preço do plano.
+//   • Não existe mais "teste automático" liberando tudo na 1ª abertura.
 //
 // A cobrança real é feita pelo RevenueCat (ver ./billing.js). Quando o billing
 // está disponível (app instalado + chave configurada), o estado de "assinante"
-// vem do entitlement "premium" do RevenueCat. Sem billing (navegador/dev), cai
-// no modo LOCAL (stub em localStorage) para o app continuar utilizável.
+// vem do entitlement "premium". Sem billing (navegador/dev), cai no modo LOCAL
+// (stub em localStorage) só para conseguir testar a UI desbloqueada.
 
 import * as Billing from './billing';
 
-const CHAVE_INICIO = 'orbi.trialInicio';    // ISO de quando o teste começou
 const CHAVE_PLANO = 'orbi.plano';           // null | 'mensal' | 'anual' (stub local)
-const CHAVE_MSG_FIM = 'orbi.trialFimVisto';  // '1' depois de mostrar a msg única
-
-export const DIAS_TRIAL = 7;
 
 export const PLANOS = {
   mensal: { id: 'mensal', rotulo: 'Mensal', preco: 'R$ 12,90', periodo: '/mês' },
@@ -27,6 +23,9 @@ export const PLANOS = {
     equivalente: 'Apenas R$ 7,49/mês', economia: 'Economize 42%', popular: true,
   },
 };
+
+// Dias do teste grátis (oferta de free trial da assinatura na Play).
+export const DIAS_TRIAL = 7;
 
 export const BENEFICIOS = ['Todos os temas', 'Minha História', 'Mapa da Vida'];
 
@@ -50,24 +49,6 @@ export async function iniciarBillingSeNecessario() {
   } catch { /* silencioso — mantém stub local */ }
 }
 
-function garantirInicio() {
-  if (!localStorage.getItem(CHAVE_INICIO)) {
-    localStorage.setItem(CHAVE_INICIO, new Date().toISOString());
-  }
-}
-
-// Chamado no boot para marcar o começo do teste.
-export function iniciarTrialSeNecessario() {
-  garantirInicio();
-}
-
-export function diasRestantes() {
-  garantirInicio();
-  const inicio = new Date(localStorage.getItem(CHAVE_INICIO));
-  const passados = Math.floor((Date.now() - inicio.getTime()) / 86400000);
-  return Math.max(0, DIAS_TRIAL - passados);
-}
-
 // Plano do stub local (só quando não há billing real).
 function planoLocal() {
   return localStorage.getItem(CHAVE_PLANO) || null;
@@ -79,19 +60,20 @@ export function planoAtual() {
   return planoLocal();
 }
 
-// É Premium se tem assinatura ativa (billing OU stub) OU ainda está no teste.
+// É Premium se há assinatura ativa (billing real OU stub local de dev).
+// Durante o período de teste da assinatura, o entitlement já fica ativo.
 export function ehPremium() {
-  return billing.ativo || !!planoLocal() || diasRestantes() > 0;
+  return billing.ativo || !!planoLocal();
 }
 
-// 'assinante' | 'trial' | 'expirado'
+// 'assinante' | 'gratis'
 export function estado() {
-  if (billing.ativo || planoLocal()) return 'assinante';
-  return diasRestantes() > 0 ? 'trial' : 'expirado';
+  return ehPremium() ? 'assinante' : 'gratis';
 }
 
-// Assina o plano. Assíncrona: no app dispara a compra real (RevenueCat); no
-// navegador/dev grava o stub local. Retorna { ok, cancelado? }.
+// Assina o plano. Assíncrona: no app dispara a compra real (RevenueCat, já com
+// o teste grátis da oferta); no navegador/dev grava o stub local. Retorna
+// { ok, cancelado? }.
 export async function assinar(plano) {
   const pl = plano === 'mensal' ? 'mensal' : 'anual';
   if (Billing.billingDisponivel()) {
@@ -129,15 +111,6 @@ export function cancelarAssinatura() {
   }
   localStorage.removeItem(CHAVE_PLANO);
   notificar();
-}
-
-// Mensagem única "Você aproveitou o Orbi Premium por 7 dias" — só quando o teste
-// acabou e ainda não foi mostrada.
-export function deveMostrarBoasVindasFim() {
-  return estado() === 'expirado' && localStorage.getItem(CHAVE_MSG_FIM) !== '1';
-}
-export function marcarBoasVindasFimVista() {
-  localStorage.setItem(CHAVE_MSG_FIM, '1');
 }
 
 export function observar(cb) {

@@ -1,26 +1,16 @@
 // Paywall — bottom sheet elegante que sobe de baixo. Nunca é uma "tela seca":
-// mostra os benefícios, os planos (anual em destaque) e um único botão Assinar.
-//
-// Variante `saudacaoFim`: a mensagem única mostrada quando o teste de 7 dias
-// acaba ("Você aproveitou o Orbi Premium por 7 dias...").
+// mostra os benefícios, os planos (anual em destaque) e um único botão para
+// começar o teste grátis / assinar.
 
 import { createPortal } from 'react-dom';
 import PainelPro from './PainelPro';
 import { cores, sombraForte, raioGrande } from '../lib/tema';
 
-export default function PaywallSheet({ saudacaoFim = false, onFechar, onAssinar }) {
+export default function PaywallSheet({ onFechar, onAssinar }) {
   return createPortal(
     <div style={estilos.fundo} className="modalFundo" onClick={onFechar} role="dialog" aria-modal="true" aria-label="Orbi Pro">
       <div style={estilos.sheet} className="bottomSheet" onClick={(e) => e.stopPropagation()}>
         <div style={estilos.pegador} />
-
-        {saudacaoFim && (
-          <div style={estilos.saudacao}>
-            <div style={estilos.saudacaoTitulo}>Você aproveitou o Orbi Pro por 7 dias 💛</div>
-            <div style={estilos.saudacaoSub}>Esperamos que tenha gostado! Continue desbloqueando tudo:</div>
-          </div>
-        )}
-
         <PainelPro onAssinar={onAssinar} onFechar={onFechar} />
       </div>
     </div>,

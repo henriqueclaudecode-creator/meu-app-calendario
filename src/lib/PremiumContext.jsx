@@ -19,28 +19,21 @@ function sincronizarTema() {
 
 export function PremiumProvider({ children }) {
   const [, setTick] = useState(0);
-  const [paywall, setPaywall] = useState(null); // null | { saudacaoFim }
+  const [paywall, setPaywall] = useState(null); // null | {}
 
   useEffect(() => {
-    P.iniciarTrialSeNecessario();
     P.iniciarBillingSeNecessario();
     sincronizarTema();
     const off = P.observar(() => { sincronizarTema(); setTick((t) => t + 1); });
-    // Mensagem única de fim de teste (só a 1ª vez após expirar).
-    if (P.deveMostrarBoasVindasFim()) {
-      P.marcarBoasVindasFimVista();
-      setPaywall({ saudacaoFim: true });
-    }
     return off;
   }, []);
 
-  const abrirPaywall = useCallback((opts = {}) => setPaywall({ saudacaoFim: !!opts.saudacaoFim }), []);
+  const abrirPaywall = useCallback(() => setPaywall({}), []);
   const fechar = useCallback(() => setPaywall(null), []);
 
   const valor = {
     premium: P.ehPremium(),
     estado: P.estado(),
-    diasRestantes: P.diasRestantes(),
     plano: P.planoAtual(),
     abrirPaywall,
   };
@@ -50,7 +43,6 @@ export function PremiumProvider({ children }) {
       {children}
       {paywall && (
         <PaywallSheet
-          saudacaoFim={paywall.saudacaoFim}
           onFechar={fechar}
           onAssinar={async (pl) => { const r = await P.assinar(pl); if (r?.ok || r?.cancelado) fechar(); }}
         />
