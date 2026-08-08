@@ -21,6 +21,12 @@
 -keep class androidx.core.app.CoreComponentFactory { *; }
 -dontwarn org.slf4j.**
 
+# --- Provedores de login não usados (evita erro de classes ausentes no R8) ---
+# O plugin de autenticação referencia Facebook Login, que não incluímos.
+-dontwarn com.facebook.**
+# RevenueCat traz suporte opcional à Amazon Appstore, que não usamos.
+-dontwarn com.amazon.**
+
 # Preserva anotações e nomes necessários a stack traces legíveis no Play Console.
 -keepattributes *Annotation*, Signature, InnerClasses, EnclosingMethod
 -keepattributes SourceFile,LineNumberTable

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 // Carrega as credenciais de assinatura de android/keystore.properties (fora do
 // controle de versão). Se o arquivo não existir, o build de release ainda roda
@@ -55,6 +56,9 @@ android {
     lint {
         checkReleaseBuilds false
         abortOnError false
+    }
+    kotlinOptions {
+        jvmTarget = '21'
     }
 }
 
