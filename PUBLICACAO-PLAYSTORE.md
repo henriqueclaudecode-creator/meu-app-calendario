@@ -159,6 +159,20 @@ vêm do merge do plugin de notificações e **são usadas**. Billing adicionará
 
 ---
 
+## ✅ Ensaio do build de release (feito em 2026-08-08)
+
+`./gradlew bundleRelease` rodou com sucesso e gerou um `.aab` assinado com a
+upload key (SHA-1 `05:E6:F4:…:FA:43`, `jar verified`). Correções aplicadas para
+o release funcionar (todas já commitáveis):
+
+- **Kotlin habilitado** — os widgets são `.kt` e não compilavam. Adicionado
+  `org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21` (root) + `apply plugin:
+  'org.jetbrains.kotlin.android'` e `kotlinOptions { jvmTarget = '21' }` (app).
+- **R8** — `-dontwarn com.facebook.**` e `-dontwarn com.amazon.**` (provedores de
+  login/loja não usados, referenciados por plugins).
+- **SDK** — `android/local.properties` com `sdk.dir` (arquivo local, fora do git).
+  Em outra máquina, recriar apontando para o Android SDK local.
+
 ## 🚀 Como gerar o AAB (quando liberar)
 
 ```bash
