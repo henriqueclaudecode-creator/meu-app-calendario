@@ -1,11 +1,10 @@
 // Menu de navegação que DESCE do topo por cima do conteúdo (não empurra o app).
-// Substitui a antiga barra de abas. Abre pelo botão ☰ no cabeçalho das telas.
-//
-// Itens: Calendário, Agenda, Mapa da Vida (Pro), Minha História (Pro) e
-// Configurações (⚙️, que é o antigo "Mais"). Recursos Pro mostram o diamante.
+// Mantém o MESMO design da antiga barra de abas (itens na horizontal, ícone em
+// cima e rótulo embaixo, com traço no item ativo) — só que agora oculto, abrindo
+// pelo botão ☰. Recursos Pro mostram o diamante.
 
 import { createPortal } from 'react-dom';
-import { cores, sombraForte, raioGrande, raio } from '../lib/tema';
+import { cores, sombraForte, raioGrande } from '../lib/tema';
 import { IconePro } from './IconePro';
 
 const ITENS = [
@@ -13,12 +12,17 @@ const ITENS = [
   { id: 'agenda', rotulo: 'Agenda' },
   { id: 'mapa', rotulo: 'Mapa da Vida', premium: true },
   { id: 'historia', rotulo: 'Minha História', premium: true },
-  { id: 'mais', rotulo: 'Configurações' },
+  { id: 'mais', rotulo: 'Config.' },
 ];
 
-function Icone({ id, cor }) {
-  const c = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: cor, strokeWidth: 1.9, strokeLinecap: 'round', strokeLinejoin: 'round' };
-  if (id === 'calendario') return <svg {...c}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>;
+function Icone({ id, ativo, apagado }) {
+  const cor = ativo ? cores.acento : cores.textoApagado;
+  const c = {
+    width: 23, height: 23, viewBox: '0 0 24 24', fill: 'none',
+    stroke: cor, strokeWidth: 1.9, strokeLinecap: 'round', strokeLinejoin: 'round',
+    style: apagado ? { opacity: 0.32 } : undefined,
+  };
+  if (id === 'calendario') return <svg {...c}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M3 10h18" /></svg>;
   if (id === 'agenda') return <svg {...c}><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01" /></svg>;
   if (id === 'mapa') return <svg {...c}><circle cx="12" cy="12" r="2.4" /><circle cx="12" cy="4" r="1.4" /><circle cx="19" cy="15" r="1.4" /><circle cx="5" cy="15" r="1.4" /><path d="M12 9.6V5.4M13.8 13.2l3.7 1.4M10.2 13.2l-3.7 1.4" /></svg>;
   if (id === 'historia') return <svg {...c}><circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3.5 2" /></svg>;
@@ -30,32 +34,26 @@ export default function MenuLateral({ ativa, onNavegar, onFechar, premium }) {
   return createPortal(
     <div style={estilos.fundo} className="modalFundo" onClick={onFechar} role="dialog" aria-modal="true" aria-label="Navegação">
       <nav style={estilos.painel} className="menuDesce" onClick={(e) => e.stopPropagation()}>
-        <div style={estilos.cabecalho}>
-          <span style={estilos.marca}>Orbi</span>
-          <button style={estilos.fechar} onClick={onFechar} aria-label="Fechar menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cores.textoSuave} strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-          </button>
-        </div>
-
-        <div style={estilos.lista}>
+        <div style={estilos.interno}>
           {ITENS.map((it) => {
             const ativo = it.id === ativa;
             const bloqueado = it.premium && !premium;
-            const cor = ativo ? cores.acento : cores.texto;
             return (
               <button
                 key={it.id}
-                style={{ ...estilos.item, ...(ativo ? estilos.itemAtivo : null) }}
+                style={estilos.item}
                 onClick={() => { onNavegar(it.id); onFechar(); }}
                 aria-current={ativo ? 'page' : undefined}
+                aria-label={bloqueado ? `${it.rotulo} (Premium)` : it.rotulo}
               >
-                <span style={{ ...estilos.itemIcone, color: cor }}><Icone id={it.id} cor={cor} /></span>
-                <span style={{ ...estilos.itemRotulo, color: cor, fontWeight: ativo ? 800 : 600 }}>{it.rotulo}</span>
-                {bloqueado && (
-                  <span style={estilos.itemPro}>
-                    <IconePro tamanho={13} cor={cores.acento} />
-                  </span>
-                )}
+                <span style={estilos.iconeWrap}>
+                  <Icone id={it.id} ativo={ativo} apagado={bloqueado} />
+                  {bloqueado && <span style={estilos.selo}><IconePro tamanho={11} cor={cores.acento} preenchido /></span>}
+                </span>
+                <span style={{ ...estilos.rotulo, color: ativo ? cores.acento : cores.textoApagado, fontWeight: ativo ? 700 : 600, opacity: bloqueado ? 0.8 : 1 }}>
+                  {it.rotulo}
+                </span>
+                <span style={{ ...estilos.indicador, background: ativo ? cores.acento : 'transparent' }} />
               </button>
             );
           })}
@@ -71,15 +69,15 @@ const estilos = {
   painel: {
     width: '100%', maxWidth: 560, boxSizing: 'border-box', background: cores.superficie,
     borderRadius: `0 0 ${raioGrande + 4}px ${raioGrande + 4}px`, boxShadow: sombraForte,
-    paddingTop: 'calc(env(safe-area-inset-top) + 8px)', padding: '8px 12px 14px',
+    paddingTop: 'env(safe-area-inset-top)',
   },
-  cabecalho: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 8px 10px' },
-  marca: { fontSize: 20, fontWeight: 900, letterSpacing: -0.6, color: cores.acento },
-  fechar: { width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: '50%' },
-  lista: { display: 'flex', flexDirection: 'column', gap: 3 },
-  item: { position: 'relative', display: 'flex', alignItems: 'center', gap: 13, width: '100%', textAlign: 'left', padding: '13px 12px', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: raio },
-  itemAtivo: { background: cores.acentoBg },
-  itemIcone: { flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24 },
-  itemRotulo: { flex: 1, fontSize: 15.5, letterSpacing: -0.2 },
-  itemPro: { flexShrink: 0, display: 'flex', alignItems: 'center' },
+  interno: { maxWidth: 560, margin: '0 auto', display: 'flex', padding: '0 2px' },
+  item: {
+    flex: 1, minWidth: 0, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+    border: 'none', background: 'transparent', cursor: 'pointer', padding: '12px 1px 13px',
+  },
+  iconeWrap: { position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  selo: { position: 'absolute', top: -6, right: -9, display: 'flex' },
+  rotulo: { fontSize: 9.5, lineHeight: 1.1, letterSpacing: -0.2, textAlign: 'center', height: 21, display: 'flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap' },
+  indicador: { position: 'absolute', left: '20%', right: '20%', bottom: 0, height: 3, borderRadius: '3px 3px 0 0' },
 };
