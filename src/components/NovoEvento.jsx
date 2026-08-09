@@ -45,7 +45,12 @@ const UNIDADES = [
 ];
 
 // Paleta para colorir o compromisso (sobrepõe a cor da etiqueta).
-const CORES_EVENTO = ['#2563eb', '#0891b2', '#0f9d58', '#f59e0b', '#f97316', '#e5484d', '#7c3aed', '#e58c8c'];
+const CORES_EVENTO = [
+  // Vivas (originais).
+  '#2563eb', '#0891b2', '#0f9d58', '#f59e0b', '#f97316', '#e5484d', '#7c3aed', '#e58c8c',
+  // Nude / vintage (mesmo padrão das paletas terrosas).
+  '#a9746e', '#c68b59', '#9aa06b', '#e0a57c', '#d98c8c', '#6f9296', '#b99a73',
+];
 
 const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];

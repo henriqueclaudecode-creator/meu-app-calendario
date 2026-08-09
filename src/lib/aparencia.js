@@ -4,7 +4,7 @@
 
 const CHAVE = 'calendario.tema';
 const VALIDOS = ['light', 'dark', 'blossom', 'black', 'natureza',
-  'terracota', 'argila', 'musgo', 'pessego', 'oceano', 'rose', 'areia'];
+  'musgo', 'oceano', 'rose', 'areia'];
 
 export function lerTema() {
   const v = localStorage.getItem(CHAVE);
