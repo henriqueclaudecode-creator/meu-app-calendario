@@ -7,7 +7,7 @@
 // Extras: seletor de visão (Dia/Semana/Mês/Ano), menu lateral (as três barras),
 // feriados destacados com o nome na grade e uma faixa de eventos favoritos.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { listarEventos } from '../db/eventos';
 import { listarCategorias } from '../db/categorias';
 import { hojeISO } from '../lib/datas';
@@ -224,24 +224,81 @@ function Calendario({ onAbrirMenu }) {
   }
 
   // Arrastar para os lados (swipe) troca o período conforme a visão atual.
-  const [toqueIni, setToqueIni] = useState(null);
+  // A grade acompanha o dedo e, ao soltar, desliza suavemente para o próximo
+  // período (ou volta ao lugar como uma mola se o gesto for curto).
+  const gradeRef = useRef(null);
+  const toqueIni = useRef(null);
+  const [arraste, setArraste] = useState(0);      // deslocamento horizontal atual (px)
+  const arrasteRef = useRef(0);                     // espelho síncrono do deslocamento
+  const [transicao, setTransicao] = useState(false); // ativa a animação suave
+  const animandoRef = useRef(false);
+  const aplicarArraste = (v) => { arrasteRef.current = v; setArraste(v); };
+
   function aoTocarInicio(e) {
+    if (animandoRef.current) return;
     const t = e.touches?.[0];
-    if (t) setToqueIni({ x: t.clientX, y: t.clientY });
-  }
-  function aoTocarFim(e) {
-    if (!toqueIni) return;
-    const t = e.changedTouches?.[0];
     if (t) {
-      const dx = t.clientX - toqueIni.x;
-      const dy = t.clientY - toqueIni.y;
-      // Só conta como swipe horizontal se for claramente lateral.
-      if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        navegar(dx < 0 ? 1 : -1);
-      }
+      toqueIni.current = { x: t.clientX, y: t.clientY, travado: null };
+      setTransicao(false);
     }
-    setToqueIni(null);
   }
+  function aoTocarMover(e) {
+    const ini = toqueIni.current;
+    if (!ini || animandoRef.current) return;
+    const t = e.touches?.[0];
+    if (!t) return;
+    const dx = t.clientX - ini.x;
+    const dy = t.clientY - ini.y;
+    // Decide uma única vez se o gesto é horizontal ou vertical.
+    if (ini.travado === null) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      ini.travado = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'h' : 'v';
+    }
+    if (ini.travado !== 'h') return;
+    e.preventDefault();
+    // Leve resistência para dar sensação elástica ao arrastar.
+    aplicarArraste(dx * 0.9);
+  }
+  function aoTocarFim() {
+    const ini = toqueIni.current;
+    toqueIni.current = null;
+    if (!ini || animandoRef.current) return;
+    const dx = arrasteRef.current;
+    const largura = gradeRef.current?.offsetWidth || 320;
+    // Passou do limite: desliza para fora e troca o período.
+    if (Math.abs(dx) > largura * 0.22) {
+      const dir = dx < 0 ? 1 : -1;
+      animandoRef.current = true;
+      setTransicao(true);
+      aplicarArraste(-dir * largura);
+      setTimeout(() => {
+        navegar(dir);
+        // Reposiciona instantaneamente do lado oposto e desliza para o centro.
+        setTransicao(false);
+        aplicarArraste(dir * largura);
+        setTimeout(() => {
+          setTransicao(true);
+          aplicarArraste(0);
+          setTimeout(() => { setTransicao(false); animandoRef.current = false; }, 280);
+        }, 30);
+      }, 240);
+    } else {
+      // Gesto curto: volta ao lugar suavemente.
+      setTransicao(true);
+      aplicarArraste(0);
+    }
+  }
+
+  // Estilo aplicado ao conteúdo que acompanha o dedo.
+  const estiloArraste = {
+    transform: `translateX(${arraste}px)`,
+    transition: transicao ? 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+    willChange: 'transform',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+  };
 
   // Setas do topo: navegam de acordo com a visão atual.
   function navegar(passo) {
@@ -318,27 +375,29 @@ function Calendario({ onAbrirMenu }) {
 
       {/* VISÃO: MÊS */}
       {vista === 'mes' && (
-        <div style={estilos.cartaoGrade} onTouchStart={aoTocarInicio} onTouchEnd={aoTocarFim}>
-          <div style={estilos.linhaSemana}>
-            {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
-          </div>
-          {grade.map((semana, i) => (
-            <div key={i} style={estilos.semana}>
-              {semana.map((celula) => (
-                <Celula
-                  key={celula.iso}
-                  celula={celula}
-                  selecionado={celula.iso === selecionado}
-                  ehHoje={celula.iso === hoje}
-                  eventos={eventosDo(celula.iso)}
-                  corDe={corDe}
-                  feriado={feriados[celula.iso]}
-                  onClick={() => { setSelecionado(celula.iso); setForm({ tipo: 'compromisso', evento: null, data: celula.iso }); }}
-                  onAbrirEvento={abrirEvento}
-                />
-              ))}
+        <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
+          <div style={estiloArraste}>
+            <div style={estilos.linhaSemana}>
+              {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
             </div>
-          ))}
+            {grade.map((semana, i) => (
+              <div key={i} style={estilos.semana}>
+                {semana.map((celula) => (
+                  <Celula
+                    key={celula.iso}
+                    celula={celula}
+                    selecionado={celula.iso === selecionado}
+                    ehHoje={celula.iso === hoje}
+                    eventos={eventosDo(celula.iso)}
+                    corDe={corDe}
+                    feriado={feriados[celula.iso]}
+                    onClick={() => { setSelecionado(celula.iso); setForm({ tipo: 'compromisso', evento: null, data: celula.iso }); }}
+                    onAbrirEvento={abrirEvento}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -363,25 +422,27 @@ function Calendario({ onAbrirMenu }) {
 
       {/* VISÃO: SEMANA — grade de 7 células grandes, no estilo do mês. */}
       {vista === 'semana' && (
-        <div style={estilos.cartaoGrade} onTouchStart={aoTocarInicio} onTouchEnd={aoTocarFim}>
-          <div style={estilos.linhaSemana}>
-            {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
-          </div>
-          <div style={estilos.semanaGradeUnica}>
-            {diasDaSemana(selecionado).map((dataIso) => (
-              <CelulaSemana
-                key={dataIso}
-                iso={dataIso}
-                dia={dataLocal(dataIso).getDate()}
-                selecionado={dataIso === selecionado}
-                ehHoje={dataIso === hoje}
-                eventos={eventosDo(dataIso)}
-                corDe={corDe}
-                feriado={feriados[dataIso]}
-                onClick={() => { setSelecionado(dataIso); setForm({ tipo: 'compromisso', evento: null, data: dataIso }); }}
-                onAbrirEvento={abrirEvento}
-              />
-            ))}
+        <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
+          <div style={estiloArraste}>
+            <div style={estilos.linhaSemana}>
+              {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
+            </div>
+            <div style={estilos.semanaGradeUnica}>
+              {diasDaSemana(selecionado).map((dataIso) => (
+                <CelulaSemana
+                  key={dataIso}
+                  iso={dataIso}
+                  dia={dataLocal(dataIso).getDate()}
+                  selecionado={dataIso === selecionado}
+                  ehHoje={dataIso === hoje}
+                  eventos={eventosDo(dataIso)}
+                  corDe={corDe}
+                  feriado={feriados[dataIso]}
+                  onClick={() => { setSelecionado(dataIso); setForm({ tipo: 'compromisso', evento: null, data: dataIso }); }}
+                  onAbrirEvento={abrirEvento}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}
