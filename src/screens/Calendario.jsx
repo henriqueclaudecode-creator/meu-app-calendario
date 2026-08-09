@@ -228,23 +228,24 @@ function Calendario({ onAbrirMenu }) {
   // período (ou volta ao lugar como uma mola se o gesto for curto).
   const gradeRef = useRef(null);
   const toqueIni = useRef(null);
+  const timerRef = useRef(null);
   const [arraste, setArraste] = useState(0);      // deslocamento horizontal atual (px)
   const arrasteRef = useRef(0);                     // espelho síncrono do deslocamento
   const [transicao, setTransicao] = useState(false); // ativa a animação suave
-  const animandoRef = useRef(false);
   const aplicarArraste = (v) => { arrasteRef.current = v; setArraste(v); };
 
   function aoTocarInicio(e) {
-    if (animandoRef.current) return;
     const t = e.touches?.[0];
-    if (t) {
-      toqueIni.current = { x: t.clientX, y: t.clientY, travado: null };
-      setTransicao(false);
-    }
+    if (!t) return;
+    // Interrompe qualquer animação em andamento: um novo gesto pode "encavalar"
+    // o anterior, continuando de onde o conteúdo estiver.
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+    setTransicao(false);
+    toqueIni.current = { x: t.clientX, y: t.clientY, base: arrasteRef.current, travado: null };
   }
   function aoTocarMover(e) {
     const ini = toqueIni.current;
-    if (!ini || animandoRef.current) return;
+    if (!ini) return;
     const t = e.touches?.[0];
     if (!t) return;
     const dx = t.clientX - ini.x;
@@ -256,32 +257,29 @@ function Calendario({ onAbrirMenu }) {
     }
     if (ini.travado !== 'h') return;
     e.preventDefault();
+    ini.dx = dx;
     // Leve resistência para dar sensação elástica ao arrastar.
-    aplicarArraste(dx * 0.9);
+    aplicarArraste(ini.base + dx * 0.9);
   }
   function aoTocarFim() {
     const ini = toqueIni.current;
     toqueIni.current = null;
-    if (!ini || animandoRef.current) return;
-    const dx = arrasteRef.current;
+    if (!ini) return;
+    const dx = ini.dx ?? 0;
     const largura = gradeRef.current?.offsetWidth || 320;
-    // Passou do limite: desliza para fora e troca o período.
+    // Passou do limite: troca o período e o novo conteúdo entra deslizando.
     if (Math.abs(dx) > largura * 0.22) {
       const dir = dx < 0 ? 1 : -1;
-      animandoRef.current = true;
-      setTransicao(true);
-      aplicarArraste(-dir * largura);
-      setTimeout(() => {
-        navegar(dir);
-        // Reposiciona instantaneamente do lado oposto e desliza para o centro.
-        setTransicao(false);
-        aplicarArraste(dir * largura);
-        setTimeout(() => {
-          setTransicao(true);
-          aplicarArraste(0);
-          setTimeout(() => { setTransicao(false); animandoRef.current = false; }, 280);
-        }, 30);
-      }, 240);
+      navegar(dir);
+      // Posiciona o novo período fora da tela, do lado de onde ele "vem",
+      // e o anima até o centro. Fica interrompível por um novo toque.
+      setTransicao(false);
+      aplicarArraste(dir * largura);
+      timerRef.current = setTimeout(() => {
+        timerRef.current = null;
+        setTransicao(true);
+        aplicarArraste(0);
+      }, 20);
     } else {
       // Gesto curto: volta ao lugar suavemente.
       setTransicao(true);
