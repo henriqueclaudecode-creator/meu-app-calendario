@@ -3,7 +3,8 @@
 // Guardado no localStorage e aplicado como data-theme na raiz — o CSS faz o resto.
 
 const CHAVE = 'calendario.tema';
-const VALIDOS = ['light', 'dark', 'blossom', 'black', 'natureza'];
+const VALIDOS = ['light', 'dark', 'blossom', 'black', 'natureza',
+  'terracota', 'argila', 'musgo', 'pessego', 'oceano', 'rose', 'areia'];
 
 export function lerTema() {
   const v = localStorage.getItem(CHAVE);

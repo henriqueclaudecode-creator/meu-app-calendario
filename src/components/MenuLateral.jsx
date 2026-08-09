@@ -26,8 +26,12 @@ function Icone({ id, ativo, apagado }) {
   if (id === 'agenda') return <svg {...c}><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01" /></svg>;
   if (id === 'mapa') return <svg {...c}><circle cx="12" cy="12" r="2.4" /><circle cx="12" cy="4" r="1.4" /><circle cx="19" cy="15" r="1.4" /><circle cx="5" cy="15" r="1.4" /><path d="M12 9.6V5.4M13.8 13.2l3.7 1.4M10.2 13.2l-3.7 1.4" /></svg>;
   if (id === 'historia') return <svg {...c}><circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3.5 2" /></svg>;
-  // Configurações (engrenagem).
-  return <svg {...c}><circle cx="12" cy="12" r="3.2" /><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12h2.5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8" /></svg>;
+  // Configurações — engrenagem SÓLIDA (com furo central), no estilo da imagem.
+  return (
+    <svg width="23" height="23" viewBox="0 0 24 24" fill={cor} style={apagado ? { opacity: 0.32 } : undefined} aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+    </svg>
+  );
 }
 
 export default function MenuLateral({ ativa, onNavegar, onFechar, premium }) {
@@ -69,12 +73,12 @@ const estilos = {
   painel: {
     width: '100%', maxWidth: 560, boxSizing: 'border-box', background: cores.superficie,
     borderRadius: `0 0 ${raioGrande + 4}px ${raioGrande + 4}px`, boxShadow: sombraForte,
-    paddingTop: 'env(safe-area-inset-top)',
+    paddingTop: 'env(safe-area-inset-top)', paddingBottom: 8,
   },
   interno: { maxWidth: 560, margin: '0 auto', display: 'flex', padding: '0 2px' },
   item: {
-    flex: 1, minWidth: 0, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-    border: 'none', background: 'transparent', cursor: 'pointer', padding: '12px 1px 13px',
+    flex: 1, minWidth: 0, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+    border: 'none', background: 'transparent', cursor: 'pointer', padding: '18px 1px 19px',
   },
   iconeWrap: { position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   selo: { position: 'absolute', top: -6, right: -9, display: 'flex' },

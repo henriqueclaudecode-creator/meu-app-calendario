@@ -378,6 +378,85 @@ button {
   --feriado-borda: #d8e0d0;
 }
 
+/* ==== Temas NUDE (inspirados em paletas vintage/terrosas) ================ */
+:root[data-theme='terracota'] {
+  color-scheme: light;
+  --cor-bg: #f7f2ee; --cor-superficie: #fdfbf8; --cor-superficie2: #f0e8e1;
+  --cor-primaria: #5a3f37; --cor-primariaSuave: #8a6a60;
+  --cor-acento: #ac7c72; --cor-acentoForte: #96685f; --cor-acentoClaro: #c99f97; --cor-acentoBg: #f0e4e0; --cor-acentoTexto: #ffffff;
+  --cor-texto: #4a3a34; --cor-textoSuave: #8a746c; --cor-textoApagado: #ab958d; --cor-textoFraco: #cbbbb4;
+  --cor-borda: #ece0da; --cor-bordaForte: #ddccc4; --cor-pontinho: #c3afa7; --cor-grade: #ece0da;
+  --cor-perigo: #c0492e; --cor-sucesso: #7a8a5a;
+  --dia-sel-bg: #e8d6cf; --dia-sel-texto: #4a3a34; --hora-cor: #4a3a34;
+  --feriado-bg: #f0e8e1; --feriado-texto: #8a746c; --feriado-borda: #ddccc4;
+}
+:root[data-theme='argila'] {
+  color-scheme: light;
+  --cor-bg: #f8f3f0; --cor-superficie: #fdfaf8; --cor-superficie2: #f1e7e2;
+  --cor-primaria: #5c403a; --cor-primariaSuave: #8d6b63;
+  --cor-acento: #be8a84; --cor-acentoForte: #a5726c; --cor-acentoClaro: #d3a8a2; --cor-acentoBg: #f3e6e3; --cor-acentoTexto: #ffffff;
+  --cor-texto: #4d3d38; --cor-textoSuave: #8c766f; --cor-textoApagado: #ad968f; --cor-textoFraco: #cdbdb7;
+  --cor-borda: #ede1dc; --cor-bordaForte: #dfcdc6; --cor-pontinho: #c6b1a9; --cor-grade: #ede1dc;
+  --cor-perigo: #c0492e; --cor-sucesso: #7a8a5a;
+  --dia-sel-bg: #ecdad4; --dia-sel-texto: #4d3d38; --hora-cor: #4d3d38;
+  --feriado-bg: #f1e7e2; --feriado-texto: #8c766f; --feriado-borda: #dfcdc6;
+}
+:root[data-theme='musgo'] {
+  color-scheme: light;
+  --cor-bg: #f4f3ee; --cor-superficie: #faf9f5; --cor-superficie2: #ecebe1;
+  --cor-primaria: #4a4d3a; --cor-primariaSuave: #757863;
+  --cor-acento: #636756; --cor-acentoForte: #4f5344; --cor-acentoClaro: #949784; --cor-acentoBg: #e8e9e0; --cor-acentoTexto: #ffffff;
+  --cor-texto: #363a2c; --cor-textoSuave: #6f7263; --cor-textoApagado: #9a9c8c; --cor-textoFraco: #c2c4b6;
+  --cor-borda: #e6e7dc; --cor-bordaForte: #d5d7c8; --cor-pontinho: #aeb19c; --cor-grade: #e6e7dc;
+  --cor-perigo: #c0492e; --cor-sucesso: #6b7049;
+  --dia-sel-bg: #dde0d0; --dia-sel-texto: #363a2c; --hora-cor: #363a2c;
+  --feriado-bg: #ecebe1; --feriado-texto: #6f7263; --feriado-borda: #d5d7c8;
+}
+:root[data-theme='pessego'] {
+  color-scheme: light;
+  --cor-bg: #fbf5ef; --cor-superficie: #fefbf7; --cor-superficie2: #f5e9dd;
+  --cor-primaria: #7a4f30; --cor-primariaSuave: #a5754f;
+  --cor-acento: #cf8b63; --cor-acentoForte: #b5744e; --cor-acentoClaro: #e0a884; --cor-acentoBg: #f7e7da; --cor-acentoTexto: #ffffff;
+  --cor-texto: #4d3b2f; --cor-textoSuave: #8e7562; --cor-textoApagado: #b0967f; --cor-textoFraco: #d0bba9;
+  --cor-borda: #f0e4d7; --cor-bordaForte: #e3d0bd; --cor-pontinho: #cbb199; --cor-grade: #f0e4d7;
+  --cor-perigo: #c0492e; --cor-sucesso: #7a8a5a;
+  --dia-sel-bg: #f3ddca; --dia-sel-texto: #4d3b2f; --hora-cor: #4d3b2f;
+  --feriado-bg: #f5e9dd; --feriado-texto: #8e7562; --feriado-borda: #e3d0bd;
+}
+:root[data-theme='oceano'] {
+  color-scheme: light;
+  --cor-bg: #eff3f4; --cor-superficie: #f9fbfb; --cor-superficie2: #e2eaec;
+  --cor-primaria: #2b5361; --cor-primariaSuave: #4d7a8a;
+  --cor-acento: #488399; --cor-acentoForte: #3a6b7e; --cor-acentoClaro: #7aa7b6; --cor-acentoBg: #e0ebee; --cor-acentoTexto: #ffffff;
+  --cor-texto: #253840; --cor-textoSuave: #5e7178; --cor-textoApagado: #8ea1a8; --cor-textoFraco: #b7c6cb;
+  --cor-borda: #e0e8ea; --cor-bordaForte: #cdd9dc; --cor-pontinho: #a1b4ba; --cor-grade: #e0e8ea;
+  --cor-perigo: #c0492e; --cor-sucesso: #3f7d5a;
+  --dia-sel-bg: #d3e2e6; --dia-sel-texto: #253840; --hora-cor: #253840;
+  --feriado-bg: #e2eaec; --feriado-texto: #5e7178; --feriado-borda: #cdd9dc;
+}
+:root[data-theme='rose'] {
+  color-scheme: light;
+  --cor-bg: #fbf2f1; --cor-superficie: #fefaf9; --cor-superficie2: #f4e4e2;
+  --cor-primaria: #7a4444; --cor-primariaSuave: #a56b6b;
+  --cor-acento: #d97b7b; --cor-acentoForte: #c06363; --cor-acentoClaro: #e8a5a5; --cor-acentoBg: #f7e3e3; --cor-acentoTexto: #ffffff;
+  --cor-texto: #4a3535; --cor-textoSuave: #8c6f6f; --cor-textoApagado: #ae9090; --cor-textoFraco: #cfb8b8;
+  --cor-borda: #f0e0df; --cor-bordaForte: #e4cccb; --cor-pontinho: #ccabab; --cor-grade: #f0e0df;
+  --cor-perigo: #c0492e; --cor-sucesso: #7a8a5a;
+  --dia-sel-bg: #f3d6d6; --dia-sel-texto: #4a3535; --hora-cor: #4a3535;
+  --feriado-bg: #f4e4e2; --feriado-texto: #8c6f6f; --feriado-borda: #e4cccb;
+}
+:root[data-theme='areia'] {
+  color-scheme: light;
+  --cor-bg: #f7f2e9; --cor-superficie: #fdfaf3; --cor-superficie2: #efe7d6;
+  --cor-primaria: #6b5a38; --cor-primariaSuave: #98855c;
+  --cor-acento: #b79b6f; --cor-acentoForte: #9d8358; --cor-acentoClaro: #cdb793; --cor-acentoBg: #f0e7d5; --cor-acentoTexto: #ffffff;
+  --cor-texto: #46402f; --cor-textoSuave: #857b63; --cor-textoApagado: #a89c80; --cor-textoFraco: #c9bea0;
+  --cor-borda: #ece2cf; --cor-bordaForte: #ddd0b6; --cor-pontinho: #c3b593; --cor-grade: #ece2cf;
+  --cor-perigo: #c0492e; --cor-sucesso: #7a8a5a;
+  --dia-sel-bg: #e6d9bd; --dia-sel-texto: #46402f; --hora-cor: #46402f;
+  --feriado-bg: #efe7d6; --feriado-texto: #857b63; --feriado-borda: #ddd0b6;
+}
+
 /* ---- Animação dos modais (ao abrir com o +) ---------------------------- */
 @keyframes modalFundoIn {
   from { opacity: 0; }

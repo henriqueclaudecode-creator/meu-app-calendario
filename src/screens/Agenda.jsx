@@ -75,6 +75,7 @@ function montarGrade(ano, mes) {
 
 // Um evento "ocorre" numa data se for a própria data ou uma repetição dela.
 function ocorreEm(e, dataIso) {
+  if (e.datasExcluidas?.includes(dataIso)) return false;
   const rep = e.repetir ?? 'nao';
   if (rep === 'nao' || !rep) return e.data === dataIso;
   if (dataIso < e.data) return false;

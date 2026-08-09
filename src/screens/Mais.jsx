@@ -25,6 +25,13 @@ const TEMAS = [
   { id: 'blossom', nome: 'Blossom', desc: 'Toque de cor', bg: '#fdfbf8', superficie: '#f3efea', acento: '#e58c8c' },
   { id: 'black', nome: 'Black', desc: 'Preto absoluto', bg: '#000000', superficie: '#1a1a1a', acento: '#d0d0d0' },
   { id: 'natureza', nome: 'Natureza', desc: 'Verde floresta', bg: '#f6f4ee', superficie: '#e8ede3', acento: '#2f6b3d' },
+  { id: 'terracota', nome: 'Terracota', desc: 'Argila quente', bg: '#f7f2ee', superficie: '#f0e4e0', acento: '#ac7c72' },
+  { id: 'argila', nome: 'Argila', desc: 'Rosa terroso', bg: '#f8f3f0', superficie: '#f3e6e3', acento: '#be8a84' },
+  { id: 'musgo', nome: 'Musgo', desc: 'Verde oliva', bg: '#f4f3ee', superficie: '#e8e9e0', acento: '#636756' },
+  { id: 'pessego', nome: 'Pêssego', desc: 'Nude aconchegante', bg: '#fbf5ef', superficie: '#f7e7da', acento: '#cf8b63' },
+  { id: 'oceano', nome: 'Oceano', desc: 'Azul vintage', bg: '#eff3f4', superficie: '#e0ebee', acento: '#488399' },
+  { id: 'rose', nome: 'Rosé', desc: 'Coral suave', bg: '#fbf2f1', superficie: '#f7e3e3', acento: '#d97b7b' },
+  { id: 'areia', nome: 'Areia', desc: 'Bege dourado', bg: '#f7f2e9', superficie: '#f0e7d5', acento: '#b79b6f' },
 ];
 
 function Mais({ onAbrirMenu }) {

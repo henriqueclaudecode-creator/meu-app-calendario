@@ -55,6 +55,11 @@ function montarEvento(dados, data) {
     repetir: dados.repetir ?? 'nao',
     repetirCada: dados.repetirCada ?? 1,
     repetirUnidade: dados.repetirUnidade ?? 'semanas',
+    // Datas 'AAAA-MM-DD' onde uma ocorrência do repetido foi excluída avulsa.
+    datasExcluidas: dados.datasExcluidas ?? [],
+    // Vínculo dos que foram criados juntos ("criar em vários dias"). Mesmo grupoId
+    // = mesma leva; permite excluir todos de uma vez. null = criado sozinho.
+    grupoId: dados.grupoId ?? null,
     // Cor escolhida para o evento (sobrepõe a cor da etiqueta). null = usa a etiqueta.
     cor: dados.cor ?? null,
     // Campos extras de "Evento" (opcionais).
@@ -81,18 +86,40 @@ export async function criarEvento(dados) {
 }
 
 // Cria uma cópia do compromisso em cada uma das datas informadas.
-// Retorna os ids criados. Não herda o "favorito".
+// Retorna os ids criados. Não herda o "favorito". Todas as cópias recebem o
+// mesmo grupoId (quando há mais de uma data), permitindo excluir a leva inteira.
 export async function criarEventoEmDatas(dados, datas) {
   const lista = lerTudo();
   const ids = [];
+  const grupoId = datas.length > 1 ? `grp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}` : null;
   for (const data of datas) {
-    const evento = montarEvento({ ...dados, favorito: false }, data);
+    const evento = montarEvento({ ...dados, favorito: false, grupoId }, data);
     lista.push(evento);
     agendarEvento(evento);
     ids.push(evento.id);
   }
   gravarTudo(lista);
   return ids;
+}
+
+// Exclui a leva inteira criada junto (mesmo grupoId).
+export async function deletarGrupo(grupoId) {
+  if (!grupoId) return;
+  const lista = lerTudo();
+  for (const e of lista) if (e.grupoId === grupoId) cancelarEvento(e.id);
+  gravarTudo(lista.filter((e) => e.grupoId !== grupoId));
+}
+
+// Exclui apenas UMA ocorrência de um evento repetido (marca a data como excluída).
+export async function excluirOcorrencia(id, dataIso) {
+  const lista = lerTudo();
+  const i = lista.findIndex((e) => e.id === id);
+  if (i === -1) return;
+  const atuais = lista[i].datasExcluidas ?? [];
+  if (!atuais.includes(dataIso)) {
+    lista[i] = { ...lista[i], datasExcluidas: [...atuais, dataIso] };
+    gravarTudo(lista);
+  }
 }
 
 export async function listarEventos() {

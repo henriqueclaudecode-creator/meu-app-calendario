@@ -81,6 +81,8 @@ function diasDaSemana(dataIso) {
 
 // Um evento "ocorre" numa data se for a própria data ou uma repetição dela.
 function ocorreEm(e, dataIso) {
+  // Ocorrência excluída avulsa (de um repetido) não aparece.
+  if (e.datasExcluidas?.includes(dataIso)) return false;
   const rep = e.repetir ?? 'nao';
   if (rep === 'nao' || !rep) return e.data === dataIso;
   if (dataIso < e.data) return false;
@@ -212,6 +214,15 @@ function Calendario({ onAbrirMenu }) {
     if (novaVista) setVista(novaVista);
   }
 
+  // Abre um evento existente para edição. `ocorrencia` é o dia clicado (usado
+  // para excluir só aquela ocorrência de um repetido).
+  function abrirEvento(e, ocorrencia) {
+    setSelecionado(ocorrencia ?? e.data);
+    setForm(e.tipo === 'aniversario'
+      ? { tipo: 'aniversario', evento: e }
+      : { tipo: 'compromisso', evento: e, ocorrencia: ocorrencia ?? e.data });
+  }
+
   // Arrastar para os lados (swipe) troca o período conforme a visão atual.
   const [toqueIni, setToqueIni] = useState(null);
   function aoTocarInicio(e) {
@@ -323,6 +334,7 @@ function Calendario({ onAbrirMenu }) {
                   corDe={corDe}
                   feriado={feriados[celula.iso]}
                   onClick={() => { setSelecionado(celula.iso); setForm({ tipo: 'compromisso', evento: null, data: celula.iso }); }}
+                  onAbrirEvento={abrirEvento}
                 />
               ))}
             </div>
@@ -367,6 +379,7 @@ function Calendario({ onAbrirMenu }) {
                 corDe={corDe}
                 feriado={feriados[dataIso]}
                 onClick={() => { setSelecionado(dataIso); setForm({ tipo: 'compromisso', evento: null, data: dataIso }); }}
+                onAbrirEvento={abrirEvento}
               />
             ))}
           </div>
@@ -394,6 +407,7 @@ function Calendario({ onAbrirMenu }) {
           tipo={form.item ?? form.evento?.tipo}
           dataInicial={form.data ?? selecionado}
           presetInicio={form.preset?.inicio}
+          ocorrencia={form.ocorrencia}
           onSalvo={(data) => carregar(data)}
           onFechar={() => setForm(null)}
         />
@@ -421,7 +435,7 @@ function Calendario({ onAbrirMenu }) {
 
 const MAX_CHIPS = 2;
 
-function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick }) {
+function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick, onAbrirEvento }) {
   // Cada dia mostra o TÍTULO dos compromissos (até 2), com um pontinho na cor da
   // etiqueta; havendo mais, um "+N". Feriados aparecem numa etiqueta discreta.
   const visiveis = eventos.slice(0, MAX_CHIPS);
@@ -436,26 +450,33 @@ function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick 
   };
 
   return (
-    <button style={estilos.celula} onClick={onClick} title={feriado || undefined}>
+    <div role="button" tabIndex={0} style={estilos.celula} onClick={onClick} title={feriado || undefined}>
       <span style={estiloNumero}>{celula.dia}</span>
       <span style={estilos.celConteudo}>
         {feriado && <span style={estilos.feriadoTag} title={feriado}>{feriado}</span>}
         {visiveis.map((e) => {
           const c = corDe(e);
           return (
-            <span key={e.id} style={{ ...estilos.chip, background: c, color: corTexto(c) }} title={e.titulo}>
+            <span
+              key={e.id}
+              role="button"
+              tabIndex={0}
+              onClick={(ev) => { ev.stopPropagation(); onAbrirEvento?.(e, celula.iso); }}
+              style={{ ...estilos.chip, background: c, color: corTexto(c), cursor: 'pointer' }}
+              title={e.titulo}
+            >
               {e.titulo}
             </span>
           );
         })}
         {extra > 0 && <span style={estilos.chipMais}>+{extra}</span>}
       </span>
-    </button>
+    </div>
   );
 }
 
 // Célula da visão SEMANA — maior que a do mês, mostra mais títulos por dia.
-function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, onClick }) {
+function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, onClick, onAbrirEvento }) {
   const MAX = 4;
   const visiveis = eventos.slice(0, MAX);
   const extra = eventos.length - visiveis.length;
@@ -466,21 +487,28 @@ function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, 
     ...(selecionado ? estilos.numeroSelecionado : null),
   };
   return (
-    <button style={estilos.celulaSemana} onClick={onClick} title={feriado || undefined}>
+    <div role="button" tabIndex={0} style={estilos.celulaSemana} onClick={onClick} title={feriado || undefined}>
       <span style={estiloNumero}>{dia}</span>
       <span style={estilos.celConteudo}>
         {feriado && <span style={estilos.feriadoTag} title={feriado}>{feriado}</span>}
         {visiveis.map((e) => {
           const c = corDe(e);
           return (
-            <span key={e.id} style={{ ...estilos.chipSemana, background: c, color: corTexto(c) }} title={e.titulo}>
+            <span
+              key={e.id}
+              role="button"
+              tabIndex={0}
+              onClick={(ev) => { ev.stopPropagation(); onAbrirEvento?.(e, iso); }}
+              style={{ ...estilos.chipSemana, background: c, color: corTexto(c), cursor: 'pointer' }}
+              title={e.titulo}
+            >
               {e.inicio ? `${e.inicio} ` : ''}{e.titulo}
             </span>
           );
         })}
         {extra > 0 && <span style={estilos.chipMais}>+{extra}</span>}
       </span>
-    </button>
+    </div>
   );
 }
 

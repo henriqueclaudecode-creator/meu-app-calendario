@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { criarEvento, atualizarEvento, deletarEvento, criarEventoEmDatas, contarFavoritos, MAX_FAVORITOS } from '../db/eventos';
+import { criarEvento, atualizarEvento, deletarEvento, deletarGrupo, excluirOcorrencia, criarEventoEmDatas, contarFavoritos, MAX_FAVORITOS } from '../db/eventos';
 import { listarCategorias } from '../db/categorias';
 import SeletorData from './SeletorData';
 import SeletorHora from './SeletorHora';
@@ -69,11 +69,16 @@ function proximosDias(baseIso, quantos) {
   return dias;
 }
 
-function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar }) {
+function NovoEvento({ evento, tipo, dataInicial, presetInicio, ocorrencia, onSalvo, onFechar }) {
   const editando = !!evento;
   // Tipo do item: 'compromisso' (padrão) ou 'evento' (com convidados/local/anexos).
   const tipoItem = evento?.tipo ?? tipo ?? 'compromisso';
   const ehEvento = tipoItem === 'evento';
+  // Para a exclusão: repetido (uma ocorrência x todas) ou parte de uma leva
+  // criada em vários dias (só este x todos os criados juntos).
+  const ehRepetido = editando && !!evento.repetir && evento.repetir !== 'nao';
+  const temGrupo = editando && !!evento.grupoId;
+  const diaOcorrencia = ocorrencia ?? evento?.data;
   const [titulo, setTitulo] = useState(evento?.titulo ?? '');
   const [data, setData] = useState(evento?.data ?? dataInicial);
   const [diaTodo, setDiaTodo] = useState(editando ? !evento.inicio : !presetInicio && false);
@@ -282,10 +287,17 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
   }
   function removerAnexo(i) { setAnexos((a) => a.filter((_, idx) => idx !== i)); }
 
-  async function excluir() {
+  // modo: 'este' (só a ocorrência/este item) | 'todos' (repetição inteira ou leva)
+  async function excluirCom(modo) {
     setSalvando(true);
     try {
-      await deletarEvento(evento.id);
+      if (ehRepetido && modo === 'este') {
+        await excluirOcorrencia(evento.id, diaOcorrencia);
+      } else if (temGrupo && modo === 'todos') {
+        await deletarGrupo(evento.grupoId);
+      } else {
+        await deletarEvento(evento.id);
+      }
       await onSalvo?.(evento.data);
       onFechar();
     } catch { setErro('Não deu para excluir.'); setSalvando(false); }
@@ -343,16 +355,14 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
           </div>
 
           {!diaTodo && (
-            <div style={estilos.pill}>
+            <div style={{ ...estilos.pill, flexBasis: '100%' }}>
               <span style={estilos.pillIcone}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cores.textoSuave} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
               </span>
-              <div style={estilos.pillMeio}>
-                <span style={estilos.pillRotulo}>Horário</span>
-                <span style={estilos.pillValor}>{inicio}{fim ? ` – ${fim}` : ''}</span>
-              </div>
+              <span style={{ ...estilos.pillRotulo, flexShrink: 0 }}>Horário</span>
               <div style={estilos.horas}>
                 <SeletorHora valor={inicio} onMudar={setInicio} />
+                <span style={estilos.horaSep}>–</span>
                 <SeletorHora valor={fim} onMudar={setFim} placeholder="fim" />
               </div>
             </div>
@@ -365,37 +375,6 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
             </span>
           </button>
         </div>
-
-        {/* Repetir */}
-        <button style={{ ...estilos.linhaSimples, marginTop: 14 }} onClick={() => setPainel(painel === 'repetir' ? null : 'repetir')}>
-          <span style={estilos.linhaIcone}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cores.textoSuave} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 2l4 4-4 4" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><path d="M7 22l-4-4 4-4" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
-          </span>
-          <div style={estilos.linhaMeio}>
-            <span style={estilos.linhaTitulo}>Repetir</span>
-            <span style={estilos.linhaSub}>{rotuloRepeticao(repetir)}{repetir === 'personalizado' ? ` · a cada ${repetirCada} ${repetirUnidade}` : ''}</span>
-          </div>
-          <span style={estilos.chevron} aria-hidden="true">›</span>
-        </button>
-        {painel === 'repetir' && (
-          <div style={estilos.painel}>
-            {REPETICOES.map((r) => (
-              <button key={r.id} style={estilos.opcaoLista} onClick={() => { setRepetir(r.id); if (r.id !== 'personalizado') setPainel(null); }}>
-                <span style={estilos.opcaoTexto}>{r.rotulo}</span>
-                {repetir === r.id && <span style={estilos.check} aria-hidden="true">✓</span>}
-              </button>
-            ))}
-            {repetir === 'personalizado' && (
-              <div style={estilos.personalizado}>
-                <span style={estilos.personalizadoRotulo}>A cada</span>
-                <input type="number" min="1" value={repetirCada} onChange={(e) => setRepetirCada(e.target.value)} style={estilos.personalizadoNum} />
-                <select value={repetirUnidade} onChange={(e) => setRepetirUnidade(e.target.value)} style={estilos.personalizadoSelect}>
-                  {UNIDADES.map((u) => <option key={u.id} value={u.id}>{u.rotulo}</option>)}
-                </select>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Cor */}
         <div style={estilos.rotulo}>Cor</div>
@@ -571,6 +550,37 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
         <div style={estilos.rotulo}>Notas (opcional)</div>
         <textarea value={notas} onChange={(e) => setNotas(e.target.value)} placeholder="Ex.: Revisar capítulos 1 a 3" rows={3} style={estilos.textarea} />
 
+        {/* Repetir */}
+        <button style={{ ...estilos.linhaSimples, marginTop: 14 }} onClick={() => setPainel(painel === 'repetir' ? null : 'repetir')}>
+          <span style={estilos.linhaIcone}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={cores.textoSuave} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 2l4 4-4 4" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><path d="M7 22l-4-4 4-4" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></svg>
+          </span>
+          <div style={estilos.linhaMeio}>
+            <span style={estilos.linhaTitulo}>Repetir</span>
+            <span style={estilos.linhaSub}>{rotuloRepeticao(repetir)}{repetir === 'personalizado' ? ` · a cada ${repetirCada} ${repetirUnidade}` : ''}</span>
+          </div>
+          <span style={estilos.chevron} aria-hidden="true">›</span>
+        </button>
+        {painel === 'repetir' && (
+          <div style={estilos.painel}>
+            {REPETICOES.map((r) => (
+              <button key={r.id} style={estilos.opcaoLista} onClick={() => { setRepetir(r.id); if (r.id !== 'personalizado') setPainel(null); }}>
+                <span style={estilos.opcaoTexto}>{r.rotulo}</span>
+                {repetir === r.id && <span style={estilos.check} aria-hidden="true">✓</span>}
+              </button>
+            ))}
+            {repetir === 'personalizado' && (
+              <div style={estilos.personalizado}>
+                <span style={estilos.personalizadoRotulo}>A cada</span>
+                <input type="number" min="1" value={repetirCada} onChange={(e) => setRepetirCada(e.target.value)} style={estilos.personalizadoNum} />
+                <select value={repetirUnidade} onChange={(e) => setRepetirUnidade(e.target.value)} style={estilos.personalizadoSelect}>
+                  {UNIDADES.map((u) => <option key={u.id} value={u.id}>{u.rotulo}</option>)}
+                </select>
+              </div>
+            )}
+          </div>
+        )}
+
         {erro && <div style={estilos.erro}>{erro}</div>}
 
         {/* Salvar — no rodapé. */}
@@ -633,11 +643,33 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, onSalvo, onFechar
         )}
         {confirmandoExcluir && (
           <div style={estilos.confirma}>
-            <span style={estilos.confirmaTexto}>Excluir este compromisso?</span>
-            <div style={estilos.confirmaAcoes}>
-              <button style={estilos.cancelarPeq} onClick={() => setConfirmandoExcluir(false)}>Não</button>
-              <button style={estilos.excluirConfirma} onClick={excluir} disabled={salvando}>Sim, excluir</button>
-            </div>
+            {ehRepetido ? (
+              <>
+                <span style={estilos.confirmaTexto}>Este compromisso se repete. O que você quer excluir?</span>
+                <div style={estilos.confirmaCol}>
+                  <button style={estilos.excluirConfirma} onClick={() => excluirCom('este')} disabled={salvando}>Excluir só este dia</button>
+                  <button style={estilos.excluirConfirma} onClick={() => excluirCom('todos')} disabled={salvando}>Excluir todos os dias</button>
+                  <button style={estilos.cancelarPeq} onClick={() => setConfirmandoExcluir(false)}>Cancelar</button>
+                </div>
+              </>
+            ) : temGrupo ? (
+              <>
+                <span style={estilos.confirmaTexto}>Este foi criado em vários dias. O que você quer excluir?</span>
+                <div style={estilos.confirmaCol}>
+                  <button style={estilos.excluirConfirma} onClick={() => excluirCom('este')} disabled={salvando}>Excluir só este dia</button>
+                  <button style={estilos.excluirConfirma} onClick={() => excluirCom('todos')} disabled={salvando}>Excluir todos os criados juntos</button>
+                  <button style={estilos.cancelarPeq} onClick={() => setConfirmandoExcluir(false)}>Cancelar</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <span style={estilos.confirmaTexto}>Excluir este compromisso?</span>
+                <div style={estilos.confirmaAcoes}>
+                  <button style={estilos.cancelarPeq} onClick={() => setConfirmandoExcluir(false)}>Não</button>
+                  <button style={estilos.excluirConfirma} onClick={() => excluirCom('todos')} disabled={salvando}>Sim, excluir</button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -676,7 +708,8 @@ const estilos = {
   pillMeio: { flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 1 },
   pillRotulo: { fontSize: 11, color: cores.textoApagado, fontWeight: 600 },
   pillValor: { fontSize: 14, fontWeight: 700, color: cores.texto, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
-  horas: { display: 'flex', flexDirection: 'column', gap: 4 },
+  horas: { flex: 1, display: 'flex', flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'flex-end' },
+  horaSep: { color: cores.textoApagado, fontWeight: 700 },
   pillDiaTodo: { flex: '1 1 30%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 14px', borderRadius: raio, borderWidth: 1, borderStyle: 'solid', borderColor: cores.borda, background: cores.superficie2, cursor: 'pointer' },
   toggle: { width: 42, height: 24, borderRadius: 999, background: cores.bordaForte, position: 'relative', transition: 'background 0.15s ease', flexShrink: 0 },
   toggleOn: { background: cores.acento },
@@ -722,6 +755,7 @@ const estilos = {
   confirma: { marginTop: 16 },
   confirmaTexto: { display: 'block', fontSize: 14, fontWeight: 600, color: cores.texto, textAlign: 'center', marginBottom: 10 },
   confirmaAcoes: { display: 'flex', gap: 9 },
+  confirmaCol: { display: 'flex', flexDirection: 'column', gap: 8 },
   cancelarPeq: { flex: 1, padding: '11px', borderWidth: 1, borderStyle: 'solid', borderColor: cores.borda, borderRadius: raio, background: cores.superficie, color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer' },
   excluirConfirma: { flex: 1, padding: '11px', border: 'none', borderRadius: raio, background: cores.perigo, color: '#fff', fontSize: 13.5, fontWeight: 700, cursor: 'pointer' },
 
