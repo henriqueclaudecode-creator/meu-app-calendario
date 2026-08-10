@@ -250,7 +250,7 @@ function Agenda({ onAbrirMenu }) {
           <button style={estilos.setaMes} onClick={() => setSelecionado(addDias(selecionado, 7))} aria-label="Próxima semana">›</button>
         </div>
         <div style={estilos.gradeSemana}>
-          {DIAS_SEMANA.map((d) => <div key={d} style={estilos.nomeSemana}>{d}</div>)}
+          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>)}
           {semana.map((d) => {
             const date = dataLocal(d);
             const sel = d === selecionado;
@@ -289,20 +289,22 @@ function Agenda({ onAbrirMenu }) {
           <button style={estilos.setaMes} onClick={() => mudarMesSel(1)} aria-label="Próximo mês">›</button>
         </div>
         <div style={estilos.gradeMes}>
-          {DIAS_SEMANA.map((d) => <div key={d} style={estilos.nomeSemana}>{d}</div>)}
+          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>)}
           {montarGrade(selDate.getFullYear(), selDate.getMonth()).map((c) => {
             const sel = c.iso === selecionado;
             const eHoje = c.iso === hoje;
+            const ehDomingo = dataLocal(c.iso).getDay() === 0;
             const ehFeriado = !!feriados[c.iso];
             const evs = c.noMes ? eventosDo(c.iso) : [];
             const visiveis = evs.slice(0, MAX_CHIPS);
             const extra = evs.length - visiveis.length;
             return (
-              <button key={c.iso} style={estilos.celulaMes} onClick={() => irParaDia(c.iso)} title={feriados[c.iso] || undefined}>
+              <button key={c.iso} style={{ ...estilos.celulaMes, ...(ehDomingo ? estilos.celulaDomingo : null) }} onClick={() => irParaDia(c.iso)} title={feriados[c.iso] || undefined}>
                 <span style={{
                   ...estilos.numeroSemana,
                   ...(!c.noMes ? { color: cores.textoFraco, fontWeight: 600 } : null),
                   ...(ehFeriado && c.noMes && !sel && !eHoje ? { color: COR_FERIADO } : null),
+                  ...(ehDomingo && c.noMes && !sel && !eHoje ? { color: cores.perigo } : null),
                   ...(eHoje && !sel ? estilos.numeroHoje : null),
                   ...(sel ? estilos.numeroSel : null),
                 }}>{c.dia}</span>
@@ -432,6 +434,7 @@ const estilos = {
   modoBtnAtivo: { background: cores.superficie, color: cores.acento, boxShadow: sombraSuave },
   gradeMes: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', rowGap: 4 },
   celulaMes: { minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minHeight: 60, padding: '3px 1px', border: 'none', background: 'transparent', cursor: 'pointer', overflow: 'hidden' },
+  celulaDomingo: { background: 'rgba(229, 72, 77, 0.06)', borderRadius: 8 },
   celConteudo: { width: '100%', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 2 },
   chip: { display: 'block', width: '100%', boxSizing: 'border-box', fontSize: 9, fontWeight: 700, borderRadius: 4, padding: '1px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.35, letterSpacing: -0.1 },
   chipMais: { fontSize: 8.5, fontWeight: 700, color: cores.textoApagado, paddingLeft: 4, lineHeight: 1.3 },
