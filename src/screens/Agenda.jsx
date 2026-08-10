@@ -10,6 +10,7 @@ import { IconeCat } from '../components/IconeCat';
 import { IconePeriodo } from '../components/IconePeriodo';
 import NovoEvento from '../components/NovoEvento';
 import NovoAniversario from '../components/NovoAniversario';
+import NovoMomento from '../components/NovoMomento';
 import MenuCriar from '../components/MenuCriar';
 import BuscaEventos from '../components/BuscaEventos';
 import { mapaFeriados } from '../db/feriados';
@@ -362,6 +363,15 @@ function Agenda({ onAbrirMenu }) {
           onCompromisso={(preset) => setForm({ tipo: 'compromisso', item: 'compromisso', evento: null, preset })}
           onEvento={(preset) => setForm({ tipo: 'compromisso', item: 'evento', evento: null, preset })}
           onAniversario={() => setForm({ tipo: 'aniversario', evento: null })}
+          onMomento={() => setForm({ tipo: 'momento', momento: null })}
+          onFechar={() => setForm(null)}
+        />
+      )}
+
+      {form?.tipo === 'momento' && (
+        <NovoMomento
+          momento={form.momento}
+          onSalvo={(data) => carregar(data)}
           onFechar={() => setForm(null)}
         />
       )}

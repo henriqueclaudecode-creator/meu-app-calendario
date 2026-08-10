@@ -138,10 +138,16 @@ export async function atualizarEvento(id, mudancas) {
   const lista = lerTudo();
   const i = lista.findIndex((e) => e.id === id);
   if (i !== -1) {
-    lista[i] = { ...lista[i], ...mudancas };
+    lista[i] = { ...lista[i], ...mudancas, atualizado_em: Date.now() };
     gravarTudo(lista);
     agendarEvento(lista[i]);
   }
+}
+
+// Substitui a lista inteira de uma vez (usado pela sincronização com a nuvem
+// após mesclar local + remoto). Quem chama cuida de reagendar as notificações.
+export async function substituirEventos(lista) {
+  gravarTudo(Array.isArray(lista) ? lista : []);
 }
 
 export async function deletarEvento(id) {

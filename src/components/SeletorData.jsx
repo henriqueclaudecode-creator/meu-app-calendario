@@ -59,6 +59,9 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
   const inicial = partesISO(valor || hojeISO());
   const [ano, setAno] = useState(inicial.ano);
   const [mes, setMes] = useState(inicial.mes);
+  // Painel de anos (para pular décadas de uma vez — útil em datas de nascimento
+  // e momentos antigos, sem clicar o "mês anterior" dezenas de vezes).
+  const [escolhendoAno, setEscolhendoAno] = useState(false);
 
   useEffect(() => {
     function aoTeclar(e) {
@@ -101,9 +104,14 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
           <button onClick={() => mudarMes(-1)} style={estilos.navMes} aria-label="Mês anterior">
             <Seta direcao="anterior" />
           </button>
-          <span style={estilos.tituloMes}>
+          <button
+            onClick={() => setEscolhendoAno((v) => !v)}
+            style={estilos.tituloMes}
+            aria-label="Escolher o ano"
+          >
             {NOMES_MESES[mes - 1]} {ano}
-          </span>
+            <span style={{ ...estilos.tituloSeta, transform: escolhendoAno ? 'rotate(180deg)' : 'none' }} aria-hidden="true">⌄</span>
+          </button>
           <button
             onClick={() => mudarMes(1)}
             disabled={proximoMesPassaDoLimite}
@@ -114,6 +122,26 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
           </button>
         </div>
 
+        {escolhendoAno && (
+          <div style={estilos.anos} className="sem-barra">
+            {(() => {
+              const anoMax = max ? partesISO(max).ano : new Date().getFullYear() + 5;
+              const lista = [];
+              for (let a = anoMax; a >= 1920; a--) lista.push(a);
+              return lista.map((a) => (
+                <button
+                  key={a}
+                  onClick={() => { setAno(a); setEscolhendoAno(false); }}
+                  style={{ ...estilos.anoItem, ...(a === ano ? estilos.anoItemAtivo : null) }}
+                >
+                  {a}
+                </button>
+              ));
+            })()}
+          </div>
+        )}
+
+        {!escolhendoAno && (
         <div style={estilos.grade}>
           {/* Três letras em vez de uma: as iniciais teriam repetições
               ("D S T Q Q S S") — dois S e dois Q, ilegível. */}
@@ -148,6 +176,7 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
             );
           })}
         </div>
+        )}
 
         <div style={estilos.rodape}>
           <button onClick={() => onEscolher(hoje)} style={estilos.botaoHoje}>
@@ -256,10 +285,46 @@ const estilos = {
     marginBottom: 12,
   },
   tituloMes: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
     fontSize: 15,
     fontWeight: 700,
     letterSpacing: -0.2,
     color: cores.texto,
+    border: 'none',
+    background: 'transparent',
+    cursor: 'pointer',
+    padding: '4px 8px',
+    borderRadius: raioPequeno,
+  },
+  tituloSeta: {
+    fontSize: 14,
+    color: cores.textoApagado,
+    transition: 'transform 0.15s ease',
+  },
+  anos: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 6,
+    maxHeight: 232,
+    overflowY: 'auto',
+    padding: '2px',
+  },
+  anoItem: {
+    padding: '10px 0',
+    border: `1px solid ${cores.borda}`,
+    borderRadius: raioPequeno,
+    background: cores.superficie2,
+    color: cores.texto,
+    fontSize: 13.5,
+    fontWeight: 700,
+    cursor: 'pointer',
+  },
+  anoItemAtivo: {
+    background: cores.acento,
+    borderColor: cores.acento,
+    color: cores.textoClaro,
   },
   navMes: {
     display: 'flex',

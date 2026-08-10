@@ -75,11 +75,16 @@ export async function atualizarObjetivo(id, mudancas) {
   }
   const i = lista.findIndex((o) => o.id === id);
   if (i !== -1) {
-    lista[i] = { ...lista[i], ...mudancas };
+    lista[i] = { ...lista[i], ...mudancas, atualizado_em: Date.now() };
     gravarTudo(lista);
   }
 }
 
 export async function deletarObjetivo(id) {
   gravarTudo(lerTudo().filter((o) => o.id !== id));
+}
+
+// Substitui a lista inteira de uma vez (usado pela sincronização com a nuvem).
+export async function substituirObjetivos(lista) {
+  gravarTudo(Array.isArray(lista) ? lista : []);
 }

@@ -58,13 +58,18 @@ export async function atualizarCategoria(id, mudancas) {
   const lista = lerTudo();
   const i = lista.findIndex((c) => c.id === id);
   if (i !== -1) {
-    lista[i] = { ...lista[i], ...mudancas };
+    lista[i] = { ...lista[i], ...mudancas, atualizado_em: Date.now() };
     gravarTudo(lista);
   }
 }
 
 export async function deletarCategoria(id) {
   gravarTudo(lerTudo().filter((c) => c.id !== id));
+}
+
+// Substitui a lista inteira de uma vez (usado pela sincronização com a nuvem).
+export async function substituirCategorias(lista) {
+  gravarTudo(Array.isArray(lista) ? lista : []);
 }
 
 // Resolve uma etiqueta pelo id a partir de uma lista já carregada (ou do

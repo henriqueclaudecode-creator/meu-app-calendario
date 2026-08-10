@@ -178,6 +178,43 @@ function corpoNotificacao(evento) {
   return 'Compromisso de hoje.';
 }
 
+// ---------- Aniversário do próprio usuário ----------
+// Um agrado grátis (independe de Premium): todo ano, no dia do aniversário, o
+// app manda uma notificação local. Id fixo (não vem de evento), para reagendar
+// sem duplicar. Recorre anualmente via schedule.on (mês/dia).
+const ID_ANIVERSARIO = 2000000001;
+
+export async function cancelarAniversario() {
+  const p = await plugin();
+  if (!p) return;
+  try { await p.cancel({ notifications: [{ id: ID_ANIVERSARIO }] }); } catch { /* silencioso */ }
+}
+
+// Agenda (ou reagenda) o lembrete anual de aniversário a partir da data de
+// nascimento ('AAAA-MM-DD'). Sem data, apenas cancela o que houver.
+export async function agendarAniversario(nascimentoISO) {
+  const p = await plugin();
+  if (!p) return;
+  if (!(await permissaoConcedida())) return;
+  await cancelarAniversario();
+  if (!nascimentoISO) return;
+  const partes = nascimentoISO.split('-').map(Number);
+  const mes = partes[1];
+  const dia = partes[2];
+  if (!mes || !dia) return;
+  try {
+    await p.schedule({
+      notifications: [{
+        id: ID_ANIVERSARIO,
+        title: '🎂 Feliz aniversário!',
+        body: 'Mais um ano da sua história.',
+        schedule: { on: { month: mes, day: dia, hour: 9, minute: 0 }, allowWhileIdle: true },
+        extra: { aniversario: true },
+      }],
+    });
+  } catch { /* silencioso */ }
+}
+
 // Reagenda TODOS os eventos (usado no início do app e depois de importar dados).
 // Cancela tudo que estava pendente e recria a partir da lista atual.
 export async function sincronizarTodos(eventos) {

@@ -7,12 +7,20 @@
 
 import BotaoMenu from '../components/BotaoMenu';
 import PreviewPremium from '../components/PreviewPremium';
+import NovoMomento from '../components/NovoMomento';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { listarEventos } from '../db/eventos';
+import { listarMomentos } from '../db/momentos';
 import { listarCategorias } from '../db/categorias';
+import { acharCategoriaMomento } from '../lib/momentoCategorias';
 import { hojeISO } from '../lib/datas';
 import { IconeCat } from '../components/IconeCat';
 import { cores, sombraForte, raio, raioGrande } from '../lib/tema';
+
+// Cor de destaque dos momentos de vida (dourado do app).
+const COR_MOMENTO = '#bf9540';
+const MESES_CURTO = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const anoDe = (iso) => Number(iso.slice(0, 4));
 
 // Períodos do filtro (do mais curto ao mais amplo).
 const PERIODOS = [
@@ -74,23 +82,25 @@ function maiorSequencia(datasIso) {
 function MapaVida({ onAbrirMenu }) {
   const hoje = hojeISO();
   const [eventos, setEventos] = useState([]);
+  const [momentos, setMomentos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [periodo, setPeriodo] = useState('mes');
   const [detalhe, setDetalhe] = useState(null);
+  const [form, setForm] = useState(null); // null | { momento } — abre o NovoMomento
   const [pronto, setPronto] = useState(false);
 
   const areaRef = useRef(null);
   const [lado, setLado] = useState(340);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [evs, cats] = await Promise.all([listarEventos(), listarCategorias()]);
-        setEventos(evs);
-        setCategorias(cats);
-      } catch { /* vazio */ }
-    })();
-  }, []);
+  async function carregar() {
+    try {
+      const [evs, moms, cats] = await Promise.all([listarEventos(), listarMomentos(), listarCategorias()]);
+      setEventos(evs);
+      setMomentos(moms);
+      setCategorias(cats);
+    } catch { /* vazio */ }
+  }
+  useEffect(() => { carregar(); }, []);
 
   // Mede a área para posicionar tudo proporcionalmente (funciona no mobile).
   useLayoutEffect(() => {
@@ -254,9 +264,72 @@ function MapaVida({ onAbrirMenu }) {
           <Tile valor={seqGeral} rotulo="Maior sequência" />
         </div>
       </div>
+
+      {/* Marcos da vida — a linha do tempo dos momentos (toda a vida, sem filtro). */}
+      <MarcosVida
+        momentos={momentos}
+        hoje={hoje}
+        onAbrir={(m) => setForm({ momento: m })}
+        onAdicionar={() => setForm({ momento: null })}
+      />
       </PreviewPremium>
 
       {detalhe && <DetalheEtiqueta n={detalhe} onFechar={() => setDetalhe(null)} />}
+      {form && <NovoMomento momento={form.momento} onSalvo={() => carregar()} onFechar={() => setForm(null)} />}
+    </div>
+  );
+}
+
+// Faixa horizontal com os marcos da vida (momentos), do mais antigo ao mais
+// recente, encerrando em "Hoje". Cada marco é tocável (abre para editar).
+function MarcosVida({ momentos, hoje, onAbrir, onAdicionar }) {
+  const marcos = [...momentos].sort((a, b) => a.data.localeCompare(b.data));
+
+  return (
+    <div style={estilos.marcos}>
+      <div style={estilos.marcosCabecalho}>
+        <div style={estilos.marcosTitulo}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill={COR_MOMENTO} stroke="none" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7L6.8 18.2l1-5.8-4.3-4.1 5.9-.9z" /></svg>
+          Marcos da vida
+        </div>
+        <button style={estilos.marcosAdd} onClick={onAdicionar} aria-label="Adicionar momento">+ Momento</button>
+      </div>
+
+      {marcos.length === 0 ? (
+        <p style={estilos.marcosVazio}>Registre os momentos que marcaram sua vida para vê-los aqui, do começo até hoje.</p>
+      ) : (
+        <div style={estilos.marcosTrilha} className="sem-barra">
+          {marcos.map((m) => {
+            const cat = acharCategoriaMomento(m.categoria);
+            const [a, mm, dd] = m.data.split('-').map(Number);
+            return (
+              <button key={m.id} style={estilos.marco} onClick={() => onAbrir(m)}>
+                <div style={estilos.marcoAno}>{a}</div>
+                <div style={estilos.marcoLinha}>
+                  <span style={{ ...estilos.marcoPonto, background: cat.cor }} />
+                </div>
+                <div style={{ ...estilos.marcoIcone, background: cat.cor }}>
+                  <IconeCat id={cat.icone} tamanho={16} cor="#fff" strokeWidth={2} />
+                </div>
+                <div style={estilos.marcoTitulo}>{m.titulo}</div>
+                <div style={estilos.marcoData}>{dd} {MESES_CURTO[mm - 1]}</div>
+              </button>
+            );
+          })}
+          {/* Marco final: Hoje. */}
+          <div style={estilos.marco}>
+            <div style={{ ...estilos.marcoAno, color: cores.acento }}>{anoDe(hoje)}</div>
+            <div style={estilos.marcoLinha}>
+              <span style={{ ...estilos.marcoPonto, background: cores.acento, boxShadow: `0 0 0 3px ${cores.acentoBg}` }} />
+            </div>
+            <div style={{ ...estilos.marcoIcone, background: cores.acento }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+            </div>
+            <div style={{ ...estilos.marcoTitulo, color: cores.acento }}>Hoje</div>
+            <div style={estilos.marcoData}>&nbsp;</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -346,6 +419,21 @@ const estilos = {
   tile: { textAlign: 'center' },
   tileValor: { fontSize: 20, fontWeight: 800, color: cores.texto, letterSpacing: -0.5 },
   tileRotulo: { fontSize: 11, fontWeight: 600, color: cores.textoSuave, marginTop: 3, lineHeight: 1.2 },
+
+  // Marcos da vida (faixa horizontal de momentos).
+  marcos: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, padding: 16, marginTop: 12 },
+  marcosCabecalho: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
+  marcosTitulo: { display: 'flex', alignItems: 'center', gap: 7, fontSize: 15, fontWeight: 800, color: cores.texto },
+  marcosAdd: { padding: '7px 13px', borderRadius: 999, border: `1px solid ${COR_MOMENTO}`, background: cores.superficie, color: COR_MOMENTO, fontSize: 12.5, fontWeight: 800, cursor: 'pointer' },
+  marcosVazio: { fontSize: 13.5, color: cores.textoSuave, lineHeight: 1.5, margin: 0, fontWeight: 500 },
+  marcosTrilha: { display: 'flex', gap: 4, overflowX: 'auto', paddingBottom: 4 },
+  marco: { flexShrink: 0, width: 96, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 },
+  marcoAno: { fontSize: 13, fontWeight: 800, color: cores.textoApagado, marginBottom: 6 },
+  marcoLinha: { position: 'relative', width: '100%', height: 2, background: cores.borda, display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  marcoPonto: { width: 11, height: 11, borderRadius: '50%', border: `2px solid ${cores.superficie}`, boxSizing: 'content-box' },
+  marcoIcone: { width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 10 },
+  marcoTitulo: { fontSize: 12.5, fontWeight: 700, color: cores.texto, marginTop: 7, lineHeight: 1.25, letterSpacing: -0.2 },
+  marcoData: { fontSize: 11, fontWeight: 600, color: cores.textoApagado, marginTop: 2 },
 
   fundo: { position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' },
   sheet: { width: '100%', maxWidth: 520, boxSizing: 'border-box', background: cores.superficie, borderRadius: `${raioGrande + 6}px ${raioGrande + 6}px 0 0`, boxShadow: sombraForte, padding: '10px 18px calc(20px + env(safe-area-inset-bottom))' },
