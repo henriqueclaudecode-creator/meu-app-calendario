@@ -18,6 +18,12 @@ const GRUPOS = [
 ];
 const corDoGrupo = (id) => GRUPOS.find((g) => g.id === id)?.cor ?? '#64748b';
 
+// Ano de referência usado quando não se sabe o ano de nascimento. Serve só para
+// montar uma data válida (dia/mês) — não representa o ano real e nunca aparece.
+const ANO_REFERENCIA = 2000;
+const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+const diasNoMes = (mes) => new Date(ANO_REFERENCIA, mes, 0).getDate(); // mes 1-12
+
 const OPCOES_LEMBRETE = [
   { id: '1sem', rotulo: '1 semana antes' },
   { id: '3dias', rotulo: '3 dias antes' },
@@ -74,6 +80,27 @@ function NovoAniversario({ evento, onSalvo, onFechar }) {
 
   const anoNasc = (!semAno && dataNasc) ? Number(dataNasc.split('-')[0]) : null;
   const idade = idadeEsteAno(dataNasc, anoNasc);
+
+  // Dia e mês atuais (para os seletores quando não se sabe o ano).
+  const partes = dataNasc ? dataNasc.split('-').map(Number) : [];
+  const diaSel = partes[2] || '';
+  const mesSel = partes[1] || '';
+
+  // Ao marcar "não sei o ano", fixa o ano de referência mantendo dia/mês.
+  function alternarSemAno(marcado) {
+    setSemAno(marcado);
+    if (marcado && dataNasc) {
+      const [, m, d] = dataNasc.split('-');
+      setDataNasc(`${ANO_REFERENCIA}-${m}-${d}`);
+    }
+  }
+  function mudarDiaMes(novoDia, novoMes) {
+    const m = novoMes || mesSel || 1;
+    let d = novoDia || diaSel || 1;
+    const max = diasNoMes(m);
+    if (d > max) d = max;
+    setDataNasc(`${ANO_REFERENCIA}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
+  }
 
   function escolherFoto(e) {
     const f = e.target.files?.[0];
@@ -174,20 +201,45 @@ function NovoAniversario({ evento, onSalvo, onFechar }) {
           <input value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Ana Paula Silva" style={estilos.inputPlano} />
         </div>
 
-        {/* Data de nascimento */}
-        <div style={estilos.rotulo}>Data de nascimento</div>
-        <div style={estilos.campoIcone}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={cores.textoApagado} strokeWidth="1.8"><rect x="3" y="5" width="18" height="16" rx="3.5" /><path d="M3 10h18M8 2.5v4M16 2.5v4" strokeLinecap="round" /></svg>
-          <input type="date" value={dataNasc} onChange={(e) => setDataNasc(e.target.value)} style={estilos.inputPlano} />
-        </div>
+        {/* Data de nascimento (ou só dia/mês, se não souber o ano) */}
+        <div style={estilos.rotulo}>{semAno ? 'Dia do aniversário' : 'Data de nascimento'}</div>
+        {semAno ? (
+          <div style={estilos.diaMesLinha}>
+            <div style={{ ...estilos.campoIcone, flex: 1 }}>
+              <select value={diaSel} onChange={(e) => mudarDiaMes(Number(e.target.value), mesSel)} style={estilos.select}>
+                <option value="">Dia</option>
+                {Array.from({ length: diasNoMes(mesSel || 1) }, (_, i) => i + 1).map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ ...estilos.campoIcone, flex: 2 }}>
+              <select value={mesSel} onChange={(e) => mudarDiaMes(diaSel, Number(e.target.value))} style={estilos.select}>
+                <option value="">Mês</option>
+                {MESES.map((nome, i) => (
+                  <option key={nome} value={i + 1}>{nome}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        ) : (
+          <div style={estilos.campoIcone}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={cores.textoApagado} strokeWidth="1.8"><rect x="3" y="5" width="18" height="16" rx="3.5" /><path d="M3 10h18M8 2.5v4M16 2.5v4" strokeLinecap="round" /></svg>
+            <input type="date" value={dataNasc} onChange={(e) => setDataNasc(e.target.value)} style={estilos.inputPlano} />
+          </div>
+        )}
         <label style={estilos.checkLinha}>
-          <input type="checkbox" checked={semAno} onChange={(e) => setSemAno(e.target.checked)} style={estilos.checkbox} />
+          <input type="checkbox" checked={semAno} onChange={(e) => alternarSemAno(e.target.checked)} style={estilos.checkbox} />
           <span style={estilos.checkTexto}>Não sei o ano de nascimento</span>
         </label>
 
-        {/* Idade este ano */}
-        <div style={estilos.rotulo}>Idade este ano</div>
-        <div style={estilos.idadeCampo}>{semAno || idade == null ? '—' : `${idade} anos`}</div>
+        {/* Idade este ano — só faz sentido quando o ano é conhecido */}
+        {!semAno && (
+          <>
+            <div style={estilos.rotulo}>Idade este ano</div>
+            <div style={estilos.idadeCampo}>{idade == null ? '—' : `${idade} anos`}</div>
+          </>
+        )}
 
         {/* Grupo + destacar */}
         <div style={estilos.grupoLinha}>
@@ -305,6 +357,8 @@ const estilos = {
   opcional: { fontWeight: 500, color: cores.textoApagado },
   campoIcone: { display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', borderRadius: raio, border: `1px solid ${cores.borda}`, background: cores.superficie2 },
   inputPlano: { flex: 1, minWidth: 0, border: 'none', background: 'transparent', color: cores.texto, fontSize: 15, outline: 'none', fontFamily: 'inherit' },
+  diaMesLinha: { display: 'flex', gap: 9 },
+  select: { flex: 1, minWidth: 0, border: 'none', background: 'transparent', color: cores.texto, fontSize: 15, outline: 'none', fontFamily: 'inherit', cursor: 'pointer', appearance: 'none' },
 
   checkLinha: { display: 'flex', alignItems: 'center', gap: 9, marginTop: 10, cursor: 'pointer' },
   checkbox: { width: 18, height: 18, accentColor: cores.acento },

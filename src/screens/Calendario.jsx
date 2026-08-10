@@ -336,6 +336,15 @@ function Calendario({ onAbrirMenu }) {
 
   const diasContagem = (dataIso) => Math.round((dataLocal(dataIso) - hojeDate) / 86400000);
 
+  // Para eventos anuais (aniversários), a data guardada é a de nascimento — o que
+  // importa é quantos dias faltam para a PRÓXIMA ocorrência (dia/mês) a partir de hoje.
+  const diasAteProxima = (dataIso) => {
+    const d = dataLocal(dataIso);
+    let proxima = new Date(hojeDate.getFullYear(), d.getMonth(), d.getDate());
+    if (proxima < hojeDate) proxima = new Date(hojeDate.getFullYear() + 1, d.getMonth(), d.getDate());
+    return Math.round((proxima - hojeDate) / 86400000);
+  };
+
   return (
     <div style={estilos.pagina}>
       {/* Cabeçalho: lupa de pesquisa, título do período, setas e o menu. */}
@@ -367,9 +376,9 @@ function Calendario({ onAbrirMenu }) {
           {favoritos.map((e) => {
             const cor = corDe(e);
             const ehAniversario = e.tipo === 'aniversario';
-            const dias = diasContagem(e.data);
+            const dias = ehAniversario ? diasAteProxima(e.data) : diasContagem(e.data);
             return (
-              <button key={e.id} style={estilos.favCard} onClick={() => { irParaDia(e.data); setForm(ehAniversario ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); }}>
+              <button key={e.id} style={estilos.favCard} onClick={() => { irParaDia(ehAniversario ? isoDe(new Date(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate() + dias)) : e.data); setForm(ehAniversario ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); }}>
                 <span style={{ ...estilos.favCardIcone, background: cor }}>
                   <IconeCat id={ehAniversario ? 'bolo' : (etiquetaDe(e)?.icone ?? 'estrela')} tamanho={16} cor="#fff" strokeWidth={2} />
                 </span>
