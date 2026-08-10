@@ -140,7 +140,7 @@ function montarCalendario(eventos, categorias, premium) {
   const mes = hoje.getMonth();
 
   const primeiro = new Date(ano, mes, 1);
-  const desloc = (primeiro.getDay() + 6) % 7;
+  const desloc = primeiro.getDay(); // 0 = domingo (semana começa no domingo)
   const cursor = new Date(ano, mes, 1 - desloc);
 
   const celulas = [];

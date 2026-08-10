@@ -28,7 +28,7 @@ import { cores, sombra, sombraSuave, sombraAcento, raio, raioGrande } from '../l
 const COR_FERIADO = '#0891b2';
 const COR_NEUTRA = cores.textoApagado; // compromisso sem etiqueta
 
-const DIAS_SEMANA = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+const DIAS_SEMANA = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 const NOMES_DIAS = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 const MESES_CURTO = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -54,7 +54,7 @@ function dataLocal(dataIso) {
 
 function montarGrade(ano, mes) {
   const primeiro = new Date(ano, mes, 1);
-  const deslocamento = (primeiro.getDay() + 6) % 7;
+  const deslocamento = primeiro.getDay(); // 0 = domingo (semana começa no domingo)
   const cursor = new Date(ano, mes, 1 - deslocamento);
   const semanas = [];
   for (let s = 0; s < 6; s++) {
@@ -70,7 +70,7 @@ function montarGrade(ano, mes) {
 
 function diasDaSemana(dataIso) {
   const d = dataLocal(dataIso);
-  const desloc = (d.getDay() + 6) % 7;
+  const desloc = d.getDay(); // 0 = domingo (semana começa no domingo)
   const seg = new Date(d.getFullYear(), d.getMonth(), d.getDate() - desloc);
   return Array.from({ length: 7 }, (_, i) => {
     const x = new Date(seg);
@@ -415,7 +415,7 @@ function Calendario({ onAbrirMenu }) {
         <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
           <div style={estiloArraste}>
             <div style={estilos.linhaSemana}>
-              {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
+              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>))}
             </div>
             {grade.map((semana, i) => (
               <div key={i} style={estilos.semana}>
@@ -462,7 +462,7 @@ function Calendario({ onAbrirMenu }) {
         <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
           <div style={estiloArraste}>
             <div style={estilos.linhaSemana}>
-              {DIAS_SEMANA.map((d) => (<div key={d} style={estilos.nomeSemana}>{d}</div>))}
+              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>))}
             </div>
             <div style={estilos.semanaGradeUnica}>
               {diasDaSemana(selecionado).map((dataIso) => (
@@ -539,10 +539,12 @@ function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick,
   const visiveis = eventos.slice(0, MAX_CHIPS);
   const extra = eventos.length - visiveis.length;
 
+  const ehDomingo = dataLocal(celula.iso).getDay() === 0;
   const estiloNumero = {
     ...estilos.numeroDia,
     ...(celula.noMes ? null : estilos.numeroForaMes),
     ...(feriado && !selecionado && !ehHoje ? estilos.numeroFeriado : null),
+    ...(ehDomingo && celula.noMes && !selecionado && !ehHoje ? { color: cores.perigo } : null),
     ...(ehHoje && !selecionado ? estilos.numeroHoje : null),
     ...(selecionado ? estilos.numeroSelecionado : null),
   };
@@ -578,9 +580,11 @@ function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, 
   const MAX = 4;
   const visiveis = eventos.slice(0, MAX);
   const extra = eventos.length - visiveis.length;
+  const ehDomingo = dataLocal(iso).getDay() === 0;
   const estiloNumero = {
     ...estilos.numeroDia,
     ...(feriado && !selecionado && !ehHoje ? estilos.numeroFeriado : null),
+    ...(ehDomingo && !selecionado && !ehHoje ? { color: cores.perigo } : null),
     ...(ehHoje && !selecionado ? estilos.numeroHoje : null),
     ...(selecionado ? estilos.numeroSelecionado : null),
   };
@@ -617,17 +621,19 @@ function MiniMes({ ano, mes, hoje, selecionado, temEvento, feriados, onAbrirMes,
     <div style={estilos.miniCartao}>
       <button style={estilos.miniTitulo} onClick={onAbrirMes}>{MESES_CURTO[mes]}</button>
       <div style={estilos.miniSemana}>
-        {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((d, i) => (<span key={i} style={estilos.miniDow}>{d}</span>))}
+        {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (<span key={i} style={{ ...estilos.miniDow, ...(i === 0 ? { color: cores.perigo } : null) }}>{d}</span>))}
       </div>
       {grade.map((semana, i) => (
         <div key={i} style={estilos.miniLinha}>
           {semana.map((c) => {
             const comEvento = temEvento(c.iso);
             const ferido = !!feriados[c.iso];
+            const ehDomingo = dataLocal(c.iso).getDay() === 0;
             const est = {
               ...estilos.miniDia,
               ...(c.noMes ? null : estilos.miniForaMes),
               ...(ferido && c.noMes ? { color: COR_FERIADO, fontWeight: 700 } : null),
+              ...(ehDomingo && c.noMes ? { color: cores.perigo } : null),
               ...(c.iso === hoje ? estilos.miniHoje : null),
               ...(c.iso === selecionado ? estilos.miniSel : null),
             };

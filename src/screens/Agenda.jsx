@@ -22,7 +22,7 @@ import { cores, sombra, sombraSuave, raio, raioGrande } from '../lib/tema';
 const COR_FERIADO = '#0891b2';
 const COR_NEUTRA = cores.textoApagado;
 
-const DIAS_SEMANA = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+const DIAS_SEMANA = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 const NOMES_DIAS = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
@@ -54,16 +54,16 @@ function corTexto(bg) {
 
 const MAX_CHIPS = 2;
 
-function segundaDaSemana(iso) {
+function domingoDaSemana(iso) {
   const d = dataLocal(iso);
-  const desloc = (d.getDay() + 6) % 7;
+  const desloc = d.getDay(); // 0 = domingo (semana começa no domingo)
   d.setDate(d.getDate() - desloc);
   return isoDe(d);
 }
 
 function montarGrade(ano, mes) {
   const primeiro = new Date(ano, mes, 1);
-  const deslocamento = (primeiro.getDay() + 6) % 7;
+  const deslocamento = primeiro.getDay(); // 0 = domingo (semana começa no domingo)
   const cursor = new Date(ano, mes, 1 - deslocamento);
   const celulas = [];
   for (let i = 0; i < 42; i++) {
@@ -158,8 +158,8 @@ function Agenda({ onAbrirMenu }) {
     .filter((e) => visivel(e) && ocorreEm(e, d))
     .sort((a, b) => (a.inicio ?? '99:99').localeCompare(b.inicio ?? '99:99'));
 
-  const segunda = segundaDaSemana(selecionado);
-  const semana = Array.from({ length: 7 }, (_, i) => addDias(segunda, i));
+  const domingo = domingoDaSemana(selecionado);
+  const semana = Array.from({ length: 7 }, (_, i) => addDias(domingo, i));
   const selDate = dataLocal(selecionado);
   const ehHoje = selecionado === hoje;
 
@@ -255,7 +255,7 @@ function Agenda({ onAbrirMenu }) {
             const date = dataLocal(d);
             const sel = d === selecionado;
             const eHoje = d === hoje;
-            const fds = date.getDay() === 0 || date.getDay() === 6;
+            const ehDomingo = date.getDay() === 0;
             const ehFeriado = !!feriados[d];
             const evs = eventosDo(d);
             const visiveis = evs.slice(0, 2);
@@ -264,7 +264,7 @@ function Agenda({ onAbrirMenu }) {
               <button key={d} style={estilos.diaSemana} onClick={() => irParaDia(d)} title={feriados[d] || undefined}>
                 <span style={{
                   ...estilos.numeroSemana,
-                  ...(fds && !sel ? { color: cores.perigo } : null),
+                  ...(ehDomingo && !sel ? { color: cores.perigo } : null),
                   ...(ehFeriado && !sel && !eHoje ? { color: COR_FERIADO } : null),
                   ...(eHoje && !sel ? estilos.numeroHoje : null),
                   ...(sel ? estilos.numeroSel : null),

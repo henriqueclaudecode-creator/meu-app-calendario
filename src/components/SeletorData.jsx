@@ -23,7 +23,7 @@ import {
 import { cores, sombraForte, raio, raioGrande, raioPequeno, transicao } from '../lib/tema';
 
 // A semana começa na segunda, como no resto do app.
-const ORDEM_SEMANA = [1, 2, 3, 4, 5, 6, 0];
+const ORDEM_SEMANA = [0, 1, 2, 3, 4, 5, 6]; // domingo primeiro
 
 export function IconeCalendario({ tamanho = 16 }) {
   return (
@@ -76,8 +76,8 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
 
   const hoje = hojeISO();
   const total = diasNoMes(ano, mes);
-  // Quantas casas vazias antes do dia 1, com a semana começando na segunda.
-  const vazias = (diaSemanaDoPrimeiro(ano, mes) + 6) % 7;
+  // Quantas casas vazias antes do dia 1, com a semana começando no domingo.
+  const vazias = diaSemanaDoPrimeiro(ano, mes);
   const celulas = [
     ...Array.from({ length: vazias }, () => null),
     ...Array.from({ length: total }, (_, i) => i + 1),
@@ -115,8 +115,8 @@ function Calendario({ valor, max, onEscolher, onFechar }) {
         </div>
 
         <div style={estilos.grade}>
-          {/* Três letras em vez de uma: com a semana começando na segunda, as
-              iniciais viram "S T Q Q S S D" — dois S e dois Q, ilegível. */}
+          {/* Três letras em vez de uma: as iniciais teriam repetições
+              ("D S T Q Q S S") — dois S e dois Q, ilegível. */}
           {ORDEM_SEMANA.map((d) => (
             <div key={d} style={estilos.nomeDia}>
               {ABREV_DIAS_SEMANA[d].slice(0, 3)}
