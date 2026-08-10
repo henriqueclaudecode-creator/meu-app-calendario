@@ -377,13 +377,33 @@ function Calendario({ onAbrirMenu }) {
             const cor = corDe(e);
             const ehAniversario = e.tipo === 'aniversario';
             const dias = ehAniversario ? diasAteProxima(e.data) : diasContagem(e.data);
+            const abrir = () => { irParaDia(ehAniversario ? isoDe(new Date(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate() + dias)) : e.data); setForm(ehAniversario ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); };
+
+            if (ehAniversario) {
+              const hoje0 = dias === 0;
+              return (
+                <button key={e.id} style={{ ...estilos.favCard, ...estilos.favCardAniv, background: `${cor}12`, borderColor: `${cor}40` }} onClick={abrir}>
+                  <div style={estilos.favAnivTopo}>
+                    {e.foto
+                      ? <img src={e.foto} alt="" style={estilos.favAnivFoto} />
+                      : <span style={{ ...estilos.favCardIcone, background: cor }}><IconeCat id="bolo" tamanho={17} cor="#fff" strokeWidth={2} /></span>}
+                    <span style={{ ...estilos.favAnivEtiqueta, color: cor }}>Aniversário</span>
+                  </div>
+                  <span style={estilos.favCardTitulo}>{e.titulo}</span>
+                  <span style={{ ...estilos.favAnivPill, background: hoje0 ? cor : `${cor}22`, color: hoje0 ? '#fff' : cor }}>
+                    {rotuloAniversario(dias)}
+                  </span>
+                </button>
+              );
+            }
+
             return (
-              <button key={e.id} style={estilos.favCard} onClick={() => { irParaDia(ehAniversario ? isoDe(new Date(hojeDate.getFullYear(), hojeDate.getMonth(), hojeDate.getDate() + dias)) : e.data); setForm(ehAniversario ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); }}>
+              <button key={e.id} style={estilos.favCard} onClick={abrir}>
                 <span style={{ ...estilos.favCardIcone, background: cor }}>
-                  <IconeCat id={ehAniversario ? 'bolo' : (etiquetaDe(e)?.icone ?? 'estrela')} tamanho={16} cor="#fff" strokeWidth={2} />
+                  <IconeCat id={etiquetaDe(e)?.icone ?? 'estrela'} tamanho={16} cor="#fff" strokeWidth={2} />
                 </span>
-                <span style={estilos.favCardTitulo}>{ehAniversario ? `Aniversário de ${e.titulo}` : e.titulo}</span>
-                <span style={{ ...estilos.favCardContagem, color: cor }}>{ehAniversario ? rotuloAniversario(dias) : rotuloContagem(dias)}</span>
+                <span style={estilos.favCardTitulo}>{e.titulo}</span>
+                <span style={{ ...estilos.favCardContagem, color: cor }}>{rotuloContagem(dias)}</span>
               </button>
             );
           })}
@@ -671,6 +691,11 @@ const estilos = {
   favCardIcone: { width: 30, height: 30, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center' },
   favCardTitulo: { fontSize: 13.5, fontWeight: 700, color: cores.texto, letterSpacing: -0.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   favCardContagem: { fontSize: 12.5, fontWeight: 800 },
+  favCardAniv: { gap: 8 },
+  favAnivTopo: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
+  favAnivFoto: { width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' },
+  favAnivEtiqueta: { fontSize: 10.5, fontWeight: 800, letterSpacing: 0.3, textTransform: 'uppercase' },
+  favAnivPill: { alignSelf: 'flex-start', fontSize: 12, fontWeight: 800, padding: '3px 9px', borderRadius: 999, whiteSpace: 'nowrap' },
 
   cartaoGrade: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, boxShadow: sombra, padding: '14px 10px 10px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
   linhaSemana: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6, flexShrink: 0 },

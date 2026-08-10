@@ -177,7 +177,10 @@ function NovoAniversario({ evento, onSalvo, onFechar }) {
           <button style={estilos.voltar} onClick={onFechar} aria-label="Voltar">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
           </button>
-          <span style={estilos.topoTitulo}>🎁 Aniversário</span>
+          <span style={estilos.topoTitulo}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M4 16c1.2 0 1.2 1 2.4 1s1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1M12 12V8" /><circle cx="12" cy="5.5" r="1" /></svg>
+            Aniversário
+          </span>
           <span style={{ width: 34 }} />
         </div>
 
@@ -345,7 +348,7 @@ const estilos = {
   pegador: { width: 40, height: 5, borderRadius: 999, background: cores.bordaForte, margin: '4px auto 8px' },
   topo: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   voltar: { width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 },
-  topoTitulo: { fontSize: 18, fontWeight: 800, letterSpacing: -0.4, color: cores.texto },
+  topoTitulo: { display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 18, fontWeight: 800, letterSpacing: -0.4, color: cores.texto },
 
   fotoWrap: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', margin: '4px 0 8px' },
   fotoImg: { width: 84, height: 84, borderRadius: '50%', objectFit: 'cover' },
