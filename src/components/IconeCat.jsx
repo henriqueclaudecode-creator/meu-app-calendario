@@ -27,6 +27,7 @@ const DESENHOS = {
   planta: <path d="M12 21v-8M12 13c0-3-2.5-5-6-5 0 3.5 2.5 5 6 5zM12 12c0-3.5 2.5-6 6-6 0 4-2.5 6-6 6z" />,
   financeiro: <><circle cx="12" cy="12" r="8.5" /><path d="M14.5 9.2c-.6-.8-1.6-1.2-2.7-1.2-1.6 0-2.8.9-2.8 2.1 0 3 5.6 1.5 5.6 4.2 0 1.3-1.3 2.2-3 2.2-1.3 0-2.4-.5-3-1.4M12 6v2M12 16v2" /></>,
   lazer: <><circle cx="12" cy="12" r="8.5" /><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M12 12l4.5-4.5" /></>,
+  bolo: <><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M4 16c1.2 0 1.2 1 2.4 1s1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1 1.2 1 2.4 1 1.2-1 2.4-1M12 12V8" /><circle cx="12" cy="5.5" r="1" /></>,
 };
 
 export function IconeCat({ id = 'livro', tamanho = 22, cor = 'currentColor', strokeWidth = 1.9 }) {

@@ -10,4 +10,6 @@
     <color name="orbit_text_muted">#9AA6B2</color>
     <color name="orbit_accent">#2563EB</color>
     <color name="orbit_accent_bg">#EAF1FE</color>
+    <!-- Fundo da splash (igual ao fundo branco do ícone) -->
+    <color name="splash_background">#FFFFFF</color>
 </resources>

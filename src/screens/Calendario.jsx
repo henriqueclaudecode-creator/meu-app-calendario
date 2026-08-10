@@ -143,6 +143,14 @@ function rotuloContagem(dias) {
   return `há ${-dias} dias`;
 }
 
+function rotuloAniversario(dias) {
+  if (dias === 0) return 'é hoje 🎉';
+  if (dias === 1) return 'daqui a 1 dia';
+  if (dias > 1) return `daqui a ${dias} dias`;
+  if (dias === -1) return 'foi ontem';
+  return `foi há ${-dias} dias`;
+}
+
 function Calendario({ onAbrirMenu }) {
   const hoje = hojeISO();
   const hojeDate = dataLocal(hoje);
@@ -330,15 +338,15 @@ function Calendario({ onAbrirMenu }) {
 
   return (
     <div style={estilos.pagina}>
-      {/* Cabeçalho: menu, título do período, setas e a lupa de pesquisa. */}
+      {/* Cabeçalho: lupa de pesquisa, título do período, setas e o menu. */}
       <div style={estilos.cabecalho}>
-        <BotaoMenu onAbrir={onAbrirMenu} />
-        <button style={estilos.setaMes} onClick={() => navegar(-1)} aria-label="Anterior">‹</button>
-        <div style={estilos.mesTitulo}>{tituloTopo}</div>
-        <button style={estilos.setaMes} onClick={() => navegar(1)} aria-label="Próximo">›</button>
         <button style={estilos.lupa} onClick={() => setBusca(true)} aria-label="Pesquisar eventos">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.2-3.2" /></svg>
         </button>
+        <button style={estilos.setaMes} onClick={() => navegar(-1)} aria-label="Anterior">‹</button>
+        <div style={estilos.mesTitulo}>{tituloTopo}</div>
+        <button style={estilos.setaMes} onClick={() => navegar(1)} aria-label="Próximo">›</button>
+        <BotaoMenu onAbrir={onAbrirMenu} />
       </div>
 
       {/* Seletor de visão: Dia · Semana · Mês · Ano */}
@@ -358,13 +366,15 @@ function Calendario({ onAbrirMenu }) {
         <div style={estilos.favLista}>
           {favoritos.map((e) => {
             const cor = corDe(e);
+            const ehAniversario = e.tipo === 'aniversario';
+            const dias = diasContagem(e.data);
             return (
-              <button key={e.id} style={estilos.favCard} onClick={() => { irParaDia(e.data); setForm(e.tipo === 'aniversario' ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); }}>
+              <button key={e.id} style={estilos.favCard} onClick={() => { irParaDia(e.data); setForm(ehAniversario ? { tipo: 'aniversario', evento: e } : { tipo: 'compromisso', evento: e }); }}>
                 <span style={{ ...estilos.favCardIcone, background: cor }}>
-                  <IconeCat id={etiquetaDe(e)?.icone ?? 'estrela'} tamanho={16} cor="#fff" strokeWidth={2} />
+                  <IconeCat id={ehAniversario ? 'bolo' : (etiquetaDe(e)?.icone ?? 'estrela')} tamanho={16} cor="#fff" strokeWidth={2} />
                 </span>
-                <span style={estilos.favCardTitulo}>{e.titulo}</span>
-                <span style={{ ...estilos.favCardContagem, color: cor }}>{rotuloContagem(diasContagem(e.data))}</span>
+                <span style={estilos.favCardTitulo}>{ehAniversario ? `Aniversário de ${e.titulo}` : e.titulo}</span>
+                <span style={{ ...estilos.favCardContagem, color: cor }}>{ehAniversario ? rotuloAniversario(dias) : rotuloContagem(dias)}</span>
               </button>
             );
           })}
