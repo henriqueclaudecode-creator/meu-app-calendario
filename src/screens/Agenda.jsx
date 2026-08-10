@@ -255,7 +255,6 @@ function Agenda({ onAbrirMenu }) {
             const date = dataLocal(d);
             const sel = d === selecionado;
             const eHoje = d === hoje;
-            const ehDomingo = date.getDay() === 0;
             const ehFeriado = !!feriados[d];
             const evs = eventosDo(d);
             const visiveis = evs.slice(0, 2);
@@ -264,7 +263,6 @@ function Agenda({ onAbrirMenu }) {
               <button key={d} style={estilos.diaSemana} onClick={() => irParaDia(d)} title={feriados[d] || undefined}>
                 <span style={{
                   ...estilos.numeroSemana,
-                  ...(ehDomingo && !sel ? { color: cores.perigo } : null),
                   ...(ehFeriado && !sel && !eHoje ? { color: COR_FERIADO } : null),
                   ...(eHoje && !sel ? estilos.numeroHoje : null),
                   ...(sel ? estilos.numeroSel : null),
@@ -293,7 +291,6 @@ function Agenda({ onAbrirMenu }) {
           {montarGrade(selDate.getFullYear(), selDate.getMonth()).map((c) => {
             const sel = c.iso === selecionado;
             const eHoje = c.iso === hoje;
-            const ehDomingo = dataLocal(c.iso).getDay() === 0;
             const ehFeriado = !!feriados[c.iso];
             const evs = c.noMes ? eventosDo(c.iso) : [];
             const visiveis = evs.slice(0, MAX_CHIPS);
@@ -304,7 +301,6 @@ function Agenda({ onAbrirMenu }) {
                   ...estilos.numeroSemana,
                   ...(!c.noMes ? { color: cores.textoFraco, fontWeight: 600 } : null),
                   ...(ehFeriado && c.noMes && !sel && !eHoje ? { color: COR_FERIADO } : null),
-                  ...(ehDomingo && c.noMes && !sel && !eHoje ? { color: cores.perigo } : null),
                   ...(eHoje && !sel ? estilos.numeroHoje : null),
                   ...(sel ? estilos.numeroSel : null),
                 }}>{c.dia}</span>
@@ -422,7 +418,7 @@ function CardEvento({ evento, etiqueta, cor, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px', position: 'relative' },
+  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 90px', position: 'relative' },
 
   cabecalho: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, padding: '10px 2px 14px' },
   titulo: { fontSize: 28, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0 },
@@ -439,13 +435,13 @@ const estilos = {
   chipMais: { fontSize: 8.5, fontWeight: 700, color: cores.textoApagado, paddingLeft: 4, lineHeight: 1.3 },
   feriadoTag: { maxWidth: '100%', boxSizing: 'border-box', fontSize: 8.5, fontWeight: 700, lineHeight: 1.15, color: 'var(--feriado-texto, #0e6f86)', background: 'var(--feriado-bg, #e6f6fb)', border: '1px solid var(--feriado-borda, #b7e3ef)', borderRadius: 5, padding: '1px 3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' },
 
-  cartaoSemana: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, boxShadow: sombra, padding: '14px 12px', marginBottom: 6 },
+  cartaoSemana: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, boxShadow: sombra, padding: '14px 8px', marginBottom: 6 },
   mesLinha: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
   mesTitulo: { fontSize: 16, fontWeight: 800, color: cores.texto },
   setaMes: { border: 'none', background: 'transparent', color: cores.textoApagado, fontSize: 22, cursor: 'pointer', lineHeight: 1, padding: '0 8px' },
   gradeSemana: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', rowGap: 4 },
   nomeSemana: { textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: 0.4, color: cores.textoApagado, marginBottom: 2 },
-  diaSemana: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, border: 'none', background: 'transparent', cursor: 'pointer', padding: '2px 0' },
+  diaSemana: { minWidth: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, border: 'none', background: 'transparent', cursor: 'pointer', padding: '2px 0' },
   numeroSemana: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', fontSize: 15, fontWeight: 700, color: cores.texto },
   numeroHoje: { border: `2px solid ${cores.acento}`, color: cores.acento },
   numeroSel: { background: `var(--dia-sel-bg, ${cores.acento})`, color: `var(--dia-sel-texto, ${cores.textoClaro})` },

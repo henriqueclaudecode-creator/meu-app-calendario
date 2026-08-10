@@ -539,12 +539,10 @@ function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick,
   const visiveis = eventos.slice(0, MAX_CHIPS);
   const extra = eventos.length - visiveis.length;
 
-  const ehDomingo = dataLocal(celula.iso).getDay() === 0;
   const estiloNumero = {
     ...estilos.numeroDia,
     ...(celula.noMes ? null : estilos.numeroForaMes),
     ...(feriado && !selecionado && !ehHoje ? estilos.numeroFeriado : null),
-    ...(ehDomingo && celula.noMes && !selecionado && !ehHoje ? { color: cores.perigo } : null),
     ...(ehHoje && !selecionado ? estilos.numeroHoje : null),
     ...(selecionado ? estilos.numeroSelecionado : null),
   };
@@ -580,11 +578,9 @@ function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, 
   const MAX = 4;
   const visiveis = eventos.slice(0, MAX);
   const extra = eventos.length - visiveis.length;
-  const ehDomingo = dataLocal(iso).getDay() === 0;
   const estiloNumero = {
     ...estilos.numeroDia,
     ...(feriado && !selecionado && !ehHoje ? estilos.numeroFeriado : null),
-    ...(ehDomingo && !selecionado && !ehHoje ? { color: cores.perigo } : null),
     ...(ehHoje && !selecionado ? estilos.numeroHoje : null),
     ...(selecionado ? estilos.numeroSelecionado : null),
   };
@@ -628,12 +624,10 @@ function MiniMes({ ano, mes, hoje, selecionado, temEvento, feriados, onAbrirMes,
           {semana.map((c) => {
             const comEvento = temEvento(c.iso);
             const ferido = !!feriados[c.iso];
-            const ehDomingo = dataLocal(c.iso).getDay() === 0;
             const est = {
               ...estilos.miniDia,
               ...(c.noMes ? null : estilos.miniForaMes),
               ...(ferido && c.noMes ? { color: COR_FERIADO, fontWeight: 700 } : null),
-              ...(ehDomingo && c.noMes ? { color: cores.perigo } : null),
               ...(c.iso === hoje ? estilos.miniHoje : null),
               ...(c.iso === selecionado ? estilos.miniSel : null),
             };
@@ -681,7 +675,7 @@ function CardEvento({ evento, etiqueta, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 14px', position: 'relative', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 },
+  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 14px', position: 'relative', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 },
 
   cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 12px', flexShrink: 0 },
   mesTitulo: { flex: 1, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
@@ -703,7 +697,7 @@ const estilos = {
   favAnivEtiqueta: { fontSize: 10.5, fontWeight: 800, letterSpacing: 0.3, textTransform: 'uppercase' },
   favAnivPill: { alignSelf: 'flex-start', fontSize: 12, fontWeight: 800, padding: '3px 9px', borderRadius: 999, whiteSpace: 'nowrap' },
 
-  cartaoGrade: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, boxShadow: sombra, padding: '14px 10px 10px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
+  cartaoGrade: { background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raioGrande, boxShadow: sombra, padding: '14px 6px 10px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
   linhaSemana: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: 6, flexShrink: 0 },
   nomeSemana: { textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: 0.5, color: cores.textoApagado },
   semana: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', flex: 1, minHeight: 0 },

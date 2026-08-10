@@ -56,7 +56,6 @@ class CalendarioFactory(private val context: Context) : RemoteViewsService.Remot
                 views.setInt(R.id.cel_num, "setBackgroundResource", 0)
                 val cor = when {
                     !noMes -> corDe("orbit_text_muted")
-                    dom -> Color.parseColor("#E5484D")
                     else -> corDe("orbit_text")
                 }
                 views.setTextColor(R.id.cel_num, cor)
