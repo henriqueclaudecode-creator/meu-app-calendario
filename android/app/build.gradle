@@ -43,8 +43,11 @@ android {
             if (hasKeystore) {
                 signingConfig signingConfigs.release
             }
-            minifyEnabled true
-            shrinkResources true
+            // Minify/R8 desativado no 1o lançamento para o build passar sem
+            // percalços. É seguro e reversível: depois, com um build validado,
+            // volte estes dois para true (o app fica menor e ofuscado).
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
