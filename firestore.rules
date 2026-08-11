@@ -13,9 +13,16 @@ service cloud.firestore {
       // Só o dono lê o próprio documento.
       allow read: if request.auth != null && request.auth.uid == uid;
 
-      // O dono pode criar/atualizar o próprio perfil (nome, email...),
-      // mas não pode tocar no campo `premium`.
-      allow create, update: if request.auth != null
+      // Criação (1º login / 1ª sincronização): o doc ainda não existe, então NÃO
+      // dá para usar diff(resource.data). Basta garantir que o dono não injete o
+      // campo `premium` já na criação.
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && !('premium' in request.resource.data);
+
+      // Atualização: o dono pode mexer no próprio perfil e nos dados sincronizados
+      // (momentos, eventos, objetivos, categorias, perfil), mas nunca no `premium`.
+      allow update: if request.auth != null
         && request.auth.uid == uid
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['premium']);
 

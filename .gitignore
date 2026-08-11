@@ -24,3 +24,6 @@ android/app/*.apk
 
 # CHAVE API.txt contém credencial — não versionar
 CHAVE API.txt
+
+# Firebase CLI deploy cache
+.firebase/
