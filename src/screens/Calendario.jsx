@@ -17,7 +17,6 @@ import NovaCategoria from '../components/NovaCategoria';
 import MenuCriar from '../components/MenuCriar';
 import BotaoMenu from '../components/BotaoMenu';
 import NovoAniversario from '../components/NovoAniversario';
-import NovoMomento from '../components/NovoMomento';
 import BuscaEventos from '../components/BuscaEventos';
 import { IconePeriodo } from '../components/IconePeriodo';
 import { mapaFeriados } from '../db/feriados';
@@ -496,15 +495,6 @@ function Calendario({ onAbrirMenu }) {
           onCompromisso={(preset) => setForm({ tipo: 'compromisso', item: 'compromisso', evento: null, preset })}
           onEvento={(preset) => setForm({ tipo: 'compromisso', item: 'evento', evento: null, preset })}
           onAniversario={() => setForm({ tipo: 'aniversario', evento: null })}
-          onMomento={() => setForm({ tipo: 'momento', momento: null })}
-          onFechar={() => setForm(null)}
-        />
-      )}
-
-      {form?.tipo === 'momento' && (
-        <NovoMomento
-          momento={form.momento}
-          onSalvo={(data) => carregar(data)}
           onFechar={() => setForm(null)}
         />
       )}

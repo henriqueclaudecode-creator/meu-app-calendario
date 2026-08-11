@@ -23,7 +23,7 @@ function IconeAtalho({ id }) {
   return <svg {...c}><path d="M5 21V4M5 4h11l-1.5 4L16 12H5" /></svg>;
 }
 
-function MenuCriar({ onCompromisso, onEvento, onAniversario, onMomento, onFechar }) {
+function MenuCriar({ onCompromisso, onEvento, onAniversario, onFechar }) {
   return createPortal(
     <div style={estilos.fundo} className="modalFundo" onClick={onFechar} role="dialog" aria-modal="true" aria-label="O que você deseja criar">
       <div style={estilos.sheet} className="bottomSheet" onClick={(e) => e.stopPropagation()}>
@@ -57,14 +57,6 @@ function MenuCriar({ onCompromisso, onEvento, onAniversario, onMomento, onFechar
             <span style={estilos.opcaoNome}>Aniversário</span>
             <span style={estilos.opcaoDesc}>Datas especiais de quem você ama</span>
           </button>
-
-          <button style={estilos.opcao} onClick={() => onMomento()}>
-            <span style={estilos.opcaoIcone}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7L6.8 18.2l1-5.8-4.3-4.1 5.9-.9z" /></svg>
-            </span>
-            <span style={estilos.opcaoNome}>Momento de vida</span>
-            <span style={estilos.opcaoDesc}>Um marco da sua trajetória</span>
-          </button>
         </div>
 
         <button style={estilos.cancelar} onClick={onFechar}>Cancelar</button>
@@ -82,7 +74,7 @@ const estilos = {
   titulo: { fontSize: 20, fontWeight: 800, letterSpacing: -0.4, color: cores.texto },
   sub: { fontSize: 13.5, color: cores.textoSuave, marginTop: 4, fontWeight: 500 },
 
-  opcoes: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 },
+  opcoes: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 9 },
   opcao: { display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 7, padding: '16px 8px', borderRadius: raioGrande, borderWidth: 1, borderStyle: 'solid', borderColor: cores.borda, background: cores.superficie2, cursor: 'pointer' },
   opcaoIcone: { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 50, height: 50, borderRadius: '50%', background: cores.superficie, border: `1px solid ${cores.borda}`, marginBottom: 2 },
   opcaoNome: { fontSize: 14.5, fontWeight: 700, color: cores.texto },
