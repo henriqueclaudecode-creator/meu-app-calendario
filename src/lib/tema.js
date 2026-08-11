@@ -36,6 +36,9 @@ export const cores = {
 
   sucesso: v('sucesso', '#0f9d58'),
   perigo: v('perigo', '#e5484d'),
+  // Vermelho do domingo (cabeçalhos de calendário). Token próprio para ficar
+  // sempre vermelho, mesmo nos temas onde `perigo` é neutro (ex.: black).
+  domingo: v('domingo', '#e5484d'),
   atencaoBg: v('atencaoBg', '#fff8e8'),
   atencaoBorda: v('atencaoBorda', '#f3d18a'),
   atencaoTexto: v('atencaoTexto', '#8a5a00'),

@@ -251,7 +251,7 @@ function Agenda({ onAbrirMenu }) {
           <button style={estilos.setaMes} onClick={() => setSelecionado(addDias(selecionado, 7))} aria-label="Próxima semana">›</button>
         </div>
         <div style={estilos.gradeSemana}>
-          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>)}
+          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.domingo } : null) }}>{d}</div>)}
           {semana.map((d) => {
             const date = dataLocal(d);
             const sel = d === selecionado;
@@ -288,7 +288,7 @@ function Agenda({ onAbrirMenu }) {
           <button style={estilos.setaMes} onClick={() => mudarMesSel(1)} aria-label="Próximo mês">›</button>
         </div>
         <div style={estilos.gradeMes}>
-          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>)}
+          {DIAS_SEMANA.map((d) => <div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.domingo } : null) }}>{d}</div>)}
           {montarGrade(selDate.getFullYear(), selDate.getMonth()).map((c) => {
             const sel = c.iso === selecionado;
             const eHoje = c.iso === hoje;

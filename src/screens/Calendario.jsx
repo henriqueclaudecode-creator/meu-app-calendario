@@ -416,7 +416,7 @@ function Calendario({ onAbrirMenu }) {
         <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
           <div style={estiloArraste}>
             <div style={estilos.linhaSemana}>
-              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>))}
+              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.domingo } : null) }}>{d}</div>))}
             </div>
             {grade.map((semana, i) => (
               <div key={i} style={estilos.semana}>
@@ -463,7 +463,7 @@ function Calendario({ onAbrirMenu }) {
         <div ref={gradeRef} style={{ ...estilos.cartaoGrade, overflow: 'hidden' }} onTouchStart={aoTocarInicio} onTouchMove={aoTocarMover} onTouchEnd={aoTocarFim}>
           <div style={estiloArraste}>
             <div style={estilos.linhaSemana}>
-              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.perigo } : null) }}>{d}</div>))}
+              {DIAS_SEMANA.map((d) => (<div key={d} style={{ ...estilos.nomeSemana, ...(d === 'DOM' ? { color: cores.domingo } : null) }}>{d}</div>))}
             </div>
             <div style={estilos.semanaGradeUnica}>
               {diasDaSemana(selecionado).map((dataIso) => (
@@ -627,7 +627,7 @@ function MiniMes({ ano, mes, hoje, selecionado, temEvento, feriados, onAbrirMes,
     <div style={estilos.miniCartao}>
       <button style={estilos.miniTitulo} onClick={onAbrirMes}>{MESES_CURTO[mes]}</button>
       <div style={estilos.miniSemana}>
-        {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (<span key={i} style={{ ...estilos.miniDow, ...(i === 0 ? { color: cores.perigo } : null) }}>{d}</span>))}
+        {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (<span key={i} style={{ ...estilos.miniDow, ...(i === 0 ? { color: cores.domingo } : null) }}>{d}</span>))}
       </div>
       {grade.map((semana, i) => (
         <div key={i} style={estilos.miniLinha}>
