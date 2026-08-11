@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbi — Feature Graphic (1024×500)</title>
+<style>
+  body { margin:0; font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:#0b1220; color:#e6e6ee; text-align:center; padding:24px; }
+  h1 { font-size:18px; font-weight:700; }
+  p { color:#9aa7bd; font-size:13px; }
+  .wrap { max-width:1024px; margin:16px auto; }
+  svg { width:100%; height:auto; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,.4); display:block; }
+  button { margin-top:18px; padding:13px 22px; border:none; border-radius:10px; background:#bf9540; color:#1a1200; font-size:15px; font-weight:800; cursor:pointer; }
+  button:active { transform:translateY(1px); }
+  .dica { margin-top:10px; font-size:12px; color:#8a97ad; }
+</style>
+</head>
+<body>
+  <h1>Feature graphic do Orbi — 1024 × 500</h1>
+  <p>Clique no botão para baixar o PNG pronto para a Play Store.</p>
+
+  <div class="wrap">
+    <svg id="fg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#12294a"/>
+          <stop offset="1" stop-color="#0a1730"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="0.22" cy="0.48" r="0.42">
+          <stop offset="0" stop-color="#bf9540" stop-opacity="0.30"/>
+          <stop offset="1" stop-color="#bf9540" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Fundo -->
+      <rect width="1024" height="500" fill="url(#bg)"/>
+      <rect width="1024" height="500" fill="url(#glow)"/>
+
+      <!-- Logo (montanha dourada) -->
+      <svg x="92" y="150" width="250" height="181" viewBox="205 278 850 615">
+        <path fill="#bf9540" d="M 1040,871 L872,645 L868,642 L861,643 L823,675 L818,676 L718,535 L708,525 L700,521 L700,375 L714,370 L728,370 L739,373 L761,386 L775,390 L801,389 L814,385 L817,381 L798,373 L789,366 L803,356 L814,345 L814,342 L788,343 L772,340 L763,335 L747,319 L735,312 L718,308 L701,310 L700,305 L703,302 L703,296 L700,292 L696,291 L690,295 L689,299 L693,306 L693,517 L687,517 L687,508 L675,503 L669,497 L669,492 L661,485 L661,479 L645,437 L646,435 L650,437 L651,444 L655,444 L654,453 L658,453 L660,441 L654,429 L638,420 L629,418 L615,405 L609,394 L601,387 L605,382 L612,383 L614,381 L616,371 L619,369 L616,360 L626,358 L630,353 L618,351 L605,338 L594,337 L586,340 L580,346 L577,355 L580,368 L584,374 L583,377 L575,379 L570,383 L566,376 L560,373 L547,372 L540,374 L533,383 L532,394 L525,402 L527,407 L518,430 L518,461 L521,468 L530,474 L547,476 L551,487 L561,496 L546,504 L538,512 L450,651 L446,654 L432,652 L419,654 L224,871 L224,874 L1039,875 Z" />
+      </svg>
+
+      <!-- Nome -->
+      <text x="384" y="245" font-family="Segoe UI, Arial, sans-serif" font-size="104" font-weight="800" fill="#ffffff" letter-spacing="-2">Orbi</text>
+
+      <!-- Tagline -->
+      <text x="388" y="300" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500" fill="#cdd8e8">Organize seus dias.</text>
+      <text x="388" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#d8b25e">Construa sua história.</text>
+
+      <!-- Linha do tempo (motivo "história") -->
+      <line x1="390" y1="392" x2="710" y2="392" stroke="#bf9540" stroke-opacity="0.55" stroke-width="2"/>
+      <circle cx="390" cy="392" r="5" fill="#8aa0bd"/>
+      <circle cx="470" cy="392" r="5" fill="#8aa0bd"/>
+      <circle cx="550" cy="392" r="5" fill="#8aa0bd"/>
+      <circle cx="630" cy="392" r="5" fill="#8aa0bd"/>
+      <circle cx="710" cy="392" r="7" fill="#d8b25e"/>
+    </svg>
+  </div>
+
+  <button id="baixar">⬇ Baixar PNG (1024×500)</button>
+  <div class="dica">Se preferir JPEG, me avise — mas PNG é aceito e tem melhor qualidade.</div>
+
+<script>
+  document.getElementById('baixar').addEventListener('click', function () {
+    const svg = document.getElementById('fg');
+    const xml = new XMLSerializer().serializeToString(svg);
+    const url = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+    const img = new Image();
+    img.onload = function () {
+      const c = document.createElement('canvas');
+      c.width = 1024; c.height = 500;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0, 1024, 500);
+      const a = document.createElement('a');
+      a.download = 'orbi-feature-graphic.png';
+      a.href = c.toDataURL('image/png');
+      a.click();
+    };
+    img.src = url;
+  });
+</script>
+</body>
+</html>

@@ -10,7 +10,8 @@
     "public": "site",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      { "source": "/privacidade", "destination": "/politica-privacidade.html" }
+      { "source": "/privacidade", "destination": "/politica-privacidade.html" },
+      { "source": "/exclusao", "destination": "/exclusao-de-dados.html" }
     ]
   }
 }
