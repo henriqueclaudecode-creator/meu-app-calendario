@@ -44,6 +44,16 @@ button {
   font-family: inherit;
 }
 
+/* Largura máxima do conteúdo. No celular fica em 560px (o fallback nos estilos);
+   em telas grandes (tablets) o conteúdo se alarga para não ficar uma coluna
+   estreita cercada de vazio. */
+@media (min-width: 700px) {
+  :root { --app-max: 720px; }
+}
+@media (min-width: 1040px) {
+  :root { --app-max: 840px; }
+}
+
 /* ---- Modo escuro ------------------------------------------------------- */
 /* O tema claro usa os fallbacks definidos em lib/tema.js. Aqui só sobrescrevo
    o que muda no escuro (paleta inspirada na referência: navy quase preto). */

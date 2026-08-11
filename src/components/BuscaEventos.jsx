@@ -127,7 +127,7 @@ export default function BuscaEventos({ onFechar, onMudou }) {
 
 const estilos = {
   fundo: { position: 'fixed', inset: 0, zIndex: 350, background: cores.bg, display: 'flex', flexDirection: 'column' },
-  painel: { width: '100%', maxWidth: 560, margin: '0 auto', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', boxSizing: 'border-box', padding: '0 12px' },
+  painel: { width: '100%', maxWidth: 'var(--app-max, 560px)', margin: '0 auto', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', boxSizing: 'border-box', padding: '0 12px' },
   topo: { display: 'flex', alignItems: 'center', gap: 8, padding: '12px 4px', position: 'relative' },
   lupa: { flexShrink: 0, display: 'flex' },
   input: { flex: 1, minWidth: 0, border: 'none', background: 'transparent', color: cores.texto, fontSize: 16, outline: 'none', fontFamily: 'inherit' },

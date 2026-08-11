@@ -342,7 +342,7 @@ function MomentoItem({ momento, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
   cabecalho: { padding: '4px 2px 14px' },
   titulo: { fontSize: 27, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0, display: 'flex', alignItems: 'center', gap: 8 },
   estrela: { color: '#bf9540', fontSize: 20 },

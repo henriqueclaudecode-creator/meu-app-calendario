@@ -685,7 +685,7 @@ function CardEvento({ evento, etiqueta, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 14px', position: 'relative', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 14px', position: 'relative', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 },
 
   cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 12px', flexShrink: 0 },
   mesTitulo: { flex: 1, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },

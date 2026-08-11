@@ -285,7 +285,7 @@ function Mais({ onAbrirMenu }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
   cabecalhoMais: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 10px' },
   tituloMais: { margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)' },
   cabecalho: { padding: '4px 2px 16px' },

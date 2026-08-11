@@ -384,7 +384,7 @@ function Linha({ rotulo, valor }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
   cabecalho: { padding: '4px 2px 14px', textAlign: 'center' },
   titulo: { fontSize: 26, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, margin: 0 },
   subtitulo: { fontSize: 13.5, color: cores.textoSuave, margin: '4px 0 0', fontWeight: 500 },

@@ -83,7 +83,7 @@ const estilos = {
     boxShadow: '0 2px 10px rgba(15, 37, 71, 0.05)',
     paddingTop: 'env(safe-area-inset-top)',
   },
-  interno: { maxWidth: 560, margin: '0 auto', display: 'flex', padding: '0 8px' },
+  interno: { maxWidth: 'var(--app-max, 560px)', margin: '0 auto', display: 'flex', padding: '0 8px' },
   item: {
     flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
     border: 'none', background: 'transparent', cursor: 'pointer', padding: '9px 0 10px',

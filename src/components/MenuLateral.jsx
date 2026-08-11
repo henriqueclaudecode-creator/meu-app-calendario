@@ -71,11 +71,11 @@ export default function MenuLateral({ ativa, onNavegar, onFechar, premium }) {
 const estilos = {
   fundo: { position: 'fixed', inset: 0, zIndex: 350, background: 'rgba(0,0,0,0.42)', backdropFilter: 'blur(2px)', display: 'flex', flexDirection: 'column', alignItems: 'center' },
   painel: {
-    width: '100%', maxWidth: 560, boxSizing: 'border-box', background: cores.superficie,
+    width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', background: cores.superficie,
     borderRadius: `0 0 ${raioGrande + 4}px ${raioGrande + 4}px`, boxShadow: sombraForte,
     paddingTop: 'env(safe-area-inset-top)', paddingBottom: 8,
   },
-  interno: { maxWidth: 560, margin: '0 auto', display: 'flex', padding: '0 2px' },
+  interno: { maxWidth: 'var(--app-max, 560px)', margin: '0 auto', display: 'flex', padding: '0 2px' },
   item: {
     flex: 1, minWidth: 0, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
     border: 'none', background: 'transparent', cursor: 'pointer', padding: '18px 1px 19px',

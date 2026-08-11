@@ -428,7 +428,7 @@ function CardEvento({ evento, etiqueta, cor, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 90px', position: 'relative' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 90px', position: 'relative' },
 
   cabecalho: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, padding: '10px 2px 14px' },
   titulo: { fontSize: 28, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0 },

@@ -201,7 +201,7 @@ function CardProximo({ evento, hoje }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 560, boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px', position: 'relative' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px', position: 'relative' },
 
   cabecalho: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '4px 2px 16px' },
   titulo: { fontSize: 30, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0 },
