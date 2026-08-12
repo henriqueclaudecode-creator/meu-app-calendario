@@ -122,6 +122,23 @@ export async function pedirPermissao() {
   }
 }
 
+// Versão detalhada do pedido de permissão, para a UI mostrar exatamente o que
+// aconteceu (concedida / negada / sem-plugin / erro nativo). Útil para
+// diagnosticar por que "não acontece nada" no aparelho.
+export async function pedirPermissaoDetalhado() {
+  const p = await plugin();
+  if (!p) return { ok: false, motivo: 'Sem plugin nativo (navegador/PWA).' };
+  try {
+    let { display } = await p.checkPermissions();
+    if (display !== 'granted') {
+      ({ display } = await p.requestPermissions());
+    }
+    return { ok: display === 'granted', motivo: `permissão: ${display}` };
+  } catch (e) {
+    return { ok: false, motivo: `erro: ${e?.message || e?.code || String(e)}` };
+  }
+}
+
 // Cancela a notificação de um evento (por id textual do evento).
 export async function cancelarEvento(eventoId) {
   const p = await plugin();

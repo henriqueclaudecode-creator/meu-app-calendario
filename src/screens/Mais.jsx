@@ -9,12 +9,12 @@ import { UFS, CAPITAIS } from '../lib/localidades';
 import { observarAuth, entrarComGoogle, sair, deletarConta } from '../lib/auth';
 import { usePremium } from '../lib/PremiumContext';
 import { assinar, cancelarAssinatura } from '../lib/premium';
-import { permissaoConcedida, pedirPermissao, sincronizarTodos } from '../lib/notificacoes';
+import { permissaoConcedida, pedirPermissaoDetalhado, sincronizarTodos } from '../lib/notificacoes';
 import { listarEventos } from '../db/eventos';
 import PainelPro from '../components/PainelPro';
 import { IconeOrbi } from '../components/IconeOrbi';
 import { IconePro } from '../components/IconePro';
-import { cores, sombra, sombraSuave, raio, raioGrande, raioPequeno } from '../lib/tema';
+import { cores, sombra, sombraSuave, sombraForte, raio, raioGrande, raioPequeno } from '../lib/tema';
 
 // Cada tema mostra um preview real das suas cores (fundo · superfície · acento)
 // em vez de um emoji — leitura instantânea e visual mais sofisticado.
@@ -41,15 +41,21 @@ function Mais() {
 
   useEffect(() => observarAuth(setUsuario), []);
   useEffect(() => { permissaoConcedida().then(setNotif); }, []);
+  // Some sozinho depois de alguns segundos (mensagens mais longas ficam mais tempo).
+  useEffect(() => {
+    if (!aviso) return;
+    const t = setTimeout(() => setAviso(''), aviso.length > 60 ? 8000 : 4500);
+    return () => clearTimeout(t);
+  }, [aviso]);
 
   async function ativarNotificacoes() {
-    const ok = await pedirPermissao();
+    const { ok, motivo } = await pedirPermissaoDetalhado();
     setNotif(ok);
     if (ok) {
       await sincronizarTodos(await listarEventos());
       setAviso('Notificações ativadas! Seus lembretes vão avisar na hora certa.');
     } else {
-      setAviso('Permissão negada. Ative as notificações do Orbi nos ajustes do aparelho.');
+      setAviso(`Não foi possível ativar (${motivo}). Ative as notificações do Orbi nos ajustes do aparelho.`);
     }
   }
 
@@ -64,8 +70,8 @@ function Mais() {
     try {
       await entrarComGoogle();
       setAviso('Login realizado! Seus dados serão sincronizados na nuvem.');
-    } catch {
-      setAviso('Não deu para entrar. Tente de novo.');
+    } catch (e) {
+      setAviso(`Não deu para entrar: ${e?.message || e?.code || String(e)}`);
     }
   }
 
@@ -275,7 +281,11 @@ function Mais() {
         )}
       </div>
 
-      {aviso && <div style={estilos.aviso}>{aviso}</div>}
+      {aviso && (
+        <div style={estilos.avisoToast} className="bottomSheet" onClick={() => setAviso('')} role="status">
+          {aviso}
+        </div>
+      )}
 
       <p style={estilos.versao}>Calendário · versão local 1.0</p>
     </div>
@@ -355,7 +365,13 @@ const estilos = {
   contaEmail: { fontSize: 13, color: cores.textoSuave, marginTop: 1 },
   sairBtn: { flex: 1, padding: '12px', border: `1px solid ${cores.borda}`, borderRadius: raio, background: cores.superficie, color: cores.texto, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
   deletarBtn: { flex: 1, padding: '12px', border: `1px solid ${cores.perigo}`, borderRadius: raio, background: 'transparent', color: cores.perigo, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-  aviso: { padding: '11px 14px', borderRadius: raio, background: cores.acentoBg, color: cores.acento, fontSize: 13.5, fontWeight: 600, textAlign: 'center', marginBottom: 14 },
+  avisoToast: {
+    position: 'fixed', left: '50%', transform: 'translateX(-50%)',
+    bottom: 'calc(72px + env(safe-area-inset-bottom))', zIndex: 60,
+    width: 'calc(100% - 32px)', maxWidth: 'calc(var(--app-max, 560px) - 32px)', boxSizing: 'border-box',
+    padding: '12px 16px', borderRadius: raio, background: cores.acento, color: cores.acentoTexto,
+    fontSize: 13.5, fontWeight: 600, textAlign: 'center', boxShadow: sombraForte, cursor: 'pointer',
+  },
   versao: { textAlign: 'center', fontSize: 12, color: cores.textoFraco, fontWeight: 600, marginTop: 8 },
 };
 
