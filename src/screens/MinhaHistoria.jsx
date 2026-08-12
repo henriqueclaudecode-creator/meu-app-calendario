@@ -5,7 +5,6 @@
 // geradas a partir dos próprios dados — quase uma autobiografia do que a pessoa
 // organizou.
 
-import BotaoMenu from '../components/BotaoMenu';
 import PreviewPremium from '../components/PreviewPremium';
 import NovoMomento from '../components/NovoMomento';
 import Retrospectiva from '../components/Retrospectiva';
@@ -126,7 +125,7 @@ function IconeConquista({ id, cor }) {
   return <IconeCat id={id} tamanho={22} cor="#fff" strokeWidth={2} />;
 }
 
-function MinhaHistoria({ onAbrirMenu }) {
+function MinhaHistoria() {
   const hoje = hojeISO();
   const [eventos, setEventos] = useState([]);
   const [momentos, setMomentos] = useState([]);
@@ -186,7 +185,6 @@ function MinhaHistoria({ onAbrirMenu }) {
   return (
     <div style={estilos.pagina}>
       <div style={{ ...estilos.cabecalho, display: 'flex', alignItems: 'center', gap: 4 }}>
-        <BotaoMenu onAbrir={onAbrirMenu} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <h1 style={estilos.titulo}>Minha História <IconeMontanha tamanho={34} cor={COR_MOMENTO} style={estilos.montanhaTitulo} /></h1>
           <p style={estilos.subtitulo}>Sua jornada, dia após dia</p>
@@ -342,7 +340,7 @@ function MomentoItem({ momento, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 24px' },
   cabecalho: { padding: '4px 2px 14px' },
   titulo: { fontSize: 27, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0, display: 'flex', alignItems: 'center', gap: 8 },
   estrela: { color: '#bf9540', fontSize: 20 },

@@ -5,7 +5,7 @@ import MapaVida from './screens/MapaVida';
 import MinhaHistoria from './screens/MinhaHistoria';
 import Mais from './screens/Mais';
 import Onboarding from './screens/Onboarding';
-import MenuLateral from './components/MenuLateral';
+import BarraInferior from './components/BarraInferior';
 import { usePremium } from './lib/PremiumContext';
 import { onboardingConcluido } from './lib/perfil';
 
@@ -19,12 +19,9 @@ const TELAS = {
 
 export default function App() {
   const [aba, setAba] = useState('calendario');
-  const [menuAberto, setMenuAberto] = useState(false);
   const [mostrarOnboarding, setMostrarOnboarding] = useState(() => !onboardingConcluido());
   const { premium } = usePremium() ?? {};
   const Tela = TELAS[aba] ?? Calendario;
-
-  const abrirMenu = () => setMenuAberto(true);
 
   if (mostrarOnboarding) {
     return <Onboarding onConcluir={() => setMostrarOnboarding(false)} />;
@@ -32,15 +29,8 @@ export default function App() {
 
   return (
     <>
-      <Tela onAbrirMenu={abrirMenu} />
-      {menuAberto && (
-        <MenuLateral
-          ativa={aba}
-          premium={premium}
-          onNavegar={(id) => setAba(id)}
-          onFechar={() => setMenuAberto(false)}
-        />
-      )}
+      <Tela />
+      <BarraInferior ativa={aba} premium={premium} onNavegar={(id) => setAba(id)} />
     </>
   );
 }

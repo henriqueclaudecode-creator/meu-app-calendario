@@ -5,7 +5,6 @@
 // ligam tudo ao centro, sobre órbitas concêntricas. Não é um dashboard: é para
 // dar a sensação de olhar para a própria vida.
 
-import BotaoMenu from '../components/BotaoMenu';
 import PreviewPremium from '../components/PreviewPremium';
 import NovoMomento from '../components/NovoMomento';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -79,7 +78,7 @@ function maiorSequencia(datasIso) {
   return melhor;
 }
 
-function MapaVida({ onAbrirMenu }) {
+function MapaVida() {
   const hoje = hojeISO();
   const [eventos, setEventos] = useState([]);
   const [momentos, setMomentos] = useState([]);
@@ -174,7 +173,6 @@ function MapaVida({ onAbrirMenu }) {
   return (
     <div style={estilos.pagina}>
       <div style={{ ...estilos.cabecalho, display: 'flex', alignItems: 'center', gap: 4, textAlign: 'left' }}>
-        <BotaoMenu onAbrir={onAbrirMenu} />
         <div>
           <h1 style={estilos.titulo}>Mapa da Vida</h1>
           <p style={estilos.subtitulo}>Uma visão geral da sua vida organizada</p>
@@ -384,7 +382,7 @@ function Linha({ rotulo, valor }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 24px' },
   cabecalho: { padding: '4px 2px 14px', textAlign: 'center' },
   titulo: { fontSize: 26, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, margin: 0 },
   subtitulo: { fontSize: 13.5, color: cores.textoSuave, margin: '4px 0 0', fontWeight: 500 },

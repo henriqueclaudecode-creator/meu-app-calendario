@@ -2,7 +2,6 @@
 // exportar/importar os dados e limpar tudo. Espaço para crescer (perfil, tema,
 // notificações, sincronização na nuvem...).
 
-import BotaoMenu from '../components/BotaoMenu';
 import { useEffect, useState } from 'react';
 import { lerLocal, salvarLocal } from '../lib/preferencias';
 import { lerTema, salvarTema } from '../lib/aparencia';
@@ -31,7 +30,7 @@ const TEMAS = [
   { id: 'areia', nome: 'Areia', desc: 'Bege dourado', bg: '#f7f2e9', superficie: '#f0e7d5', acento: '#b79b6f' },
 ];
 
-function Mais({ onAbrirMenu }) {
+function Mais() {
   const [aviso, setAviso] = useState('');
   const [confirmandoDelete, setConfirmandoDelete] = useState(false);
   const [tema, setTema] = useState(lerTema());
@@ -99,7 +98,6 @@ function Mais({ onAbrirMenu }) {
   return (
     <div style={estilos.pagina}>
       <div style={estilos.cabecalhoMais}>
-        <BotaoMenu onAbrir={onAbrirMenu} />
         <h1 style={estilos.tituloMais}>Configurações</h1>
       </div>
 
@@ -285,7 +283,7 @@ function Mais({ onAbrirMenu }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 90px' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 14px 24px' },
   cabecalhoMais: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 10px' },
   tituloMais: { margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)' },
   cabecalho: { padding: '4px 2px 16px' },

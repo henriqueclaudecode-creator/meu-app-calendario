@@ -16,7 +16,6 @@ import { mapaFeriados } from '../db/feriados';
 import { lerLocal } from '../lib/preferencias';
 import { publicarWidget } from '../lib/widget';
 import { usePremium } from '../lib/PremiumContext';
-import BotaoMenu from '../components/BotaoMenu';
 import { cores, sombra, sombraSuave, raio, raioGrande } from '../lib/tema';
 
 const COR_FERIADO = '#0891b2';
@@ -113,7 +112,7 @@ const PERIODOS = [
   { id: 'madrugada', rotulo: 'Madrugada', cor: 'var(--periodo-madrugada-icone, #93c5fd)', bg: 'var(--periodo-madrugada-bg, #1e293b)' },
 ];
 
-function Agenda({ onAbrirMenu }) {
+function Agenda() {
   const hoje = hojeISO();
   const [selecionado, setSelecionado] = useState(hoje);
   const [modo, setModo] = useState('semana'); // 'semana' | 'mes'
@@ -223,7 +222,6 @@ function Agenda({ onAbrirMenu }) {
     <div style={estilos.pagina}>
       <div style={estilos.cabecalho}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <BotaoMenu onAbrir={onAbrirMenu} />
           <div>
             <h1 style={estilos.titulo}>Agenda</h1>
             <p style={estilos.subtitulo}>Seus compromissos, dia a dia</p>
@@ -418,7 +416,7 @@ function CardEvento({ evento, etiqueta, cor, onAbrir }) {
 }
 
 const estilos = {
-  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 90px', position: 'relative' },
+  pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 24px', position: 'relative' },
 
   cabecalho: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, padding: '10px 2px 14px' },
   titulo: { fontSize: 28, fontWeight: 800, letterSpacing: -0.6, color: cores.texto, margin: 0 },
@@ -481,9 +479,10 @@ const estilos = {
   seta: { flexShrink: 0, display: 'flex', color: cores.textoApagado },
 
   botaoMais: {
-    position: 'fixed', right: 'max(18px, calc(50vw - 280px + 18px))', bottom: 24, zIndex: 30,
+    position: 'fixed', right: 'max(18px, calc(50vw - 280px + 18px))',
+    bottom: 'calc(74px + env(safe-area-inset-bottom))', zIndex: 45,
     width: 58, height: 58, borderRadius: '50%', border: 'none', cursor: 'pointer',
-    background: cores.acento, color: cores.acentoTexto,
+    background: cores.acento, color: cores.acentoTexto, opacity: 0.6,
     display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(37, 99, 235, 0.30)',
   },
 };

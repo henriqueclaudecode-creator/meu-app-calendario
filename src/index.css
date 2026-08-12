@@ -18,9 +18,11 @@ body,
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
-  /* Sem a antiga barra de abas, o conteúdo começa no topo — respeita a barra
-     de status (Android 15 edge-to-edge). */
+  /* O conteúdo começa no topo — respeita a barra de status (Android 15
+     edge-to-edge). Embaixo, reserva a altura da barra de navegação fixa
+     (BarraInferior) para o conteúdo nunca ficar escondido atrás dela. */
   padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(58px + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 #root > nav {

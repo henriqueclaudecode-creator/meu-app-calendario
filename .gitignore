@@ -22,6 +22,11 @@ android/app/release/
 android/app/*.aab
 android/app/*.apk
 
+# Artefatos de build/entrega (não versionar binários pesados)
+*.aab
+*.apk
+Arquivo play store/
+
 # CHAVE API.txt contém credencial — não versionar
 CHAVE API.txt
 

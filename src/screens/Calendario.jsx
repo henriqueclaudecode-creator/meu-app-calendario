@@ -15,7 +15,6 @@ import { IconeCat } from '../components/IconeCat';
 import NovoEvento from '../components/NovoEvento';
 import NovaCategoria from '../components/NovaCategoria';
 import MenuCriar from '../components/MenuCriar';
-import BotaoMenu from '../components/BotaoMenu';
 import NovoAniversario from '../components/NovoAniversario';
 import BuscaEventos from '../components/BuscaEventos';
 import { IconePeriodo } from '../components/IconePeriodo';
@@ -151,7 +150,7 @@ function rotuloAniversario(dias) {
   return `foi há ${-dias} dias`;
 }
 
-function Calendario({ onAbrirMenu }) {
+function Calendario() {
   const hoje = hojeISO();
   const hojeDate = dataLocal(hoje);
 
@@ -347,15 +346,14 @@ function Calendario({ onAbrirMenu }) {
 
   return (
     <div style={estilos.pagina}>
-      {/* Cabeçalho: lupa de pesquisa, título do período, setas e o menu. */}
+      {/* Cabeçalho: setas, título do período e a lupa de pesquisa (à direita). */}
       <div style={estilos.cabecalho}>
-        <button style={estilos.lupa} onClick={() => setBusca(true)} aria-label="Pesquisar eventos">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.2-3.2" /></svg>
-        </button>
         <button style={estilos.setaMes} onClick={() => navegar(-1)} aria-label="Anterior">‹</button>
         <div style={estilos.mesTitulo}>{tituloTopo}</div>
         <button style={estilos.setaMes} onClick={() => navegar(1)} aria-label="Próximo">›</button>
-        <BotaoMenu onAbrir={onAbrirMenu} />
+        <button style={estilos.lupa} onClick={() => setBusca(true)} aria-label="Pesquisar eventos">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={cores.texto} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.2-3.2" /></svg>
+        </button>
       </div>
 
       {/* Seletor de visão: Dia · Semana · Mês · Ano */}
@@ -680,7 +678,7 @@ const estilos = {
   cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 12px', flexShrink: 0 },
   mesTitulo: { flex: 1, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   setaMes: { border: 'none', background: 'transparent', color: cores.textoApagado, fontSize: 24, cursor: 'pointer', lineHeight: 1, padding: '2px 6px', flexShrink: 0 },
-  lupa: { flexShrink: 0, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: '50%', padding: 0, marginLeft: 2 },
+  lupa: { flexShrink: 0, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: '50%', padding: 0, marginLeft: 4 },
 
   seletorVista: { display: 'flex', gap: 4, background: cores.superficie2, border: `1px solid ${cores.borda}`, borderRadius: 999, padding: 4, marginBottom: 14 },
   vistaBtn: { flex: 1, padding: '8px 0', border: 'none', background: 'transparent', color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer', borderRadius: 999 },
@@ -765,9 +763,10 @@ const estilos = {
   cardEventoNota: { fontSize: 12, color: cores.textoSuave, marginTop: 2 },
 
   botaoMais: {
-    position: 'fixed', right: 'max(18px, calc(50vw - 280px + 18px))', bottom: 24, zIndex: 30,
+    position: 'fixed', right: 'max(18px, calc(50vw - 280px + 18px))',
+    bottom: 'calc(74px + env(safe-area-inset-bottom))', zIndex: 45,
     width: 58, height: 58, borderRadius: '50%', border: 'none', cursor: 'pointer',
-    background: cores.acento, color: cores.acentoTexto,
+    background: cores.acento, color: cores.acentoTexto, opacity: 0.6,
     display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: sombraAcento,
   },
 };
