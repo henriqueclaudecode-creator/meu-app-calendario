@@ -49,6 +49,7 @@ function Mais() {
   }, [aviso]);
 
   async function ativarNotificacoes() {
+    setAviso('Pedindo permissão de notificações…'); // feedback imediato (antes da espera)
     const { ok, motivo } = await pedirPermissaoDetalhado();
     setNotif(ok);
     if (ok) {
@@ -67,6 +68,7 @@ function Mais() {
   }
 
   async function fazerLogin() {
+    setAviso('Abrindo login do Google…'); // feedback imediato (antes da espera)
     try {
       await entrarComGoogle();
       setAviso('Login realizado! Seus dados serão sincronizados na nuvem.');
@@ -287,7 +289,7 @@ function Mais() {
         </div>
       )}
 
-      <p style={estilos.versao}>Calendário · versão local 1.0</p>
+      <p style={estilos.versao}>Orbi · versão {__APP_VERSION__} (build {__APP_BUILD__})</p>
     </div>
   );
 }
