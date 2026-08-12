@@ -48,8 +48,11 @@ const UNIDADES = [
 const CORES_EVENTO = [
   // Vivas (originais).
   '#2563eb', '#0891b2', '#0f9d58', '#f59e0b', '#f97316', '#e5484d', '#7c3aed', '#e58c8c',
-  // Nude / vintage (mesmo padrão das paletas terrosas).
-  '#a9746e', '#c68b59', '#9aa06b', '#e0a57c', '#d98c8c', '#6f9296', '#b99a73',
+  // Tons suaves da referência (verde sálvia, azul sereno, âmbar, terracota,
+  // coral, malva, azul aço, areia).
+  '#9dae6b', '#8db3b4', '#edb94e', '#e38c5a', '#e17e8b', '#a98cb2', '#5f7b98', '#cdbba0',
+  // Preto puro e cinza neutro.
+  '#000000', '#9096a0',
 ];
 
 const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];

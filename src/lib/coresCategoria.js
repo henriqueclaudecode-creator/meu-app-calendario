@@ -12,6 +12,12 @@ export const CORES_CATEGORIA = [
   { id: 'malva', nome: 'Malva', hex: '#a98cb2' },
   { id: 'aco', nome: 'Azul aço', hex: '#5f7b98' },
   { id: 'areia', nome: 'Areia', hex: '#cdbba0' },
+  // Tons mais vibrantes (destaque forte), incluindo um azul vivo.
+  { id: 'azul', nome: 'Azul vivo', hex: '#2f6fd6' },
+  { id: 'verde', nome: 'Verde vivo', hex: '#22a559' },
+  { id: 'vermelho', nome: 'Vermelho vivo', hex: '#e34d4d' },
+  { id: 'violeta', nome: 'Violeta vivo', hex: '#8250e0' },
+  // Cinzas por último.
   { id: 'chumbo', nome: 'Chumbo', hex: '#454b54' },
   { id: 'cinza', nome: 'Cinza', hex: '#9096a0' },
 ];
