@@ -14,6 +14,7 @@
 // para o app continuar funcionando offline.
 
 import { Capacitor } from '@capacitor/core';
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 import { firebaseAtivo, auth, db, googleProvider } from './firebase';
 import {
   signInWithPopup, signInWithCredential, signOut, onAuthStateChanged,
@@ -35,11 +36,6 @@ function avisar() {
   for (const cb of ouvintes) cb(atual);
 }
 
-// Carrega o plugin nativo só quando precisa (evita peso no bundle web).
-async function pluginAuth() {
-  const mod = await import('@capacitor-firebase/authentication');
-  return mod.FirebaseAuthentication;
-}
 
 // ---------- Modo Firebase ----------
 if (firebaseAtivo) {
@@ -76,7 +72,6 @@ export async function entrarComGoogle() {
 
   if (NATIVO) {
     // 1) Login nativo do Android → devolve a credencial do Google.
-    const FirebaseAuthentication = await pluginAuth();
     const r = await FirebaseAuthentication.signInWithGoogle();
     const idToken = r?.credential?.idToken;
     const accessToken = r?.credential?.accessToken;
@@ -95,7 +90,7 @@ export async function entrarComGoogle() {
 export async function sair() {
   if (!firebaseAtivo) { atual = null; avisar(); return; }
   if (NATIVO) {
-    try { const P = await pluginAuth(); await P.signOut(); } catch { /* ignora */ }
+    try { await FirebaseAuthentication.signOut(); } catch { /* ignora */ }
   }
   try { await esquecerUsuario(); } catch { /* ignora */ }
   await signOut(auth);
@@ -110,7 +105,7 @@ export async function deletarConta() {
   } catch { /* ignora */ }
   try {
     await deleteUser(u);
-    if (NATIVO) { try { const P = await pluginAuth(); await P.signOut(); } catch { /* ignora */ } }
+    if (NATIVO) { try { await FirebaseAuthentication.signOut(); } catch { /* ignora */ } }
   } catch {
     // Pode exigir login recente; ao menos desloga.
     await sair();

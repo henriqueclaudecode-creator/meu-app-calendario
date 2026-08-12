@@ -9,6 +9,7 @@
 // as telas podem chamar sem se preocupar com a plataforma.
 
 import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 const NATIVO = Capacitor.isNativePlatform?.() ?? false;
 
@@ -25,15 +26,9 @@ const OFFSETS = {
 // Horário padrão do lembrete para eventos "dia todo" (sem horário de início).
 const HORA_DIA_TODO = { h: 9, min: 0 };
 
-// Carrega o plugin só quando precisa (evita quebrar o build web).
-let _plugin = null;
-async function plugin() {
-  if (!NATIVO) return null;
-  if (!_plugin) {
-    const mod = await import('@capacitor/local-notifications');
-    _plugin = mod.LocalNotifications;
-  }
-  return _plugin;
+// Só age no app nativo; no navegador vira no-op (retorna null).
+function plugin() {
+  return NATIVO ? LocalNotifications : null;
 }
 
 // Gera um id numérico estável (int32 positivo) a partir do id textual do evento.
