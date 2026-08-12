@@ -14,6 +14,11 @@
 
 import * as Billing from './billing';
 
+// LIBERAÇÃO DE TESTE: enquanto true, TODOS os recursos ficam desbloqueados para
+// todos os usuários e o paywall/preços não aparecem. Serve para o teste fechado
+// na Play Store. Para lançar a monetização de verdade, basta voltar para false.
+export const LIBERAR_TUDO = true;
+
 const CHAVE_PLANO = 'orbi.plano';           // null | 'mensal' | 'anual' (stub local)
 
 export const PLANOS = {
@@ -63,6 +68,7 @@ export function planoAtual() {
 // É Premium se há assinatura ativa (billing real OU stub local de dev).
 // Durante o período de teste da assinatura, o entitlement já fica ativo.
 export function ehPremium() {
+  if (LIBERAR_TUDO) return true; // teste fechado: tudo desbloqueado
   return billing.ativo || !!planoLocal();
 }
 

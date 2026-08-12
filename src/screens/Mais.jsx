@@ -8,7 +8,7 @@ import { lerTema, salvarTema } from '../lib/aparencia';
 import { UFS, CAPITAIS } from '../lib/localidades';
 import { observarAuth, entrarComGoogle, sair, deletarConta } from '../lib/auth';
 import { usePremium } from '../lib/PremiumContext';
-import { assinar, cancelarAssinatura } from '../lib/premium';
+import { assinar, cancelarAssinatura, LIBERAR_TUDO } from '../lib/premium';
 import { permissaoConcedida, pedirPermissaoDetalhado, sincronizarTodos } from '../lib/notificacoes';
 import { listarEventos } from '../db/eventos';
 import PainelPro from '../components/PainelPro';
@@ -139,7 +139,21 @@ function Mais() {
       </div>
 
       {/* Seja Pro — vitrine do Orbi Pro / status */}
-      {estado === 'assinante' ? (
+      {LIBERAR_TUDO ? (
+        <div style={estilos.cartaoPro}>
+          <div style={estilos.assinanteTopo}>
+            <span style={estilos.assinanteIcone}><IconeOrbi tamanho={26} /></span>
+            <div style={estilos.assinanteInfo}>
+              <div style={estilos.assinanteTitulo}>Orbi <span style={estilos.assinantePro}>Pro</span></div>
+              <div style={estilos.assinanteStatus}>
+                <span style={estilos.selinho}>LIBERADO</span>
+                Fase de testes
+              </div>
+            </div>
+          </div>
+          <p style={estilos.assinanteDesc}>Todos os recursos estão liberados durante o período de testes. Aproveite!</p>
+        </div>
+      ) : estado === 'assinante' ? (
         <div style={estilos.cartaoPro}>
           <div style={estilos.assinanteTopo}>
             <span style={estilos.assinanteIcone}><IconeOrbi tamanho={26} /></span>
