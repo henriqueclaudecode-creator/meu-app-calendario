@@ -675,12 +675,12 @@ function CardEvento({ evento, etiqueta, onAbrir }) {
 const estilos = {
   pagina: { width: '100%', maxWidth: 'var(--app-max, 560px)', boxSizing: 'border-box', margin: '0 auto', padding: '0 8px 14px', position: 'relative', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 },
 
-  cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '6px 0 12px', flexShrink: 0 },
+  cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '2px 0 8px', flexShrink: 0 },
   mesTitulo: { flex: 1, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   setaMes: { border: 'none', background: 'transparent', color: cores.textoApagado, fontSize: 24, cursor: 'pointer', lineHeight: 1, padding: '2px 6px', flexShrink: 0 },
   lupa: { flexShrink: 0, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: '50%', padding: 0, marginLeft: 4 },
 
-  seletorVista: { display: 'flex', gap: 4, background: cores.superficie2, border: `1px solid ${cores.borda}`, borderRadius: 999, padding: 4, marginBottom: 14 },
+  seletorVista: { display: 'flex', gap: 4, background: cores.superficie2, border: `1px solid ${cores.borda}`, borderRadius: 999, padding: 4, marginBottom: 10 },
   vistaBtn: { flex: 1, padding: '8px 0', border: 'none', background: 'transparent', color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer', borderRadius: 999 },
   vistaBtnAtivo: { background: cores.superficie, color: cores.acento, boxShadow: sombraSuave },
 
@@ -764,9 +764,9 @@ const estilos = {
 
   botaoMais: {
     position: 'fixed', right: 'max(18px, calc(50vw - 280px + 18px))',
-    bottom: 'calc(74px + env(safe-area-inset-bottom))', zIndex: 45,
+    bottom: 'calc(64px + env(safe-area-inset-bottom))', zIndex: 45,
     width: 58, height: 58, borderRadius: '50%', border: 'none', cursor: 'pointer',
-    background: cores.acento, color: cores.acentoTexto, opacity: 0.6,
+    background: cores.acento, color: cores.acentoTexto, opacity: 0.82,
     display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: sombraAcento,
   },
 };
