@@ -21,12 +21,12 @@ import { cores, sombra, sombraSuave, sombraForte, raio, raioGrande, raioPequeno 
 const TEMAS = [
   { id: 'light', nome: 'Padrão', desc: 'Tema claro', bg: '#f6f9fd', superficie: '#ffffff', acento: '#2563eb' },
   { id: 'dark', nome: 'Escuro', desc: 'Tema escuro', bg: '#0d1926', superficie: '#1e2c40', acento: '#3b82f6' },
-  { id: 'blossom', nome: 'Blossom', desc: 'Toque de cor', bg: '#fdfbf8', superficie: '#f3efea', acento: '#e58c8c' },
+  { id: 'blossom', nome: 'Corporativo', desc: 'Branco e azul marinho', bg: '#f4f6f9', superficie: '#eef2f7', acento: '#1f4e79' },
   { id: 'black', nome: 'Black', desc: 'Preto absoluto', bg: '#000000', superficie: '#1a1a1a', acento: '#d0d0d0' },
   { id: 'natureza', nome: 'Natureza', desc: 'Verde floresta', bg: '#f6f4ee', superficie: '#e8ede3', acento: '#2f6b3d' },
   { id: 'musgo', nome: 'Musgo', desc: 'Verde musgo', bg: '#f4f3ee', superficie: '#e8ecdd', acento: '#5f7238' },
   { id: 'oceano', nome: 'Oceano', desc: 'Azul vintage', bg: '#eff3f4', superficie: '#e0ebee', acento: '#488399' },
-  { id: 'rose', nome: 'Rosé', desc: 'Coral suave', bg: '#fbf2f1', superficie: '#f7e3e3', acento: '#d97b7b' },
+  { id: 'rose', nome: 'Blossom', desc: 'Coral suave', bg: '#fbf2f1', superficie: '#f7e3e3', acento: '#d97b7b' },
   { id: 'areia', nome: 'Areia', desc: 'Bege dourado', bg: '#f7f2e9', superficie: '#f0e7d5', acento: '#b79b6f' },
 ];
 

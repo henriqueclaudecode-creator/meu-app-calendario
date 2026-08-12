@@ -1,5 +1,6 @@
-// Tema de aparência: 'light' (Padrão), 'dark' (Escuro), 'blossom' (feminino),
-// 'black' (preto absoluto, monocromático premium) ou 'natureza' (verde floresta).
+// Tema de aparência: 'light' (Padrão), 'dark' (Escuro), 'blossom' (Corporativo —
+// branco + azul marinho; id mantido por compatibilidade), 'black' (preto
+// absoluto), 'natureza' (verde floresta), 'rose' (exibido como "Blossom"), etc.
 // Guardado no localStorage e aplicado como data-theme na raiz — o CSS faz o resto.
 
 const CHAVE = 'calendario.tema';

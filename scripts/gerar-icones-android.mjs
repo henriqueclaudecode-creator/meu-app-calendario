@@ -27,7 +27,7 @@ const densidades = {
   xxxhdpi: { legado: 192, fg: 432 },
 };
 
-const ESCALA_FG = 0.72; // quanto do canvas o calendário ocupa (zona segura)
+const ESCALA_FG = 0.60; // quanto do canvas o calendário ocupa (zona segura — menor p/ não cortar)
 
 for (const [dens, { legado, fg }] of Object.entries(densidades)) {
   const dir = resolve(resDir, `mipmap-${dens}`);

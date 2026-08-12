@@ -120,87 +120,68 @@ button {
   --resumo-prova-bg: #3c2a33;
 }
 
-/* ---- Tema Blossom (feminino, cream + blush) ---------------------------- */
+/* ---- Tema Corporativo (branco + azul marinho, sóbrio) ------------------ */
+/* Nota: mantém o id interno 'blossom' por compatibilidade com preferências já
+   salvas; o nome exibido é "Corporativo". Paleta clara, limpa e profissional. */
 :root[data-theme='blossom'] {
   color-scheme: light;
 
-  --cor-bg: #fdfbf8;
-  --cor-superficie: #fffefd;
-  --cor-superficie2: #f3efea;
+  --cor-bg: #f4f6f9;
+  --cor-superficie: #ffffff;
+  --cor-superficie2: #eef2f7;
 
-  --cor-primaria: #2e2a28;
-  --cor-primariaSuave: #4a4441;
+  --cor-primaria: #14263f;
+  --cor-primariaSuave: #24405f;
 
-  --cor-acento: #e58c8c;
-  --cor-acentoForte: #d97a7a;
-  --cor-acentoClaro: #f0b3b3;
-  --cor-acentoBg: #f8ece9;
+  --cor-acento: #1f4e79;
+  --cor-acentoForte: #17395c;
+  --cor-acentoClaro: #4a72a3;
+  --cor-acentoBg: #e8eef5;
+  --cor-acentoTexto: #ffffff;
 
-  --cor-texto: #2e2a28;
-  --cor-textoSuave: #6f6a66;
-  --cor-textoApagado: #bdafa7;
-  --cor-textoFraco: #cfcac4;
+  --cor-texto: #14263f;
+  --cor-textoSuave: #5a6b82;
+  --cor-textoApagado: #8b98ac;
+  --cor-textoFraco: #b7c1d1;
 
-  --cor-borda: #f1ece7;
-  --cor-bordaForte: #e5ddd5;
-  --cor-pontinho: #d8ccc4;
-  --cor-grade: #f1ece7;
+  --cor-borda: #e2e8f0;
+  --cor-bordaForte: #cdd7e3;
+  --cor-pontinho: #b0bccb;
+  --cor-grade: #e2e8f0;
 
-  --cor-perigo: #d98c8c;
-  --cor-sucesso: #9bb89a;
+  --cor-perigo: #c0492e;
+  --cor-sucesso: #2f7d5a;
 
-  /* Categorias — cor (suave/dessaturada) */
-  --cat-estudo-cor: #e7c8bc;
-  --cat-simulado-cor: #f3b2b0;
-  --cat-prova-cor: #d9c5b6;
-  --cat-aula-cor: #b8c5d6;
-  --cat-evento-cor: #c6d3be;
-  --cat-revisao-cor: #cdbbd4;
-  --cat-meta-cor: #bfd3b8;
+  /* Cards superiores (resumo) — círculos azul marinho, ícone branco */
+  --resumo-estudo-icone: #ffffff;
+  --resumo-estudo-bg: #1f4e79;
+  --resumo-simulado-icone: #ffffff;
+  --resumo-simulado-bg: #1f4e79;
+  --resumo-prova-icone: #ffffff;
+  --resumo-prova-bg: #1f4e79;
+  --resumo-num-cor: #14263f;
 
-  /* Categorias — fundo dos badges/tags (tom quente muito claro) */
-  --cat-estudo-bg: #f6ece7;
-  --cat-simulado-bg: #fbeceb;
-  --cat-prova-bg: #f3ede5;
-  --cat-aula-bg: #ecf0f5;
-  --cat-evento-bg: #eef3ea;
-  --cat-revisao-bg: #f2eef5;
-  --cat-meta-bg: #eef4ec;
+  /* Badges de período — ícone marinho sobre fundo azul bem claro */
+  --periodo-manha-icone: #1f4e79;
+  --periodo-manha-bg: #e8eef5;
+  --periodo-tarde-icone: #1f4e79;
+  --periodo-tarde-bg: #e8eef5;
+  --periodo-noite-icone: #1f4e79;
+  --periodo-noite-bg: #e8eef5;
+  --periodo-madrugada-icone: #4a72a3;
+  --periodo-madrugada-bg: #e8eef5;
 
-  /* Cards superiores (resumo) */
-  --resumo-estudo-icone: #c9b7ac;
-  --resumo-estudo-bg: #f4ece6;
-  --resumo-simulado-icone: #f2b4b1;
-  --resumo-simulado-bg: #faebe9;
-  --resumo-prova-icone: #d4c1b4;
-  --resumo-prova-bg: #f3ece4;
-  --resumo-num-cor: #2e2a28;
+  /* Dia selecionado: círculo azul marinho, número branco */
+  --dia-sel-bg: #1f4e79;
+  --dia-sel-texto: #ffffff;
 
-  /* Badges de período */
-  --periodo-manha-icone: #f3b2b0;
-  --periodo-manha-bg: #fbeceb;
-  --periodo-tarde-icone: #f3b2b0;
-  --periodo-tarde-bg: #fbeceb;
-  --periodo-noite-icone: #d4c1b4;
-  --periodo-noite-bg: #f3ece4;
-  --periodo-madrugada-icone: #b8c5d6;
-  --periodo-madrugada-bg: #ecf0f5;
+  /* Horários da agenda em tom escuro (não colorido) */
+  --hora-cor: #14263f;
 
-  /* Dia selecionado: círculo blush claro com número escuro (assinatura Blossom) */
-  --dia-sel-bg: #f6ece7;
-  --dia-sel-texto: #2e2a28;
-
-  /* Texto dos eventos na célula e horários: suave/escuro em vez de colorido */
-  --evento-cel-cor: #6f6a66;
-  --hora-cor: #2e2a28;
-
-  /* Título do mês: serifado, elegante */
-  --fonte-titulo: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-
-  /* Aviso de feriado (neutro quente) */
-  --feriado-bg: #f3efea;
-  --feriado-texto: #8a7d76;
-  --feriado-borda: #e5ddd5;
+  /* Aviso de feriado (azul sóbrio) */
+  --feriado-bg: #e8eef5;
+  --feriado-texto: #1f4e79;
+  --feriado-borda: #cdd7e3;
 }
 
 /* Aba Objetivos no escuro: as cores de categoria dos "Próximos eventos" ficam
