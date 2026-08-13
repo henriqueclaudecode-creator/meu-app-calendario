@@ -72,7 +72,9 @@ export async function entrarComGoogle() {
 
   if (NATIVO) {
     // 1) Login nativo do Android → devolve a credencial do Google.
-    const r = await FirebaseAuthentication.signInWithGoogle();
+    //    useCredentialManager:false força o seletor de conta CLÁSSICO em vez do
+    //    Credential Manager, que dá "No credentials available" no Android novo.
+    const r = await FirebaseAuthentication.signInWithGoogle({ useCredentialManager: false });
     const idToken = r?.credential?.idToken;
     const accessToken = r?.credential?.accessToken;
     // 2) Entra também no SDK web com a mesma credencial, para o restante do app
