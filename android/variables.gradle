@@ -17,4 +17,7 @@ ext {
     // @capacitor-firebase/authentication — inclui as libs de Google Sign-In como
     // 'implementation' (senão elas ficam compileOnly e o login quebra em runtime).
     rgcfaIncludeGoogle = true
+    // Corrige o "No credentials available" no login Google em Android novo
+    // (API 35/36): a versão padrão do Credential Manager falha; 1.3.0 resolve.
+    androidxCredentialsVersion = '1.3.0'
 }
