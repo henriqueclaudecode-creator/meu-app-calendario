@@ -214,9 +214,8 @@ export async function cancelarAniversario() {
 // Agenda (ou reagenda) o lembrete anual de aniversário a partir da data de
 // nascimento ('AAAA-MM-DD'). Sem data, apenas cancela o que houver.
 export async function agendarAniversario(nascimentoISO) {
-  const p = await plugin();
+  const p = plugin();
   if (!p) return;
-  if (!(await permissaoConcedida())) return;
   await cancelarAniversario();
   if (!nascimentoISO) return;
   const partes = nascimentoISO.split('-').map(Number);
@@ -239,9 +238,8 @@ export async function agendarAniversario(nascimentoISO) {
 // Reagenda TODOS os eventos (usado no início do app e depois de importar dados).
 // Cancela tudo que estava pendente e recria a partir da lista atual.
 export async function sincronizarTodos(eventos) {
-  const p = await plugin();
+  const p = plugin();
   if (!p) return;
-  if (!(await permissaoConcedida())) return;
   try {
     const pend = await p.getPending();
     if (pend?.notifications?.length) {

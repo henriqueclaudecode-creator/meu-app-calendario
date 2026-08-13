@@ -40,7 +40,16 @@ function Mais() {
   const [notif, setNotif] = useState(null); // null = checando | true | false
 
   useEffect(() => observarAuth(setUsuario), []);
-  useEffect(() => { permissaoConcedida().then(setNotif); }, []);
+  useEffect(() => {
+    // Se o usuário já ativou antes, mostra como ativado na hora (não fica pedindo
+    // de novo a cada abertura). Ainda assim, se o sistema disser que está
+    // concedida, confirma; só volta a pedir se nunca ativou.
+    if (localStorage.getItem('orbi.notif') === '1') setNotif(true);
+    permissaoConcedida().then((v) => {
+      if (v) { setNotif(true); localStorage.setItem('orbi.notif', '1'); }
+      else if (localStorage.getItem('orbi.notif') !== '1') setNotif(false);
+    });
+  }, []);
   // Some sozinho depois de alguns segundos (mensagens mais longas ficam mais tempo).
   useEffect(() => {
     if (!aviso) return;
@@ -53,6 +62,7 @@ function Mais() {
     const { ok, motivo } = await pedirPermissaoDetalhado();
     setNotif(ok);
     if (ok) {
+      localStorage.setItem('orbi.notif', '1'); // lembra que já ativou
       setAviso('Notificações ativadas! Seus lembretes vão avisar na hora certa.');
       try { await sincronizarTodos(await listarEventos()); } catch { /* não trava o feedback */ }
     } else {
