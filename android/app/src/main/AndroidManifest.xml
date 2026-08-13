@@ -96,4 +96,10 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Lembretes no horário exato. Orbi é um app de calendário/agenda, então tem
+         direito ao USE_EXACT_ALARM (concedido automaticamente, API 33+). O
+         SCHEDULE_EXACT_ALARM cobre Android 12 (API 31-32). Sem isso, os lembretes
+         agendados não disparam no horário certo. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 </manifest>
