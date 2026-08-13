@@ -120,17 +120,26 @@ export async function pedirPermissao() {
 // Versão detalhada do pedido de permissão, para a UI mostrar exatamente o que
 // aconteceu (concedida / negada / sem-plugin / erro nativo). Útil para
 // diagnosticar por que "não acontece nada" no aparelho.
+// Corre uma promessa com tempo-limite, para uma chamada nativa travada não deixar
+// o app pendurado sem feedback.
+function comLimite(promessa, ms, rotulo) {
+  return Promise.race([
+    promessa,
+    new Promise((_, rej) => setTimeout(() => rej(new Error(`travou em ${rotulo} (${ms / 1000}s)`)), ms)),
+  ]);
+}
+
 export async function pedirPermissaoDetalhado() {
-  const p = await plugin();
-  if (!p) return { ok: false, motivo: 'Sem plugin nativo (navegador/PWA).' };
+  const p = plugin();
+  if (!p) return { ok: false, motivo: 'sem plugin nativo (navegador/PWA)' };
   try {
-    let { display } = await p.checkPermissions();
+    let { display } = await comLimite(p.checkPermissions(), 6000, 'checkPermissions');
     if (display !== 'granted') {
-      ({ display } = await p.requestPermissions());
+      ({ display } = await comLimite(p.requestPermissions(), 30000, 'requestPermissions'));
     }
     return { ok: display === 'granted', motivo: `permissão: ${display}` };
   } catch (e) {
-    return { ok: false, motivo: `erro: ${e?.message || e?.code || String(e)}` };
+    return { ok: false, motivo: e?.message || e?.code || String(e) };
   }
 }
 

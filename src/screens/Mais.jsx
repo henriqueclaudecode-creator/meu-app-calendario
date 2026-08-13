@@ -53,10 +53,10 @@ function Mais() {
     const { ok, motivo } = await pedirPermissaoDetalhado();
     setNotif(ok);
     if (ok) {
-      await sincronizarTodos(await listarEventos());
       setAviso('Notificações ativadas! Seus lembretes vão avisar na hora certa.');
+      try { await sincronizarTodos(await listarEventos()); } catch { /* não trava o feedback */ }
     } else {
-      setAviso(`Não foi possível ativar (${motivo}). Ative as notificações do Orbi nos ajustes do aparelho.`);
+      setAviso(`Não foi possível ativar (${motivo}). Ative as notificações do Orbi em Ajustes do aparelho → Apps → Orbi → Notificações.`);
     }
   }
 
