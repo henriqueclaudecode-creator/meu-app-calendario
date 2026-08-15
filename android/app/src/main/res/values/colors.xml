@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Paleta Orbit — tema claro. Espelha src/lib/tema.js -->
-    <color name="orbit_bg">#F6F9FD</color>
-    <color name="orbit_surface">#FFFFFF</color>
-    <color name="orbit_surface2">#EEF3FA</color>
-    <color name="orbit_border">#E4EAF2</color>
-    <color name="orbit_text">#1F2937</color>
-    <color name="orbit_text_soft">#6B7280</color>
-    <color name="orbit_text_muted">#9AA6B2</color>
-    <color name="orbit_accent">#2563EB</color>
-    <color name="orbit_accent_bg">#EAF1FE</color>
-    <!-- Fundo da splash (igual ao fundo branco do ícone) -->
+    <!-- Paleta Orbit dos WIDGETS (tela inicial) — estilo Dark / Frosted Glass,
+         premium. Usada SOMENTE pelos widgets (o app em si usa as variáveis CSS
+         em src/lib/tema.js, não estas cores). Fica escura mesmo com o sistema no
+         claro, de propósito: os widgets são "componentes especiais". -->
+    <color name="orbit_bg">#0F1622</color>
+    <!-- Superfície principal do widget (vidro fosco escuro) -->
+    <color name="orbit_surface">#172130</color>
+    <!-- Subcards / seções internas — um pouco mais claros -->
+    <color name="orbit_surface2">#212C3D</color>
+    <!-- Borda muito discreta (aresta de vidro) -->
+    <color name="orbit_border">#2B3646</color>
+    <color name="orbit_text">#EAF1F8</color>
+    <color name="orbit_text_soft">#A4B4C8</color>
+    <color name="orbit_text_muted">#758699</color>
+    <color name="orbit_accent">#3F83F7</color>
+    <!-- Fundo translúcido do accent (círculos de ícone/estado) -->
+    <color name="orbit_accent_bg">#22385C</color>
+    <!-- Fundo da splash (NÃO é widget — permanece branco, igual ao ícone) -->
     <color name="splash_background">#FFFFFF</color>
 </resources>
