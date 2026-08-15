@@ -677,11 +677,15 @@ const estilos = {
 
   cabecalho: { display: 'flex', alignItems: 'center', gap: 4, padding: '2px 0 8px', flexShrink: 0 },
   mesTitulo: { flex: 1, fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: cores.texto, fontFamily: 'var(--fonte-titulo, inherit)', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
-  setaMes: { border: 'none', background: 'transparent', color: cores.textoApagado, fontSize: 24, cursor: 'pointer', lineHeight: 1, padding: '2px 6px', flexShrink: 0 },
-  lupa: { flexShrink: 0, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: '50%', padding: 0, marginLeft: 4 },
+  // Botões de navegação em "almofada" soft neumorphic (referência): superfície
+  // clara, cantos arredondados, sombra bem suave. Baixa profundidade.
+  setaMes: { border: 'none', background: cores.superficie, color: cores.textoSuave, fontSize: 22, cursor: 'pointer', lineHeight: 1, width: 40, height: 40, borderRadius: 13, boxShadow: sombraSuave, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  lupa: { flexShrink: 0, width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: cores.superficie, cursor: 'pointer', borderRadius: '50%', padding: 0, marginLeft: 4, boxShadow: sombraSuave },
 
-  seletorVista: { display: 'flex', gap: 4, background: cores.superficie2, border: `1px solid ${cores.borda}`, borderRadius: 999, padding: 4, marginBottom: 10 },
-  vistaBtn: { flex: 1, padding: '8px 0', border: 'none', background: 'transparent', color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer', borderRadius: 999 },
+  // Seletor: trilho soft (superfície secundária, sem borda dura); o item ativo é
+  // uma "pílula" clara elevada com sombra bem suave e a cor de destaque do tema.
+  seletorVista: { display: 'flex', gap: 4, background: cores.superficie2, borderRadius: 999, padding: 5, marginBottom: 10 },
+  vistaBtn: { flex: 1, padding: '9px 0', border: 'none', background: 'transparent', color: cores.textoSuave, fontSize: 13.5, fontWeight: 700, cursor: 'pointer', borderRadius: 999 },
   vistaBtnAtivo: { background: cores.superficie, color: cores.acento, boxShadow: sombraSuave },
 
   favLista: { display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 2, marginBottom: 8 },

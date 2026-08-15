@@ -46,12 +46,15 @@ export const cores = {
   atencaoTexto: v('atencaoTexto', '#8a5a00'),
 };
 
-// Sombras — mantidas com tinta navy (discretas no claro, quase invisíveis no
-// escuro, sem atrapalhar).
-export const sombraSuave = '0 1px 2px rgba(15, 37, 71, 0.04)';
-export const sombra = '0 1px 2px rgba(15, 37, 71, 0.04), 0 4px 14px rgba(15, 37, 71, 0.06)';
-export const sombraForte = '0 2px 4px rgba(15, 37, 71, 0.06), 0 12px 28px rgba(15, 37, 71, 0.10)';
-export const sombraAcento = '0 4px 14px rgba(37, 99, 235, 0.30)';
+// Sombras — Soft Neumorphic: difusas, foscas e de BAIXA profundidade. Um único
+// halo suave (sem a sombra "dura" de 1px) faz os cards parecerem macios e quase
+// integrados à superfície, não flutuando. Cada tema pode sobrescrever via CSS var.
+export const sombraSuave = 'var(--sombra-suave, 0 2px 6px rgba(17, 24, 39, 0.05))';
+export const sombra = 'var(--sombra, 0 3px 12px rgba(17, 24, 39, 0.055))';
+export const sombraForte = 'var(--sombra-forte, 0 6px 22px rgba(17, 24, 39, 0.08))';
+// Sombra do botão flutuante: soft e neutra (sem glow colorido), serve p/ qualquer
+// cor de accent do tema.
+export const sombraAcento = 'var(--sombra-acento, 0 6px 16px rgba(17, 24, 39, 0.18))';
 
 // Suaviza uma cor (hex #rrggbb) nos temas escuro e black: as cores dos objetivos
 // vêm de uma paleta vibrante fixa (guardada nos dados) e ficam berrantes sobre o

@@ -84,6 +84,12 @@ button {
   --cor-pontinho: #4c5c74;
   --cor-grade: #2a3a4f;
 
+  /* Soft Neumorphic no escuro: halo escuro difuso (sem glow, sem neon). */
+  --sombra-suave: 0 2px 8px rgba(0, 0, 0, 0.22);
+  --sombra: 0 3px 14px rgba(0, 0, 0, 0.28);
+  --sombra-forte: 0 8px 26px rgba(0, 0, 0, 0.36);
+  --sombra-acento: 0 6px 18px rgba(0, 0, 0, 0.34);
+
   --cor-perigo: #f0555a;
   --cor-sucesso: #22c55e;
 
@@ -227,6 +233,13 @@ button {
   --cor-borda: rgba(255, 255, 255, 0.08);
   --cor-bordaForte: #2b2b2b;
   --cor-pontinho: #444444;
+
+  /* Black (OLED): quase plano — sombra muito discreta; a separação vem do
+     contraste de superfícies e da borda sutil, não de profundidade. */
+  --sombra-suave: 0 1px 4px rgba(0, 0, 0, 0.5);
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.55);
+  --sombra-forte: 0 4px 18px rgba(0, 0, 0, 0.6);
+  --sombra-acento: 0 4px 14px rgba(0, 0, 0, 0.55);
   --cor-grade: #2b2b2b;
 
   /* Estados semânticos mantidos monocromáticos (só brilho diferente). */
