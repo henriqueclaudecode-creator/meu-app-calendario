@@ -19,6 +19,24 @@ import * as Billing from './billing';
 // na Play Store. Para lançar a monetização de verdade, basta voltar para false.
 export const LIBERAR_TUDO = true;
 
+// PREMIUM VITALÍCIO: emails (do login Google) que têm Pro para sempre, de graça,
+// sem assinatura. Continua valendo mesmo depois que LIBERAR_TUDO virar false.
+// Basta adicionar os emails na lista (tudo minúsculo). Ex.: 'fulano@gmail.com'.
+export const EMAILS_PREMIUM_VITALICIO = [
+  // 'exemplo@gmail.com',
+];
+
+// Email do usuário logado no momento (definido pelo PremiumContext ao observar o
+// login). Usado só para checar a lista de vitalícios.
+let emailAtual = null;
+export function definirEmailAtual(email) {
+  emailAtual = email ? email.toLowerCase() : null;
+  notificar();
+}
+function temPremiumVitalicio() {
+  return !!emailAtual && EMAILS_PREMIUM_VITALICIO.map((e) => e.toLowerCase()).includes(emailAtual);
+}
+
 const CHAVE_PLANO = 'orbi.plano';           // null | 'mensal' | 'anual' (stub local)
 
 export const PLANOS = {
@@ -68,7 +86,8 @@ export function planoAtual() {
 // É Premium se há assinatura ativa (billing real OU stub local de dev).
 // Durante o período de teste da assinatura, o entitlement já fica ativo.
 export function ehPremium() {
-  if (LIBERAR_TUDO) return true; // teste fechado: tudo desbloqueado
+  if (LIBERAR_TUDO) return true;      // teste fechado: tudo desbloqueado
+  if (temPremiumVitalicio()) return true; // email na lista de vitalícios
   return billing.ativo || !!planoLocal();
 }
 

@@ -14,6 +14,7 @@ import NovaCategoria from './NovaCategoria';
 import { IconeCat } from './IconeCat';
 import { buscarLocais, buscaLocalDisponivel, urlMapa } from '../lib/mapas';
 import { compartilharConvite, abrirAnexo } from '../lib/convites';
+import { pedirPermissao } from '../lib/notificacoes';
 import { cores, sombraForte, raio, raioGrande } from '../lib/tema';
 
 const LEMBRETES = [
@@ -165,6 +166,11 @@ function NovoEvento({ evento, tipo, dataInicial, presetInicio, ocorrencia, onSal
       anexos,
     };
     try {
+      // Tem lembrete? Garante a permissão de notificação ANTES de agendar, senão
+      // o sistema recusa o agendamento silenciosamente.
+      if (lembrete && lembrete !== 'nenhum') {
+        try { await pedirPermissao(); } catch { /* segue mesmo sem permissão */ }
+      }
       if (editando) await atualizarEvento(evento.id, dados);
       else await criarEvento(dados);
       await onSalvo?.(data);

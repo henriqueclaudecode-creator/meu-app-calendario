@@ -143,61 +143,31 @@ export async function pedirPermissaoDetalhado() {
   }
 }
 
-// Dispara uma notificação de teste em ~6s e devolve um diagnóstico legível:
-// estado real da permissão + se o agendamento deu erro. Serve para descobrir por
-// que os lembretes não chegam no aparelho.
-export async function testarNotificacaoAgora() {
-  const p = plugin();
-  if (!p) return 'Sem plugin nativo (você está no navegador/PWA, não no app).';
-  let estado = '?';
-  try {
-    estado = (await comLimite(p.checkPermissions(), 6000, 'checkPermissions')).display;
-  } catch (e) {
-    return `checkPermissions falhou: ${e?.message || e}`;
-  }
-  if (estado !== 'granted') {
-    try { estado = (await comLimite(p.requestPermissions(), 30000, 'requestPermissions')).display; } catch (e) { return `pedido de permissão falhou: ${e?.message || e}`; }
-  }
-
-  // Monta um compromisso FALSO para daqui a 2 min e agenda pelo MESMO caminho de
-  // um evento real (agendarEvento/calcularDisparo). Assim testamos exatamente o
-  // que falha, e mostramos o horário calculado.
-  const alvo = new Date(Date.now() + 2 * 60000);
-  const hhmm = `${String(alvo.getHours()).padStart(2, '0')}:${String(alvo.getMinutes()).padStart(2, '0')}`;
-  const dataISO = `${alvo.getFullYear()}-${String(alvo.getMonth() + 1).padStart(2, '0')}-${String(alvo.getDate()).padStart(2, '0')}`;
-  const fake = { id: 'teste_evento_orbi', data: dataISO, inicio: hhmm, lembrete: 'no-horario', titulo: 'Teste de lembrete', repetir: 'nao' };
-  const disparo = calcularDisparo(fake);
-
-  try {
-    // (1) controle: direto em 6s
-    await p.schedule({ notifications: [{ id: 999001, title: 'Teste direto (6s) 🔔', body: 'Controle — deve chegar', schedule: { at: new Date(Date.now() + 6000), allowWhileIdle: true } }] });
-    // (2) pelo caminho de um compromisso, em ~2 min
-    await agendarEvento(fake);
-    return `Permissão: ${estado}. Disparo calculado do evento: ${disparo ? disparo.toLocaleTimeString() : 'NULO (bug!)'}. Agendei 2 avisos: (1) direto em 6s e (2) lembrete de evento às ${hhmm}. Feche o app e me diga QUAIS chegaram.`;
-  } catch (e) {
-    return `Permissão: ${estado}. ERRO ao agendar: ${e?.message || e?.code || e}`;
-  }
-}
-
 // Cancela a notificação de um evento (por id textual do evento).
 export async function cancelarEvento(eventoId) {
-  const p = await plugin();
+  const p = plugin();
   if (!p || !eventoId) return;
   try {
-    await p.cancel({ notifications: [{ id: idNotificacao(eventoId) }] });
-  } catch { /* silencioso */ }
+    await comLimite(p.cancel({ notifications: [{ id: idNotificacao(eventoId) }] }), 5000, 'cancel');
+  } catch { /* timeout/erro: não trava o fluxo */ }
 }
 
 // Agenda (ou reagenda) a notificação de um evento. Cancela a anterior antes,
 // então pode ser chamada em toda criação/edição sem duplicar.
 export async function agendarEvento(evento) {
-  const p = await plugin();
+  const p = plugin();
   if (!p || !evento?.id) return;
 
-  await cancelarEvento(evento.id);
+  // NÃO cancelamos antes: agendar com o mesmo id já substitui a notificação
+  // anterior. Cancelar+agendar o mesmo id causava uma race no plugin nativo (o
+  // cancelamento assíncrono às vezes apagava o agendamento recém-criado).
 
   const disparo = calcularDisparo(evento);
-  if (!disparo) return;
+  if (!disparo) {
+    // Sem lembrete (ou inválido): garante que não fique nada pendente.
+    await cancelarEvento(evento.id);
+    return;
+  }
 
   const intervalo = intervaloNativo(evento);
   let quando = disparo;
@@ -207,7 +177,8 @@ export async function agendarEvento(evento) {
     quando = proximaOcorrencia(disparo, intervalo);
     repetivel = true;
   } else if (disparo.getTime() <= Date.now()) {
-    // Evento único que já passou: não agenda nada.
+    // Evento único que já passou: não agenda nada (e limpa o que houver).
+    await cancelarEvento(evento.id);
     return;
   }
 
@@ -215,7 +186,7 @@ export async function agendarEvento(evento) {
   if (repetivel) schedule.repeats = true;
 
   try {
-    await p.schedule({
+    await comLimite(p.schedule({
       notifications: [{
         id: idNotificacao(evento.id),
         title: evento.titulo || 'Lembrete',
@@ -223,8 +194,8 @@ export async function agendarEvento(evento) {
         schedule,
         extra: { eventoId: evento.id, data: evento.data },
       }],
-    });
-  } catch { /* silencioso */ }
+    }), 5000, 'schedule');
+  } catch { /* timeout/erro: pula este e segue os demais */ }
 }
 
 function corpoNotificacao(evento) {
@@ -277,13 +248,13 @@ export async function sincronizarTodos(eventos) {
   const p = plugin();
   if (!p) return;
   try {
-    const pend = await p.getPending();
+    const pend = await comLimite(p.getPending(), 5000, 'getPending');
     if (pend?.notifications?.length) {
-      await p.cancel({ notifications: pend.notifications.map((n) => ({ id: n.id })) });
+      await comLimite(p.cancel({ notifications: pend.notifications.map((n) => ({ id: n.id })) }), 5000, 'cancelAll');
     }
   } catch { /* silencioso */ }
 
-  for (const ev of eventos ?? []) {
-    await agendarEvento(ev);
-  }
+  // Em PARALELO e com tolerância a falha: um evento que trave (timeout interno do
+  // agendarEvento) não impede os demais de serem agendados.
+  await Promise.allSettled((eventos ?? []).map((ev) => agendarEvento(ev)));
 }

@@ -7,6 +7,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import * as P from './premium';
+import { observarAuth } from './auth';
 import { aplicarTema, lerTema } from './aparencia';
 import PaywallSheet from '../components/PaywallSheet';
 
@@ -25,7 +26,9 @@ export function PremiumProvider({ children }) {
     P.iniciarBillingSeNecessario();
     sincronizarTema();
     const off = P.observar(() => { sincronizarTema(); setTick((t) => t + 1); });
-    return off;
+    // Informa ao Premium o email do usuário logado (para a lista de vitalícios).
+    const offAuth = observarAuth((u) => P.definirEmailAtual(u?.email ?? null));
+    return () => { off(); offAuth(); };
   }, []);
 
   const abrirPaywall = useCallback(() => setPaywall({}), []);

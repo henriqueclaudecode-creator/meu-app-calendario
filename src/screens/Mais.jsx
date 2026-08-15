@@ -9,7 +9,7 @@ import { UFS, CAPITAIS } from '../lib/localidades';
 import { observarAuth, entrarComGoogle, sair, deletarConta } from '../lib/auth';
 import { usePremium } from '../lib/PremiumContext';
 import { assinar, cancelarAssinatura, LIBERAR_TUDO } from '../lib/premium';
-import { permissaoConcedida, pedirPermissaoDetalhado, sincronizarTodos, testarNotificacaoAgora } from '../lib/notificacoes';
+import { permissaoConcedida, pedirPermissaoDetalhado, sincronizarTodos } from '../lib/notificacoes';
 import { listarEventos } from '../db/eventos';
 import PainelPro from '../components/PainelPro';
 import { IconeOrbi } from '../components/IconeOrbi';
@@ -40,16 +40,8 @@ function Mais() {
   const [notif, setNotif] = useState(null); // null = checando | true | false
 
   useEffect(() => observarAuth(setUsuario), []);
-  useEffect(() => {
-    // Se o usuário já ativou antes, mostra como ativado na hora (não fica pedindo
-    // de novo a cada abertura). Ainda assim, se o sistema disser que está
-    // concedida, confirma; só volta a pedir se nunca ativou.
-    if (localStorage.getItem('orbi.notif') === '1') setNotif(true);
-    permissaoConcedida().then((v) => {
-      if (v) { setNotif(true); localStorage.setItem('orbi.notif', '1'); }
-      else if (localStorage.getItem('orbi.notif') !== '1') setNotif(false);
-    });
-  }, []);
+  // Reflete o estado REAL da permissão do sistema (fonte da verdade).
+  useEffect(() => { permissaoConcedida().then(setNotif); }, []);
   // Some sozinho depois de alguns segundos (mensagens mais longas ficam mais tempo).
   useEffect(() => {
     if (!aviso) return;
@@ -62,18 +54,11 @@ function Mais() {
     const { ok, motivo } = await pedirPermissaoDetalhado();
     setNotif(ok);
     if (ok) {
-      localStorage.setItem('orbi.notif', '1'); // lembra que já ativou
       setAviso('Notificações ativadas! Seus lembretes vão avisar na hora certa.');
       try { await sincronizarTodos(await listarEventos()); } catch { /* não trava o feedback */ }
     } else {
       setAviso(`Não foi possível ativar (${motivo}). Ative as notificações do Orbi em Ajustes do aparelho → Apps → Orbi → Notificações.`);
     }
-  }
-
-  async function testarNotificacao() {
-    setAviso('Testando… agendando notificação para 6 segundos.');
-    const r = await testarNotificacaoAgora();
-    setAviso(r);
   }
 
   function trocarTema(novo) {
@@ -265,9 +250,6 @@ function Mais() {
             <button style={estilos.salvarLocal} onClick={ativarNotificacoes}>Ativar notificações</button>
           </>
         )}
-        <button style={{ ...estilos.salvarLocal, background: 'transparent', color: cores.acento, border: `1px solid ${cores.borda}`, marginTop: 8 }} onClick={testarNotificacao}>
-          Testar notificação (6s)
-        </button>
       </div>
 
       <div style={estilos.cartao}>
