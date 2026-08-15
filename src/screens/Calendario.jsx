@@ -133,6 +133,13 @@ function corTexto(bg) {
   return lum > 0.62 ? '#1f2937' : '#ffffff';
 }
 
+// Fundo "vidro fosco" dos chips de evento: um leve brilho no topo e um leve
+// escurecido embaixo, sobre a cor da etiqueta. Dá uma profundidade discreta
+// (efeito frosted), funciona sobre qualquer cor. Só é usado nos eventos.
+function vidroChip(c) {
+  return `linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0) 45%, rgba(0,0,0,0.12)), ${c}`;
+}
+
 // "hoje", "amanhã", "em 12 dias"… a partir da diferença em dias.
 function rotuloContagem(dias) {
   if (dias === 0) return 'hoje';
@@ -558,7 +565,7 @@ function Celula({ celula, selecionado, ehHoje, eventos, corDe, feriado, onClick,
               role="button"
               tabIndex={0}
               onClick={(ev) => { ev.stopPropagation(); onAbrirEvento?.(e, celula.iso); }}
-              style={{ ...estilos.chip, background: c, color: corTexto(c), cursor: 'pointer' }}
+              style={{ ...estilos.chip, background: vidroChip(c), color: corTexto(c), cursor: 'pointer' }}
               title={e.titulo}
             >
               {e.titulo}
@@ -595,7 +602,7 @@ function CelulaSemana({ iso, dia, selecionado, ehHoje, eventos, corDe, feriado, 
               role="button"
               tabIndex={0}
               onClick={(ev) => { ev.stopPropagation(); onAbrirEvento?.(e, iso); }}
-              style={{ ...estilos.chipSemana, background: c, color: corTexto(c), cursor: 'pointer' }}
+              style={{ ...estilos.chipSemana, background: vidroChip(c), color: corTexto(c), cursor: 'pointer' }}
               title={e.titulo}
             >
               {e.inicio ? `${e.inicio} ` : ''}{e.titulo}
@@ -711,7 +718,7 @@ const estilos = {
   numeroFeriado: { color: COR_FERIADO, fontWeight: 800 },
   numeroSelecionado: { background: `var(--dia-sel-bg, ${cores.acento})`, color: `var(--dia-sel-texto, ${cores.textoClaro})` },
   celConteudo: { width: '100%', minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 2 },
-  chip: { display: 'block', width: '100%', boxSizing: 'border-box', fontSize: 9, fontWeight: 700, borderRadius: 4, padding: '1px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.35, letterSpacing: -0.1 },
+  chip: { display: 'block', width: '100%', boxSizing: 'border-box', fontSize: 9, fontWeight: 700, borderRadius: 5, padding: '1px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.35, letterSpacing: -0.1, boxShadow: '0 1px 3px rgba(0,0,0,0.20)', border: '1px solid rgba(255,255,255,0.10)' },
   chipMais: { fontSize: 8.5, fontWeight: 700, color: cores.textoApagado, paddingLeft: 4, lineHeight: 1.3 },
   feriadoTag: { maxWidth: '100%', boxSizing: 'border-box', fontSize: 8.5, fontWeight: 700, lineHeight: 1.15, color: 'var(--feriado-texto, #0e6f86)', background: 'var(--feriado-bg, #e6f6fb)', border: '1px solid var(--feriado-borda, #b7e3ef)', borderRadius: 5, padding: '1px 3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' },
 
@@ -729,7 +736,7 @@ const estilos = {
 
   semanaGradeUnica: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', flex: 1, minHeight: 0 },
   celulaSemana: { minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '6px 2px', border: 'none', background: 'transparent', cursor: 'pointer', overflow: 'hidden' },
-  chipSemana: { display: 'block', width: '100%', boxSizing: 'border-box', fontSize: 9, fontWeight: 700, borderRadius: 4, padding: '2px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.4, letterSpacing: -0.1 },
+  chipSemana: { display: 'block', width: '100%', boxSizing: 'border-box', fontSize: 9, fontWeight: 700, borderRadius: 5, padding: '2px 4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.4, letterSpacing: -0.1, boxShadow: '0 1px 3px rgba(0,0,0,0.20)', border: '1px solid rgba(255,255,255,0.10)' },
 
   semanaLista: { display: 'flex', flexDirection: 'column', gap: 8 },
   semanaDia: { width: '100%', boxSizing: 'border-box', textAlign: 'left', display: 'flex', gap: 12, background: cores.superficie, border: `1px solid ${cores.borda}`, borderRadius: raio, boxShadow: sombraSuave, padding: '10px 12px', cursor: 'pointer' },
