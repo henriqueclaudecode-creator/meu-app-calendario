@@ -143,6 +143,36 @@ export async function pedirPermissaoDetalhado() {
   }
 }
 
+// Dispara uma notificação de teste em ~6s e devolve um diagnóstico legível:
+// estado real da permissão + se o agendamento deu erro. Serve para descobrir por
+// que os lembretes não chegam no aparelho.
+export async function testarNotificacaoAgora() {
+  const p = plugin();
+  if (!p) return 'Sem plugin nativo (você está no navegador/PWA, não no app).';
+  let estado = '?';
+  try {
+    estado = (await comLimite(p.checkPermissions(), 6000, 'checkPermissions')).display;
+  } catch (e) {
+    return `checkPermissions falhou: ${e?.message || e}`;
+  }
+  if (estado !== 'granted') {
+    try { estado = (await comLimite(p.requestPermissions(), 30000, 'requestPermissions')).display; } catch (e) { return `pedido de permissão falhou: ${e?.message || e}`; }
+  }
+  try {
+    await p.schedule({
+      notifications: [{
+        id: 999001,
+        title: 'Teste do Orbi 🔔',
+        body: 'Se você viu isso, as notificações funcionam!',
+        schedule: { at: new Date(Date.now() + 6000), allowWhileIdle: true },
+      }],
+    });
+    return `Permissão: ${estado}. Teste agendado para 6s — feche o app e aguarde. Se não chegar, o problema é entrega (bateria/OEM), não o app.`;
+  } catch (e) {
+    return `Permissão: ${estado}. ERRO ao agendar: ${e?.message || e?.code || e}`;
+  }
+}
+
 // Cancela a notificação de um evento (por id textual do evento).
 export async function cancelarEvento(eventoId) {
   const p = await plugin();
