@@ -22,15 +22,17 @@ export const cores = {
   acentoTexto: v('acentoTexto', '#ffffff'),
 
   texto: v('texto', '#0f2547'),
-  textoSuave: v('textoSuave', '#64748b'),
+  textoSuave: v('textoSuave', '#556274'),
   textoClaro: v('textoClaro', '#ffffff'),
 
   borda: v('borda', '#e4ecf6'),
   bordaForte: v('bordaForte', '#cfdcec'),
 
-  textoApagado: v('textoApagado', '#8798ac'),
-  textoFraco: v('textoFraco', '#b3bece'),
-  pontinho: v('pontinho', '#b6c3d4'),
+  // Tons secundários — um pouco mais contrastados para não sumirem (Soft
+  // Neumorphic mantém a leveza, mas texto/ícone precisam continuar legíveis).
+  textoApagado: v('textoApagado', '#6d7d92'),
+  textoFraco: v('textoFraco', '#9aa8bc'),
+  pontinho: v('pontinho', '#a2b1c4'),
 
   grade: v('grade', '#dbe6f3'),
 
