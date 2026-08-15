@@ -158,16 +158,22 @@ export async function testarNotificacaoAgora() {
   if (estado !== 'granted') {
     try { estado = (await comLimite(p.requestPermissions(), 30000, 'requestPermissions')).display; } catch (e) { return `pedido de permissão falhou: ${e?.message || e}`; }
   }
+
+  // Monta um compromisso FALSO para daqui a 2 min e agenda pelo MESMO caminho de
+  // um evento real (agendarEvento/calcularDisparo). Assim testamos exatamente o
+  // que falha, e mostramos o horário calculado.
+  const alvo = new Date(Date.now() + 2 * 60000);
+  const hhmm = `${String(alvo.getHours()).padStart(2, '0')}:${String(alvo.getMinutes()).padStart(2, '0')}`;
+  const dataISO = `${alvo.getFullYear()}-${String(alvo.getMonth() + 1).padStart(2, '0')}-${String(alvo.getDate()).padStart(2, '0')}`;
+  const fake = { id: 'teste_evento_orbi', data: dataISO, inicio: hhmm, lembrete: 'no-horario', titulo: 'Teste de lembrete', repetir: 'nao' };
+  const disparo = calcularDisparo(fake);
+
   try {
-    await p.schedule({
-      notifications: [{
-        id: 999001,
-        title: 'Teste do Orbi 🔔',
-        body: 'Se você viu isso, as notificações funcionam!',
-        schedule: { at: new Date(Date.now() + 6000), allowWhileIdle: true },
-      }],
-    });
-    return `Permissão: ${estado}. Teste agendado para 6s — feche o app e aguarde. Se não chegar, o problema é entrega (bateria/OEM), não o app.`;
+    // (1) controle: direto em 6s
+    await p.schedule({ notifications: [{ id: 999001, title: 'Teste direto (6s) 🔔', body: 'Controle — deve chegar', schedule: { at: new Date(Date.now() + 6000), allowWhileIdle: true } }] });
+    // (2) pelo caminho de um compromisso, em ~2 min
+    await agendarEvento(fake);
+    return `Permissão: ${estado}. Disparo calculado do evento: ${disparo ? disparo.toLocaleTimeString() : 'NULO (bug!)'}. Agendei 2 avisos: (1) direto em 6s e (2) lembrete de evento às ${hhmm}. Feche o app e me diga QUAIS chegaram.`;
   } catch (e) {
     return `Permissão: ${estado}. ERRO ao agendar: ${e?.message || e?.code || e}`;
   }
