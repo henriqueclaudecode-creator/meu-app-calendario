@@ -103,13 +103,15 @@ export async function permissaoConcedida() {
 }
 
 // Pede a permissão ao usuário (mostra o pop-up do sistema). Retorna true se ok.
+// Com tempo-limite: uma chamada nativa travada NUNCA pode pendurar quem chama
+// (ex.: o botão Salvar de um evento).
 export async function pedirPermissao() {
-  const p = await plugin();
+  const p = plugin();
   if (!p) return false;
   try {
-    let { display } = await p.checkPermissions();
+    let { display } = await comLimite(p.checkPermissions(), 4000, 'check');
     if (display !== 'granted') {
-      ({ display } = await p.requestPermissions());
+      ({ display } = await comLimite(p.requestPermissions(), 30000, 'request'));
     }
     return display === 'granted';
   } catch {

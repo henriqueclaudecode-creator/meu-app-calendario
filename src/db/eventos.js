@@ -19,7 +19,14 @@ function lerTudo() {
 }
 
 function gravarTudo(lista) {
-  localStorage.setItem(CHAVE, JSON.stringify(lista));
+  try {
+    localStorage.setItem(CHAVE, JSON.stringify(lista));
+  } catch (e) {
+    // Ex.: QuotaExceeded (fotos grandes). Sem isto, uma gravação falha em
+    // silêncio e a exclusão/edição "não pega" (o item reaparece ao recarregar).
+    console.error('[eventos] falha ao gravar no localStorage:', e?.name || e);
+    throw e;
+  }
 }
 
 function novoId() {

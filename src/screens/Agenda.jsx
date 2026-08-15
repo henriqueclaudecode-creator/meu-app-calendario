@@ -129,6 +129,25 @@ function Agenda() {
     setSelecionado(isoDe(nd));
   }
 
+  // Arrastar (swipe) na faixa de semana/mês para trocar de período com o dedo.
+  const toqueFaixa = useRef(null);
+  function faixaTocarInicio(e) {
+    const t = e.touches?.[0];
+    if (t) toqueFaixa.current = { x: t.clientX, y: t.clientY };
+  }
+  function faixaTocarFim(e) {
+    const ini = toqueFaixa.current;
+    toqueFaixa.current = null;
+    const t = e.changedTouches?.[0];
+    if (!ini || !t) return;
+    const dx = t.clientX - ini.x;
+    const dy = t.clientY - ini.y;
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.3) return; // só horizontal claro
+    const dir = dx < 0 ? 1 : -1; // arrastar para a esquerda = avançar
+    if (modo === 'semana') setSelecionado(addDias(selecionado, dir * 7));
+    else mudarMesSel(dir);
+  }
+
   const anoSel = dataLocal(selecionado).getFullYear();
   useEffect(() => {
     let vivo = true;
@@ -194,6 +213,21 @@ function Agenda() {
     }
   }
 
+  // Ao abrir, começa mostrando HOJE (ou o próximo dia com evento). Os compromissos
+  // já passados ficam ACIMA — o usuário sobe a tela para vê-los. O botão "Hoje"
+  // continua servindo para voltar aqui a qualquer momento.
+  const jaRolouParaHoje = useRef(false);
+  useEffect(() => {
+    if (jaRolouParaHoje.current || secoes.length === 0) return;
+    const alvo = secoes.find((s) => s.iso >= hoje) ?? secoes[secoes.length - 1];
+    if (!alvo) return;
+    jaRolouParaHoje.current = true;
+    requestAnimationFrame(() => {
+      const el = secaoRefs.current[alvo.iso];
+      if (el) { rolandoPrograma.current = true; el.scrollIntoView({ block: 'start' }); setTimeout(() => { rolandoPrograma.current = false; }, 400); }
+    });
+  }, [secoes, hoje]);
+
   // Ao rolar, o dia do topo vira o "selecionado" (a faixa de semana acompanha).
   useEffect(() => {
     const alvos = Object.values(secaoRefs.current).filter(Boolean);
@@ -241,7 +275,7 @@ function Agenda() {
 
       {/* Faixa da semana ou grade do mês. */}
       {modo === 'semana' ? (
-      <div style={estilos.cartaoSemana}>
+      <div style={estilos.cartaoSemana} onTouchStart={faixaTocarInicio} onTouchEnd={faixaTocarFim}>
         <div style={estilos.mesLinha}>
           <button style={estilos.setaMes} onClick={() => setSelecionado(addDias(selecionado, -7))} aria-label="Semana anterior">‹</button>
           <span style={estilos.mesTitulo}>{cap(MESES[selDate.getMonth()])} {selDate.getFullYear()}</span>
@@ -278,7 +312,7 @@ function Agenda() {
         </div>
       </div>
       ) : (
-      <div style={estilos.cartaoSemana}>
+      <div style={estilos.cartaoSemana} onTouchStart={faixaTocarInicio} onTouchEnd={faixaTocarFim}>
         <div style={estilos.mesLinha}>
           <button style={estilos.setaMes} onClick={() => mudarMesSel(-1)} aria-label="Mês anterior">‹</button>
           <span style={estilos.mesTitulo}>{cap(MESES[selDate.getMonth()])} {selDate.getFullYear()}</span>
